@@ -49,7 +49,7 @@ table.pre pre {
 } 
 table.pre, pre.fssnip, pre {
   line-height:13pt;
-  border:1px solid #475b5f;
+  border:1px solid #d8d8d8;
   border-collapse:separate;
   white-space:pre;
   font: 9pt 'Droid Sans Mono',consolas,monospace;
