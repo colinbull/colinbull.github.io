@@ -1,10 +1,4 @@
-﻿(**
----
-layout: page
-title: Option Operators
----
-*)
-(*** hide ***)
+﻿(*** hide ***)
 #I "../packages"
 open System
 
