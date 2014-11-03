@@ -65,6 +65,7 @@ table.pre pre {
   margin:0px;
   border-radius:0px;
   width: 100%;
+  border:1px solid #212d30; 
 }
 table.pre td {
   padding:0px;
