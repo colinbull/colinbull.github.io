@@ -74,7 +74,11 @@ table.pre td {
 table.pre td.lines {
   width:30px;
 }
-td.snippet td.lines {
+td.snippet {
+   border:1px solid #212d30; 
+}
+
+td.lines {
    border:1px solid #212d30; 
 }
 
