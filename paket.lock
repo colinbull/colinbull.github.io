@@ -3,3 +3,4 @@ NUGET
   specs:
     FAKE (3.8.5)
     FSharpx.TypeProviders.Xaml (1.8.41)
+    RavenDB.Server (2.5.2935)
