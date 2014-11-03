@@ -16,7 +16,6 @@ baseurl:          /
 author:
   name:           'Colin Bull'
   url:            https://twitter.com/colinbul
-	
 
 paginate:         5
 
