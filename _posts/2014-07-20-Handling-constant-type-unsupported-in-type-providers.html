@@ -1,7 +1,8 @@
 ---
 layout: page
-title: Type provider unsupported constant type error
+title: 2014-07-20-Handling-constant-type-unsupported-in-type-providers
 ---
+
 <p>When writing type providers you are required to define code that will run at run-time with a quotation. This in itself is not a problem, 
 however if you try and pass a none native type to the quotation you will receive the following error,</p>
 
@@ -136,7 +137,6 @@ The implementation of QuotationHelpers is as follows.</p>
 </table>
 
 <p>And thats it. Hopefully this should remove some pain points in developing type providers.</p>
-
 
 <div class="tip" id="fs1">namespace System</div>
 <div class="tip" id="fs2">namespace ProviderImplementation</div>
