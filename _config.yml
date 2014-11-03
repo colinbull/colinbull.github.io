@@ -7,7 +7,7 @@ permalink:        pretty
 relative_permalinks: true
 
 # Setup
-title:            FourEightThree
+title:            ''
 tagline:          'Functional .NET, F#, C#'
 description:      ''
 url:              http://colinbull.github.io
@@ -18,9 +18,6 @@ author:
   url:            https://twitter.com/colinbul
 
 paginate:         5
-
-# Custom vars
-version:          2.1.0
 
 github:
   repo:           https://github.com/poole/hyde
