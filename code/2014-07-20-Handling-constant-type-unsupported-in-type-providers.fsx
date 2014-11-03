@@ -1,4 +1,8 @@
-﻿(*** hide ***)
+﻿---
+layout: page
+title: Handling Unsupported Constant Type
+---
+(*** hide ***)
 #I "libs"
 #load "ProvidedTypes.fsi"
 #load "ProvidedTypes.fs"
