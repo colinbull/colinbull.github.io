@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>FSharp.Formatting.CommandTool</id>
+    <version>2.4.36</version>
+    <authors>Friedrich Boeckh, Tomas Petricek</authors>
+    <owners>Friedrich Boeckh, Tomas Petricek</owners>
+    <licenseUrl>http://github.com/tpetricek/FSharp.Formatting/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>http://github.com/tpetricek/FSharp.Formatting</projectUrl>
+    <iconUrl>https://raw.github.com/tpetricek/FSharp.Formatting/master/docs/files/misc/logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The package contains a command line version of F# Formatting libraries, which can be used for literate programming with F# (great for building documentation)  and for generating library documentation from inline code comments. The key componments  are Markdown parser, tools for formatting F# code snippets, including tool tip type information and a tool for generating documentation from library metadata.</description>
+    <summary>A command line tool for building great F# documentation, samples and blogs</summary>
+    <releaseNotes>Better mono support.</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>F# fsharp formatting markdown code fssnip literate programming</tags>
+  </metadata>
+</package>
