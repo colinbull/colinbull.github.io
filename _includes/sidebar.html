@@ -1,11 +1,11 @@
 <div class="sidebar">
   <div class="container sidebar-sticky">
     <div class="sidebar-about">
-      <h4>
+      <h2>
         <a href="{{ site.baseurl }}">
           {{ site.title }}
         </a>
-      </h4>
+      </h2>
       <p class="lead">{{ site.description }}</p>
     </div>
 
@@ -25,7 +25,7 @@
           {% endif %}
         {% endif %}
       {% endfor %}
-      <a class="sidebar-nav-item" href="/atom.xml">RSS</a>
+      <a class="sidebar-nav-item" href="{{ site.url }}/atom.xml">RSS</a>
     </nav>
 
     <p>&copy; {{ site.time | date: '%Y' }}. All rights reserved.</p>
