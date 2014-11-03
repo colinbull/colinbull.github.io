@@ -30,15 +30,21 @@ the best but the final code looks like this.</p>
 <span class="l">4: </span>
 <span class="l">5: </span>
 <span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+<span class="l">9: </span>
 </pre>
 </td>
 <td class="snippet"><pre class="fssnip">
 <span class="k">let</span> <span class="i">recordInstance</span> <span class="o">=</span> { <span class="i">Name</span> <span class="o">=</span> <span class="s">&quot;</span><span class="s">Tester</span><span class="s">&quot;</span>; <span class="i">DateTime</span> <span class="o">=</span> <span class="i">DateTime</span><span class="o">.</span><span class="i">UtcNow</span> }
-<span class="k">let</span> <span class="i">providedMethod</span>  <span class="o">=</span> <span class="i">ProvidedMethod</span>(<span class="s">&quot;</span><span class="s">MethodName</span><span class="s">&quot;</span>,
+
+<span class="k">let</span> <span class="i">providedMethod</span>  <span class="o">=</span> 
+     <span class="i">ProvidedMethod</span>(<span class="s">&quot;</span><span class="s">MethodName</span><span class="s">&quot;</span>,
                [<span class="c">(* some parameters *)</span>],<span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="i">typeof</span><span class="o">&lt;</span><span class="i">SomeType</span><span class="o">&gt;</span>, 
-               <span class="i">InvokeCode</span> <span class="o">=</span> <span class="i">QuotationHelpers</span><span class="o">.</span><span class="i">quoteRecord</span> 
-                                <span class="i">recordInstance</span> 
-                                (<span class="k">fun</span> <span class="i">args</span> <span class="i">var</span> <span class="k">-&gt;</span>  &lt;@@ ((<span class="o">%%</span><span class="i">args</span><span class="o">.</span>[<span class="n">0</span>] <span class="o">:</span> <span class="i">SomeType</span>)<span class="o">.</span><span class="i">SomeMethod</span>(<span class="o">%%</span><span class="i">var</span>)) @@&gt;))</pre>
+               <span class="i">InvokeCode</span> <span class="o">=</span> 
+                    <span class="i">QuotationHelpers</span><span class="o">.</span><span class="i">quoteRecord</span> 
+                         <span class="i">recordInstance</span> 
+                         (<span class="k">fun</span> <span class="i">args</span> <span class="i">var</span> <span class="k">-&gt;</span>  &lt;@@ ((<span class="o">%%</span><span class="i">args</span><span class="o">.</span>[<span class="n">0</span>] <span class="o">:</span> <span class="i">SomeType</span>)<span class="o">.</span><span class="i">SomeMethod</span>(<span class="o">%%</span><span class="i">var</span>)) @@&gt;))</pre>
 </td>
 </tr>
 </table>
