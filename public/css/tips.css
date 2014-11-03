@@ -46,6 +46,7 @@ table.pre pre {
   padding:0px;
   margin:0px;
   border:none;
+  border:1px solid #212d30; 
 } 
 table.pre, pre.fssnip, pre {
   line-height:13pt;
@@ -74,6 +75,10 @@ table.pre td {
 }
 table.pre td.lines {
   width:30px;
+}
+
+table.pre td pre {
+    border:1px solid #212d30; 
 }
 td.snippet {
    border:1px solid #212d30; 
