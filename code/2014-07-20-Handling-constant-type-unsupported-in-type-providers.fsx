@@ -66,7 +66,7 @@ however if you try and pass a none native type to the quotation you will receive
 
      Unsupported constant type: xxxx
 
-There is a stack-overflow post here which has an example and a good explanation of the reasons why. A typical work around is to use each 
+There is a stack-overflow post [here](http://stackoverflow.com/questions/10161437/type-provider-providing-me-with-an-unsuported-constant-type-system-double-er) which has an example and a good explanation of the reasons why. A typical work around is to use each 
 field from a record and pass it to a function call in the quotation as an array or as individual parameters. Either way this can end up being quite painful.
 
 So how can we work around this. Well, what we need to do is build a new instance of the object we are trying to pass to the quotation within the quotation 
