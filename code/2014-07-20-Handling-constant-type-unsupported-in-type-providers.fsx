@@ -83,7 +83,9 @@ the best but the final code looks like this.
 let recordInstance = { Name = "Tester"; DateTime = DateTime.UtcNow }
 let providedMethod  = ProvidedMethod("MethodName",
                [(* some parameters *)],typeof<SomeType>, 
-               InvokeCode = QuotationHelpers.quoteRecord recordInstance (fun args var ->  <@@ ((%%args.[0] : SomeType).SomeMethod(%%var)) @@>))
+               InvokeCode = QuotationHelpers.quoteRecord 
+                                recordInstance 
+                                (fun args var ->  <@@ ((%%args.[0] : SomeType).SomeMethod(%%var)) @@>))
 
 (**
 Where the args are the original arguments passed by provided method invoke code and var is a quotation that represents our record instance to pass to our method. 
