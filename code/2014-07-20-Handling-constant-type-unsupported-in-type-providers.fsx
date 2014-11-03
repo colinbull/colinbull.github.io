@@ -1,9 +1,8 @@
-﻿(***
+﻿[lang=jekyll]
 ---
 layout: page
 title: Handling Unsupported Constant Type
 ---
-***)
 (*** hide ***)
 #I "libs"
 #load "ProvidedTypes.fsi"
