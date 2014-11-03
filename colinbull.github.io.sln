@@ -48,7 +48,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "code", "code", "{B6C1F35E-3
 	ProjectSection(SolutionItems) = preProject
 		code\2013-04-29-Option-Operators.fsx = code\2013-04-29-Option-Operators.fsx
 		code\2014-07-20-Handling-constant-type-unsupported-in-type-providers.fsx = code\2014-07-20-Handling-constant-type-unsupported-in-type-providers.fsx
-		code\post-template.html = code\post-template.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{9C51350A-C836-4D7E-BB3E-B4D25DB662BA}"

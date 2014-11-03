@@ -1,4 +1,9 @@
-﻿
+﻿(*** raw ***)
+---
+layout: page
+title: Handling constant type unsupported error for type providers
+---
+
 (*** hide ***)
 #I "libs"
 #load "ProvidedTypes.fsi"

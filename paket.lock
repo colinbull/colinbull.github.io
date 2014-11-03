@@ -1,12 +1,1 @@
-NUGET
-  remote: https://www.nuget.org/api/v2
-  specs:
-    FSharp.Compiler.Service (0.0.67)
-    FSharp.Formatting (2.4.36)
-      FSharp.Compiler.Service (0.0.67)
-      Microsoft.AspNet.Razor (2.0.30506.0)
-      RazorEngine (3.3.0)
-    FSharp.Formatting.CommandTool (2.4.36)
-    Microsoft.AspNet.Razor (2.0.30506.0)
-    RazorEngine (3.3.0)
-      Microsoft.AspNet.Razor (>= 2.0.30506.0)
+
