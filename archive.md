@@ -3,7 +3,7 @@ layout: archive
 title: Archive
 ---
 
-## Blog Posts
+## Posts
 
 {% for post in site.posts %}
   * {{ post.date | date_to_string }} &raquo; [ {{ post.title }} ]({{ post.url }})
