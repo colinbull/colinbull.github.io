@@ -34,6 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "public", "public", "{65E380
 	ProjectSection(SolutionItems) = preProject
 		public\apple-touch-icon-144-precomposed.png = public\apple-touch-icon-144-precomposed.png
 		public\favicon.ico = public\favicon.ico
+		public\Twitter_logo_white_48.png = public\Twitter_logo_white_48.png
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{E6285881-77F0-49D7-919C-AA5C7DEFF27D}"
@@ -64,6 +65,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{8F07ABF3-6
 		code\libs\ProvidedTypes.fsi = code\libs\ProvidedTypes.fsi
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "blog_imgs", "blog_imgs", "{32946CB4-CE26-4C41-B21B-B85C3FDA6FBF}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,5 +75,6 @@ Global
 		{E6285881-77F0-49D7-919C-AA5C7DEFF27D} = {65E38029-39E8-4E33-B865-46538F01582B}
 		{9C51350A-C836-4D7E-BB3E-B4D25DB662BA} = {65E38029-39E8-4E33-B865-46538F01582B}
 		{8F07ABF3-6548-4EF4-9206-36C57B765F95} = {B6C1F35E-313A-4ADC-A52E-84FFCAC078FB}
+		{32946CB4-CE26-4C41-B21B-B85C3FDA6FBF} = {65E38029-39E8-4E33-B865-46538F01582B}
 	EndGlobalSection
 EndGlobal
