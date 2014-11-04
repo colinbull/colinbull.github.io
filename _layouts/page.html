@@ -6,9 +6,5 @@ layout: default
     <h1 class="page-title">{{ page.title }}</h1>
     {{ content }}
     <small>Published: {{ post.date | date_to_string }}</small>
-    <div>
-        <a href="https://twitter.com/share/tweet?url={{ site.url }}{{ page.url }}&text={{ page.title }}&via=colinbul" target="_blank">
-            <img alt="tweet-share" src="{{ site.baseurl }}public/Twitter_logo_white_48.png" />
-        </a>
-    </div>
+
 </div>
