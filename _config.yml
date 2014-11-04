@@ -10,7 +10,7 @@ relative_permalinks: true
 title:            'Colin Bull'
 tagline:          'Functional .NET, F#, C#'
 description:      'Functional .NET, F#, C#'
-url:              http://www.colinbul.net
+url:              http://colinbull.github.io
 baseurl:          /
 
 author:
