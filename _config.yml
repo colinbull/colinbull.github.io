@@ -9,8 +9,8 @@ relative_permalinks: true
 # Setup
 title:            'Colin Bull'
 tagline:          'Functional .NET, F#, C#'
-description:      ''
-url:              http://colinbull.github.io
+description:      'Functional .NET, F#, C#'
+url:              http://www.colinbul.net
 baseurl:          /
 
 author:
