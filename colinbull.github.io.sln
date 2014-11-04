@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		CNAME = CNAME
 		index.html = index.html
 		LICENSE.md = LICENSE.md
+		publish.bat = publish.bat
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -23,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_includes", "_includes", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_layouts", "_layouts", "{F2B91918-DB62-429B-AA09-5D07F0654E5F}"
 	ProjectSection(SolutionItems) = preProject
+		_layouts\archive.html = _layouts\archive.html
 		_layouts\default.html = _layouts\default.html
 		_layouts\page.html = _layouts\page.html
 		_layouts\post.html = _layouts\post.html
@@ -34,7 +36,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "public", "public", "{65E380
 	ProjectSection(SolutionItems) = preProject
 		public\apple-touch-icon-144-precomposed.png = public\apple-touch-icon-144-precomposed.png
 		public\favicon.ico = public\favicon.ico
-		public\Twitter_logo_white_48.png = public\Twitter_logo_white_48.png
+		public\GitHub-Mark-Light-32px.png = public\GitHub-Mark-Light-32px.png
+		public\Twitter_logo_blue_32.png = public\Twitter_logo_blue_32.png
+		public\Twitter_logo_white_32.png = public\Twitter_logo_white_32.png
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{E6285881-77F0-49D7-919C-AA5C7DEFF27D}"
