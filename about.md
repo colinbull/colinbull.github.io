@@ -4,13 +4,13 @@ title: About
 ---
 
 I hold a master’s degree in Physics from the University of Birmingham
-and I'm currently working as a consultant software developer/technical
+and I'm currently working as a freelance consultant programmer/technical
 architect in the UK commodity-trading sector, where I have been
 fortunate enough to implement several large scale solutions in F#.
 
-In his spare time, Colin enjoys learning about new technologies
-especially ones related functional programming and contributes to
-several F# community open source projects. Including
+In my spare time I enjoy learning about new technologies/languages 
+especially ones related programming and contributes to
+several F# community open source projects. Including but not limited to
 
 * [Cricket](http://github.com/fsprojects/Cricket)
 * [FAKE](http://github.com/fsharp/Fake)
