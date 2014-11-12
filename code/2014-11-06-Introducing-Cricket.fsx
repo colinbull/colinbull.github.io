@@ -69,7 +69,7 @@ Alternatively we can resolve the actor by name and send the message that way.
 "echo" <-- "Hello, from Cricket"
 
 (**
-From these basic begining we can build entire systems using actors. The systems can be spread over multiple machines, and as long as the underlying message transport supports it different data-centres. To create make our simply echo actor distributed. We don't have to change the implementation of the actor. All we have to do is enable remoting on the actor host.  
+From these basic beginings we can build entire systems using actors. These systems can be spread over multiple machines and as long as the underlying message transport supports it different data-centres. To make our echo actor distributed, we don't have to change the implementation of the actor. All we have to do is enable remoting on the actor host.  
 
 
      //Node1 host configuration
