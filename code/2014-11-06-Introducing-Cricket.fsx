@@ -1,7 +1,7 @@
 (*** raw ***)
 ---
 layout: page
-title: Introducing Cricket (formally FSharp.Actor)
+title: Introducing Cricket (formerly FSharp.Actor)
 ---
 
 (*** hide ***)
@@ -21,7 +21,7 @@ I also encourage you to look at [Erlang/Elixir](http://www.erlang.org), [Akka](h
 
 ##Introducing Cricket
     
-[Cricket](http://github.com/fsprojects/Cricket), formally FSharp.Actor, is yet another actor framework. Built entirely in F#, Cricket is a lightweight alternative to Akka et. al. To this end it is not as feature rich as these out of the box, but all of the core requirements like location transpancy, remoting, supervisors, metrics and tracing. Other things like failure detection and clustering are in the pipeline it is just a question of time.
+[Cricket](http://github.com/fsprojects/Cricket), formerly FSharp.Actor, is yet another actor framework. Built entirely in F#, Cricket is a lightweight alternative to Akka et. al. To this end it is not as feature rich as these out of the box, but all of the core requirements like location transpancy, remoting, supervisors, metrics and tracing. Other things like failure detection and clustering are in the pipeline it is just a question of time.
 
 Some key links for Cricket:
 
