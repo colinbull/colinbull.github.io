@@ -5,15 +5,11 @@ title: Introducting Cricket.
 ---
 
 (*** hide ***)
-#I "../packages"
-#r "FsPickler/lib/net40/FsPickler.dll"
-#r "Cricket/lib/Cricket.dll"
-
 
 (**
-Over the last few years, I have been quite taken by the actor model of computing. Although not a silver bullet it does tend to make concurrent programming many orders of magnitude easier to reason about. If you have never heard of Actors then an actor as defined by [wikipedia](http://en.wikipedia.org/wiki/Actor_model) is as follows
+Over the last few years, I have been quite taken by the actor model of computing. Although not a silver bullet it does tend to make concurrent programming orders of magnitude easier to reason about. If you have never heard of Actors then an actor as defined by [wikipedia](http://en.wikipedia.org/wiki/Actor_model) is as follows
 
-> The Actor model adopts the philosophy that everything is an actor. This is similar to the everything is an object philosophy used by some object-oriented programming languages, but differs in that object-oriented software is typically executed sequentially, while the Actor model is inherently concurrent.
+> The Actor model adopts the philosophy that everything is an actor. This is similar to the everyt>hing is an object philosophy used by some object-oriented programming languages, but differs in t>hat object-oriented software is typically executed sequentially, while the Actor model is inheren>tly concurrent.
 >
 >An actor is a computational entity that, in response to a message it receives, can concurrently:
 >
@@ -25,12 +21,29 @@ I also encourage you to look at [Erlang/Elixir](http://www.erlang.org), [Akka](h
 
 ##Introducing Cricket
     
-[Cricket](http://github.com/fsprojects/Cricket) (formally FSharp.Actor)  is yet another actor framework. Built entirely in F#, Cricket is a lightweight alternative to Akka et. al. To this end it is not as feature rich as these out of the box, but all of the core requirements like location transpancy, remoting, supervisors, metrics and tracing. Other things like failure detection and clustering are in the pipeline it is just a question of time. Currently the focus of the project is to get things running smoothly on both .NET CLR and Mono Runtimes. Anyway enough of that, to the code.
+[Cricket](http://github.com/fsprojects/Cricket), formally FSharp.Actor, is yet another actor framework. Built entirely in F#, Cricket is a lightweight alternative to Akka et. al. To this end it is not as feature rich as these out of the box, but all of the core requirements like location transpancy, remoting, supervisors, metrics and tracing. Other things like failure detection and clustering are in the pipeline it is just a question of time.
+
+Some key links for Cricket:
+
+* [Cricket Home Page](http://fsprojects.github.io/Cricket)
+* [Cricket Source code](http://github.com/fsprojects/Cricket) on GitHub
+* [Cricket NuGet package](http://www.nuget.org/packages/Cricket)
+
+The nuget package, contains a single library `Cricket.dll` and a reference to [FsPickler](https://github.com/nessos/FsPickler), which is used for serailization.
+
+###Creating a simple actor
+
+The following example, creates a `echo` actor using cricket.   
 *)
 
-open Cricket
-ActorHost.Start()
+#I "../packages"
+#r "FsPickler/lib/net45/FsPickler.dll"
+#r "Cricket/lib/Cricket.dll"
 
+open Cricket
+
+
+ActorHost.Start()
 
 let echo =
     actor {
@@ -44,16 +57,18 @@ let echo =
             loop())
     } |> Actor.spawn
 
-echo <-- "Hello"
-
-
 (**
-Above we have spawned an actor named `echo`. That when sent a string simply prints that string to the console. Not very interesting behaviour, however I hope it is clear that the body of any actor is a simply just a recursive function.
-If we now draw our attention to the value of `echo` that is printed. 
+A couple of things are happening in the code above. Firstly, we start an `ActorHost` which sets up an environment within the current process for the actor to live in. Next we define the actor, we give it a name `echo` and a body. The body is actually the only thing that is required. If the name is omitted then it is assinged as a `Guid`. All the body of an actor consists of is a recursive function, that describes how to handle the messages posted to the actor. In this case we simply print a message to the console. Once we have defined the actor we then spawn it using `Actor.spawn`. After an actor has been spawned it is ready to consume messages. We can send messages directly to the actor by using the `ActorRef` that is returned by `Actor.spawn`.      
 *)
 
-(*** include-value:echo ***)
+echo <-- "Hello, from Cricket"
+    
+(**
+Alternatively we can resolve the actor by name and send the message that way. 
+*)
+
+"echo" <-- "Hello, from Cricket"
 
 (**
-we see that 
+There is much more in Cricket, than this basic blog post covers. If your interested browse the links at the top of this post for more information. 
 *)
