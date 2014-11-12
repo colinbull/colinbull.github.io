@@ -1,12 +1,12 @@
 ---
 layout: page
-title: Introducting Cricket.
+title: Introducing Cricket.
 ---
 
 <p>Over the last few years, I have been quite taken by the actor model of computing. Although not a silver bullet it does tend to make concurrent programming orders of magnitude easier to reason about. If you have never heard of Actors then an actor as defined by <a href="http://en.wikipedia.org/wiki/Actor_model">wikipedia</a> is as follows</p>
 
 <blockquote>
-  <p>The Actor model adopts the philosophy that everything is an actor. This is similar to the everyt>hing is an object philosophy used by some object-oriented programming languages, but differs in t>hat object-oriented software is typically executed sequentially, while the Actor model is inheren>tly concurrent.</p>
+  <p>The Actor model adopts the philosophy that everything is an actor. This is similar to the everything is an object philosophy used by some object-oriented programming languages, but differs in that object-oriented software is typically executed sequentially, while the Actor model is inherently concurrent.</p>
 
   <p>An actor is a computational entity that, in response to a message it receives, can concurrently:</p>
 
@@ -37,7 +37,30 @@ title: Introducting Cricket.
 
 <p>The following example, creates a <code>echo</code> actor using cricket.</p>
 
-<pre class="fssnip">
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
 <span class="prep">#I</span> <span class="s">&quot;</span><span class="s">.</span><span class="s">.</span><span class="s">/</span><span class="s">packages</span><span class="s">&quot;</span>
 <span class="prep">#r</span> <span class="s">&quot;</span><span class="s">FsPickler</span><span class="s">/</span><span class="s">lib</span><span class="s">/</span><span class="s">net45</span><span class="s">/</span><span class="s">FsPickler</span><span class="s">.</span><span class="s">dll</span><span class="s">&quot;</span>
 <span class="prep">#r</span> <span class="s">&quot;</span><span class="s">Cricket</span><span class="s">/</span><span class="s">lib</span><span class="s">/</span><span class="s">Cricket</span><span class="s">.</span><span class="s">dll</span><span class="s">&quot;</span>
@@ -58,20 +81,35 @@ title: Introducting Cricket.
             }
             <span class="i">loop</span>())
     } <span class="o">|&gt;</span> <span class="i">Actor</span><span class="o">.</span><span class="i">spawn</span></pre>
-
+</td>
+</tr>
+</table>
 
 <p>A couple of things are happening in the code above. Firstly, we start an <code>ActorHost</code> which sets up an environment within the current process for the actor to live in. Next we define the actor, we give it a name <code>echo</code> and a body. The body is actually the only thing that is required. If the name is omitted then it is assinged as a <code>Guid</code>. All the body of an actor consists of is a recursive function, that describes how to handle the messages posted to the actor. In this case we simply print a message to the console. Once we have defined the actor we then spawn it using <code>Actor.spawn</code>. After an actor has been spawned it is ready to consume messages. We can send messages directly to the actor by using the <code>ActorRef</code> that is returned by <code>Actor.spawn</code>.</p>
 
-<pre class="fssnip">
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+<span class="l">2: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
 <span class="i">echo</span> <span class="o">&lt;--</span> <span class="s">&quot;</span><span class="s">Hello</span><span class="s">,</span><span class="s"> </span><span class="s">from</span><span class="s"> </span><span class="s">Cricket</span><span class="s">&quot;</span>
     </pre>
-
+</td>
+</tr>
+</table>
 
 <p>Alternatively we can resolve the actor by name and send the message that way.</p>
 
-<pre class="fssnip">
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
 <span class="s">&quot;</span><span class="s">echo</span><span class="s">&quot;</span> <span class="o">&lt;--</span> <span class="s">&quot;</span><span class="s">Hello</span><span class="s">,</span><span class="s"> </span><span class="s">from</span><span class="s"> </span><span class="s">Cricket</span><span class="s">&quot;</span></pre>
-
+</td>
+</tr>
+</table>
 
 <p>There is much more in Cricket, than this basic blog post covers. If your interested browse the links at the top of this post for more information.</p>
 

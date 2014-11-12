@@ -1,7 +1,7 @@
 (*** raw ***)
 ---
 layout: page
-title: Introducting Cricket.
+title: Introducing Cricket.
 ---
 
 (*** hide ***)
@@ -9,7 +9,7 @@ title: Introducting Cricket.
 (**
 Over the last few years, I have been quite taken by the actor model of computing. Although not a silver bullet it does tend to make concurrent programming orders of magnitude easier to reason about. If you have never heard of Actors then an actor as defined by [wikipedia](http://en.wikipedia.org/wiki/Actor_model) is as follows
 
-> The Actor model adopts the philosophy that everything is an actor. This is similar to the everyt>hing is an object philosophy used by some object-oriented programming languages, but differs in t>hat object-oriented software is typically executed sequentially, while the Actor model is inheren>tly concurrent.
+> The Actor model adopts the philosophy that everything is an actor. This is similar to the everything is an object philosophy used by some object-oriented programming languages, but differs in that object-oriented software is typically executed sequentially, while the Actor model is inherently concurrent.
 >
 >An actor is a computational entity that, in response to a message it receives, can concurrently:
 >
