@@ -12,6 +12,8 @@ In his spare time, Colin enjoys learning about new technologies
 especially ones related functional programming and contributes to
 several F# community open source projects. Including
 
-* [Cricket](http://github.com/fsproject/Cricket)
-* [FAKE](http://github.com/fsprojects/Fake)
-* [FSharp.Data](http://github.com/fsprojects/FSharp.Data)
+* [Cricket](http://github.com/fsprojects/Cricket)
+* [FAKE](http://github.com/fsharp/Fake)
+* [FSharp.Data](http://github.com/fsharp/FSharp.Data)
+* [SqlProvider](http://github.com/fsprojects/SqlProvider)
+
