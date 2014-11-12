@@ -1,7 +1,7 @@
 (*** raw ***)
 ---
 layout: page
-title: Introducing Cricket.
+title: Introducing Cricket (formally FSharp.Actor)
 ---
 
 (*** hide ***)
@@ -62,7 +62,6 @@ A couple of things are happening in the code above. Firstly, we start an `ActorH
 *)
 
 echo <-- "Hello, from Cricket"
-    
 (**
 Alternatively we can resolve the actor by name and send the message that way. 
 *)
@@ -70,5 +69,35 @@ Alternatively we can resolve the actor by name and send the message that way.
 "echo" <-- "Hello, from Cricket"
 
 (**
-There is much more in Cricket, than this basic blog post covers. If your interested browse the links at the top of this post for more information. 
+From these basic begining we can build entire systems using actors. The systems can be spread over multiple machines, and as long as the underlying message transport supports it different data-centres. To create make our simply echo actor distributed. We don't have to change the implementation of the actor. All we have to do is enable remoting on the actor host.  
+
+
+     //Node1 host configuration
+     ActorHost.Start()
+              .SubscribeEvents(fun (evnt:ActorEvent) -> printfn "%A" evnt)
+              .EnableRemoting(
+                        [new TCPTransport(TcpConfig.Default(IPEndPoint.Create(12002)))],
+                        new BinarySerializer(),
+                        new TcpActorRegistryTransport(TcpConfig.Default(IPEndPoint.Create(12003))),
+                        new UdpActorRegistryDiscovery(UdpConfig.Default(), 1000))
+
+
+All we have done is enchance the ActorHost with a collection of message transports, a serializer, a registry transport and a way for the actors to discover each other. Similar setif we used the same setup on another node.
+
+     //Node2 host configuration
+     ActorHost.Start()
+              .SubscribeEvents(fun (evnt:ActorEvent) -> printfn "%A" evnt)
+              .EnableRemoting(
+                        [new TCPTransport(TcpConfig.Default(IPEndPoint.Create(12004)))],
+                        new BinarySerializer(),
+                        new TcpActorRegistryTransport(TcpConfig.Default(IPEndPoint.Create(12005))),
+                        new UdpActorRegistryDiscovery(UdpConfig.Default(), 1000))
+
+then we can on node 2 resolve any actors on node 1, using the example above. Alternatively if I had 10 nodes but wanted to resolve the `echo` actor on node 9, I could do something like the following
+*)
+
+"node9@*/echo" <-- "Hello, from Cricket"
+
+(**
+This would then resolve the actor on `node9`. If we had kept the original query which was simply `echo` then this would resolve any actor named `echo` all of the nodes participating in the group. For more details on remoting and a link to an example see [here](http://fsprojects.github.io/Cricket/remoting.html) 
 *)
