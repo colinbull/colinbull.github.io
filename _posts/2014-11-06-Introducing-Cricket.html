@@ -1,0 +1,179 @@
+---
+layout: page
+title: Introducing Cricket (formerly FSharp.Actor)
+---
+
+<p>Over the last few years, I have been quite taken by the actor model of computing. Although not a silver bullet it does tend to make concurrent programming orders of magnitude easier to reason about. If you have never heard of Actors then an actor as defined by <a href="http://en.wikipedia.org/wiki/Actor_model">wikipedia</a> is as follows</p>
+
+<blockquote>
+  <p>The Actor model adopts the philosophy that everything is an actor. This is similar to the everything is an object philosophy used by some object-oriented programming languages, but differs in that object-oriented software is typically executed sequentially, while the Actor model is inherently concurrent.</p>
+
+  <p>An actor is a computational entity that, in response to a message it receives, can concurrently:</p>
+
+<ul>
+<li>send a finite number of messages to other actors;</li>
+<li>create a finite number of new actors;</li>
+<li>designate the behavior to be used for the next message it receives.</li>
+</ul>
+</blockquote>
+
+<p>I also encourage you to look at <a href="http://www.erlang.org">Erlang/Elixir</a>, <a href="https://github.com/akkadotnet/akka.net">Akka</a>, <a href="http://research.microsoft.com/en-us/projects/orleans/">Orleans</a> and the <a href="http://msdn.microsoft.com/en-us/library/ee370357.aspx"><code>MailboxProcessor&lt;'a&gt;</code> in FSharp.Core</a>.</p>
+
+<h2><a name="Introducing-Cricket" class="anchor" href="#Introducing-Cricket">Introducing Cricket</a></h2>
+
+<p><a href="http://github.com/fsprojects/Cricket">Cricket</a>, formerly FSharp.Actor, is yet another actor framework. Built entirely in F#, Cricket is a lightweight alternative to Akka et. al. To this end it is not as feature rich as these out of the box, but all of the core requirements like location transpancy, remoting, supervisors, metrics and tracing. Other things like failure detection and clustering are in the pipeline it is just a question of time.</p>
+
+<p>Some key links for Cricket:</p>
+
+<ul>
+<li><a href="http://fsprojects.github.io/Cricket">Cricket Home Page</a></li>
+<li><a href="http://github.com/fsprojects/Cricket">Cricket Source code</a> on GitHub</li>
+<li><a href="http://www.nuget.org/packages/Cricket">Cricket NuGet package</a></li>
+</ul>
+
+<p>The nuget package, contains a single library <code>Cricket.dll</code> and a reference to <a href="https://github.com/nessos/FsPickler">FsPickler</a>, which is used for serailization.</p>
+
+<h3><a name="Creating-a-simple-actor" class="anchor" href="#Creating-a-simple-actor">Creating a simple actor</a></h3>
+
+<p>The following example, creates a <code>echo</code> actor using cricket.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="prep">#I</span> <span class="s">&quot;</span><span class="s">.</span><span class="s">.</span><span class="s">/</span><span class="s">packages</span><span class="s">&quot;</span>
+<span class="prep">#r</span> <span class="s">&quot;</span><span class="s">FsPickler</span><span class="s">/</span><span class="s">lib</span><span class="s">/</span><span class="s">net45</span><span class="s">/</span><span class="s">FsPickler</span><span class="s">.</span><span class="s">dll</span><span class="s">&quot;</span>
+<span class="prep">#r</span> <span class="s">&quot;</span><span class="s">Cricket</span><span class="s">/</span><span class="s">lib</span><span class="s">/</span><span class="s">Cricket</span><span class="s">.</span><span class="s">dll</span><span class="s">&quot;</span>
+
+<span class="k">open</span> <span class="i">Cricket</span>
+
+
+<span class="i">ActorHost</span><span class="o">.</span><span class="i">Start</span>()
+
+<span class="k">let</span> <span class="i">echo</span> <span class="o">=</span>
+    <span class="i">actor</span> {
+        <span class="i">name</span> <span class="s">&quot;</span><span class="s">echo</span><span class="s">&quot;</span>
+        <span class="i">body</span> (
+            <span class="k">let</span> <span class="k">rec</span> <span class="i">loop</span>() <span class="o">=</span> <span class="i">messageHandler</span> {
+                <span class="k">let!</span> <span class="i">msg</span> <span class="o">=</span> <span class="i">Message</span><span class="o">.</span><span class="i">receive</span>()
+                <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">printfn</span> <span class="s">&quot;</span><span class="s">%</span><span class="s">s</span><span class="s">&quot;</span> <span class="i">msg</span>
+                <span class="k">return!</span> <span class="i">loop</span>()
+            }
+            <span class="i">loop</span>())
+    } <span class="o">|&gt;</span> <span class="i">Actor</span><span class="o">.</span><span class="i">spawn</span></pre>
+</td>
+</tr>
+</table>
+
+<p>A couple of things are happening in the code above. Firstly, we start an <code>ActorHost</code> which sets up an environment within the current process for the actor to live in. Next we define the actor, we give it a name <code>echo</code> and a body. The body is actually the only thing that is required. If the name is omitted then it is assinged as a <code>Guid</code>. All the body of an actor consists of is a recursive function, that describes how to handle the messages posted to the actor. In this case we simply print a message to the console. Once we have defined the actor we then spawn it using <code>Actor.spawn</code>. After an actor has been spawned it is ready to consume messages. We can send messages directly to the actor by using the <code>ActorRef</code> that is returned by <code>Actor.spawn</code>.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="i">echo</span> <span class="o">&lt;--</span> <span class="s">&quot;</span><span class="s">Hello</span><span class="s">,</span><span class="s"> </span><span class="s">from</span><span class="s"> </span><span class="s">Cricket</span><span class="s">&quot;</span></pre>
+</td>
+</tr>
+</table>
+
+<p>Alternatively we can resolve the actor by name and send the message that way.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="s">&quot;</span><span class="s">echo</span><span class="s">&quot;</span> <span class="o">&lt;--</span> <span class="s">&quot;</span><span class="s">Hello</span><span class="s">,</span><span class="s"> </span><span class="s">from</span><span class="s"> </span><span class="s">Cricket</span><span class="s">&quot;</span></pre>
+</td>
+</tr>
+</table>
+
+<p>From these basic beginings we can build entire systems using actors. These systems can be spread over multiple machines and as long as the underlying message transport supports it different data-centres. To make our echo actor distributed, we don't have to change the implementation of the actor. All we have to do is enable remoting on the actor host.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="c">//Node1 host configuration</span>
+<span class="i">ActorHost</span><span class="o">.</span><span class="i">Start</span>()
+         <span class="o">.</span><span class="i">SubscribeEvents</span>(<span class="k">fun</span> (<span class="i">evnt</span><span class="o">:</span><span class="i">ActorEvent</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">printfn</span> <span class="s">&quot;</span><span class="s">%</span><span class="s">A</span><span class="s">&quot;</span> <span class="i">evnt</span>)
+         <span class="o">.</span><span class="i">EnableRemoting</span>(
+                   [<span class="k">new</span> <span class="i">TCPTransport</span>(<span class="i">TcpConfig</span><span class="o">.</span><span class="i">Default</span>(<span class="i">IPEndPoint</span><span class="o">.</span><span class="i">Create</span>(<span class="n">12002</span>)))],
+                   <span class="k">new</span> <span class="i">BinarySerializer</span>(),
+                   <span class="k">new</span> <span class="i">TcpActorRegistryTransport</span>(<span class="i">TcpConfig</span><span class="o">.</span><span class="i">Default</span>(<span class="i">IPEndPoint</span><span class="o">.</span><span class="i">Create</span>(<span class="n">12003</span>))),
+                   <span class="k">new</span> <span class="i">UdpActorRegistryDiscovery</span>(<span class="i">UdpConfig</span><span class="o">.</span><span class="i">Default</span>(), <span class="n">1000</span>))</pre>
+</td>
+</tr>
+</table>
+
+<p>All we have done is enchance the ActorHost with a collection of message transports, a serializer, a registry transport and a way for the actors to discover each other. Similar setif we used the same setup on another node.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="c">//Node2 host configuration</span>
+<span class="i">ActorHost</span><span class="o">.</span><span class="i">Start</span>()
+         <span class="o">.</span><span class="i">SubscribeEvents</span>(<span class="k">fun</span> (<span class="i">evnt</span><span class="o">:</span><span class="i">ActorEvent</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="i">printfn</span> <span class="s">&quot;</span><span class="s">%</span><span class="s">A</span><span class="s">&quot;</span> <span class="i">evnt</span>)
+         <span class="o">.</span><span class="i">EnableRemoting</span>(
+                   [<span class="k">new</span> <span class="i">TCPTransport</span>(<span class="i">TcpConfig</span><span class="o">.</span><span class="i">Default</span>(<span class="i">IPEndPoint</span><span class="o">.</span><span class="i">Create</span>(<span class="n">12004</span>)))],
+                   <span class="k">new</span> <span class="i">BinarySerializer</span>(),
+                   <span class="k">new</span> <span class="i">TcpActorRegistryTransport</span>(<span class="i">TcpConfig</span><span class="o">.</span><span class="i">Default</span>(<span class="i">IPEndPoint</span><span class="o">.</span><span class="i">Create</span>(<span class="n">12005</span>))),
+                   <span class="k">new</span> <span class="i">UdpActorRegistryDiscovery</span>(<span class="i">UdpConfig</span><span class="o">.</span><span class="i">Default</span>(), <span class="n">1000</span>))</pre>
+</td>
+</tr>
+</table>
+
+<p>then we can on node 2 resolve any actors on node 1, using the example above. Alternatively if I had 10 nodes but wanted to resolve the <code>echo</code> actor on node 9, I could do something like the following</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="s">&quot;</span><span class="s">node9</span><span class="s">@</span><span class="s">*</span><span class="s">/</span><span class="s">echo</span><span class="s">&quot;</span> <span class="o">&lt;--</span> <span class="s">&quot;</span><span class="s">Hello</span><span class="s">,</span><span class="s"> </span><span class="s">from</span><span class="s"> </span><span class="s">Cricket</span><span class="s">&quot;</span></pre>
+</td>
+</tr>
+</table>
+
+<p>This would then resolve the actor on <code>node9</code>. If we had kept the original query which was simply <code>echo</code> then this would resolve any actor named <code>echo</code> all of the nodes participating in the group. For more details on remoting and a link to an example see <a href="http://fsprojects.github.io/Cricket/remoting.html">here</a></p>
+
+
+<div class="tip" id="fs1">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
