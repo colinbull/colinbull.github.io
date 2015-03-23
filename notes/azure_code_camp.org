@@ -1,0 +1,39 @@
+
+* Azure Cloud Camp
+
+23/03/2015
+
+Martin Beeby (@thebeebs) / Martin Kearn (@martinkearn)
+
+ - http://modern.ie/ - Allows you to test browsers, accessibility,
+compatiblity etc.
+
+- http://caniuse.com - Checks browser support across all browsers.
+
+** Intro to ASP.NET and VS2013 web tools 
+
+- Look at POSTMAN - google extension for navigating APIS.
+
+** Building a Web App and deploy to Azure
+
+- Can split traffic in a percentage between production and staging, 
+  to split traffic on IP ranges, you can use TrafficManager
+  (https://msdn.microsoft.com/en-us/library/azure/hh744833.aspx)
+
+- Can debug straight in Azure Web roles. 
+
+** Building web front ends for both desktop and mobile
+
+- Microsoft new browser (Project Spartan - Windows 10)
+- ECMA Script 262 - Provides classes and modules.
+ 
+** Real-time communications with Signal-R
+
+** Tuning, Modernising and Optimising ASP.NET
+
+- Improved developer tools in IE (F12)
+  - Rendering time
+  - Memory ect
+  - Emulation
+
+
