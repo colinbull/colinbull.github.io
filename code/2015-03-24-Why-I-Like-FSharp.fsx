@@ -1,8 +1,8 @@
 (*** raw ***)
-//---
-//layout: page
-//title: Why I like F#.
-//---
+---
+layout: page
+title: Why I like F#.
+---
 
 (*** hide ***)
 #r @"..\packages\FSharp.Data\lib\net40\FSharp.Data.dll"
