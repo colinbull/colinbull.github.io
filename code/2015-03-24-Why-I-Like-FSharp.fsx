@@ -34,7 +34,7 @@ let unixToDateTime (timestamp:int) =
 (**
 Recently Dr. James McCaffery, posted [Why he doesn't like the F# language](https://jamesmccaffrey.wordpress.com/2015/03/01/why-i-dont-like-the-f-language/). Quite a few of his points are subjective. People have different preferences and it seems like F# and more generally functional programming takes him outside of this comfort zone. This is fine, and I have absolutly no objections about views like this. I have a similar feeling when I'm in C# or Java. I don't feel safe, or comfortable, again it is just a preference thing.
 
-However, there are a few points raised in the blog post that I don't really agree with. I'll tackle each one seperatly not to loose any context.
+However, there are a few points raised in the blog post that I don't really agree with. I'll tackle each one seperately not to loose any context.
 
 >2. F# has a tiny user base.
 >
@@ -66,6 +66,7 @@ let getQuestions(page) =
     if(not <| outputPath.Exists)
     then
         let results =
+
             Http.RequestString(baseUri + sprintf "search?page=%d" page + "&pagesize=100&order=desc&sort=creation&tagged=f%23&site=stackoverflow")
         File.WriteAllText(outputPath.FullName, results)
 

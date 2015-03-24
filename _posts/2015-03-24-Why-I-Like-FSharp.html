@@ -5,7 +5,7 @@ title: Why I like F#.
 
 <p>Recently Dr. James McCaffery, posted <a href="https://jamesmccaffrey.wordpress.com/2015/03/01/why-i-dont-like-the-f-language/">Why he doesn't like the F# language</a>. Quite a few of his points are subjective. People have different preferences and it seems like F# and more generally functional programming takes him outside of this comfort zone. This is fine, and I have absolutly no objections about views like this. I have a similar feeling when I'm in C# or Java. I don't feel safe, or comfortable, again it is just a preference thing.</p>
 
-<p>However, there are a few points raised in the blog post that I don't really agree with. I'll tackle each one seperatly not to loose any context.</p>
+<p>However, there are a few points raised in the blog post that I don't really agree with. I'll tackle each one seperately not to loose any context.</p>
 
 <blockquote>
 <ol>
@@ -45,6 +45,7 @@ title: Why I like F#.
 <span class="l">17: </span>
 <span class="l">18: </span>
 <span class="l">19: </span>
+<span class="l">20: </span>
 </pre>
 </td>
 <td class="snippet"><pre class="fssnip">
@@ -62,6 +63,7 @@ title: Why I like F#.
     <span class="k">if</span>(<span onmouseout="hideTip(event, 'fs14', 20)" onmouseover="showTip(event, 'fs14', 20)" class="i">not</span> <span class="o">&lt;|</span> <span class="i">outputPath</span><span class="o">.</span><span class="i">Exists</span>)
     <span class="k">then</span>
         <span class="k">let</span> <span class="i">results</span> <span class="o">=</span>
+
             <span class="i">Http</span><span class="o">.</span><span class="i">RequestString</span>(<span class="i">baseUri</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="i">sprintf</span> <span class="s">&quot;</span><span class="s">search</span><span class="s">?</span><span class="s">page</span><span class="s">=</span><span class="s">%</span><span class="s">d</span><span class="s">&quot;</span> <span class="i">page</span> <span class="o">+</span> <span class="s">&quot;</span><span class="s">&amp;</span><span class="s">pagesize</span><span class="s">=</span><span class="s">100</span><span class="s">&amp;</span><span class="s">order</span><span class="s">=</span><span class="s">desc</span><span class="s">&amp;</span><span class="s">sort</span><span class="s">=</span><span class="s">creation</span><span class="s">&amp;</span><span class="s">tagged</span><span class="s">=</span><span class="s">f</span><span class="s">%</span><span class="s">23</span><span class="s">&amp;</span><span class="s">site</span><span class="s">=</span><span class="s">stackoverflow</span><span class="s">&quot;</span>)
         <span class="i">File</span><span class="o">.</span><span class="i">WriteAllText</span>(<span class="i">outputPath</span><span class="o">.</span><span class="i">FullName</span>, <span class="i">results</span>)
 
