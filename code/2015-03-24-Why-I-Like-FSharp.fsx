@@ -174,6 +174,7 @@ let statsByYear =
 
 (*** include-value: statsByYear ***)
 
+(** Which we can then plot using *)
 (*** define-output:statchart ***)
 (Chart.Combine [
     Chart.Line(statsByYear |> Seq.map (fun (y, a, _) -> y, a), Name = "Average", XTitle = "Year", YTitle = "Average")
