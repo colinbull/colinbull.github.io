@@ -4,6 +4,7 @@ NUGET
     Cricket (0.0.8-alpha)
       FsPickler (>= 0.9.9)
     FAKE (3.8.5)
+    FSharp.Charting (0.90.9)
     FSharp.Data (2.2.0)
       Zlib.Portable (>= 1.10.0) - portable-7.0
     FSharpx.TypeProviders.Xaml (1.8.41)

@@ -1,12 +1,15 @@
 (*** raw ***)
----
-layout: page
-title: Why I like F#.
----
+//---
+//layout: page
+//title: Why I like F#.
+//---
 
 (*** hide ***)
 #r @"..\packages\FSharp.Data\lib\net40\FSharp.Data.dll"
+#load @"..\packages\FSharp.Charting\FSharp.Charting.fsx"
+
 open FSharp.Data
+open FSharp.Charting
 open System.IO
 open System
 
@@ -30,7 +33,14 @@ let unixToDateTime (timestamp:int) =
     let dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)
     let ret = dateTime.AddSeconds(timestamp |> float).ToLocalTime()
     ret
-        
+
+let inline median input = 
+    let sorted = input |> Seq.toArray |> Array.sort
+    let m1,m2 = 
+        let len = sorted.Length-1 |> float
+        len/2. |> floor |> int, len/2. |> ceil |> int 
+    (sorted.[m1] + sorted.[m2] |> float)/2.
+       
 (**
 Recently Dr. James McCaffery, posted [Why he doesn't like the F# language](https://jamesmccaffrey.wordpress.com/2015/03/01/why-i-dont-like-the-f-language/). Quite a few of his points are subjective. People have different preferences and it seems like F# and more generally functional programming takes him outside of this comfort zone. This is fine, and I have absolutly no objections about views like this. I have a similar feeling when I'm in C# or Java. I don't feel safe, or comfortable, again it is just a preference thing.
 
@@ -141,22 +151,42 @@ let mergeQuestionAnswers =
     ]
 
 (**
-An we are now at a point where we can work out the average time to close a question. 
+And we are now at a point where we can compute some statistics around the questions. 
 *)
 
 let getTimeToClose (question : Questions.Item, answer : Answers.Item) =
-    (unixToDateTime answer.CreationDate).Subtract(unixToDateTime question.CreationDate)
+    (unixToDateTime answer.CreationDate).Subtract(unixToDateTime question.CreationDate).TotalHours
 
-let timeToClose =
-    List.map getTimeToClose (mergeQuestionAnswers)
+let statsByYear =
+    mergeQuestionAnswers
+    |> Seq.groupBy (fun (q,a) -> (unixToDateTime q.CreationDate).Year)
+    |> Seq.map (fun (year, data) ->
+         let timeToClose = 
+             data |> Seq.map getTimeToClose
+         let average = timeToClose |> Seq.average
+         let median = timeToClose |> median
+         year, average, median
+    )
+    |> Seq.sortBy (fun (y, _, _) -> y)
+    |> Seq.toArray
 
-(*** define-output:average ***)
-printfn "%f Hours - To Accepted answer" (timeToClose |> List.averageBy (fun x -> x.TotalHours))
 
-(*** include-output:average ***)
+(*** include-value: statsByYear ***)
+
+(*** define-output:statchart ***)
+
+(Chart.Combine [
+    Chart.Line(statsByYear |> Seq.map (fun (y, a, _) -> y, a), Name = "Average", XTitle = "Year", YTitle = "Average")
+    Chart.Line(statsByYear |> Seq.map (fun (y, _, m) -> y, m), Name = "Median", XTitle = "Year", YTitle = "Median")
+]).WithLegend(true)
+
+(*** include-it:statchart ***)
 
 (**
-And actually we see 110 hours. Which actually, isn't as good as I was expecting, but then again, the F# compiler has been open sourced for quiet some time now. Typically this has mean't questions are directed to [fsharp github repository](https://github.com/Microsoft/visualfsharp) previously on codeplex, or people simply take a look at the code and figure it out for themselves. Or ask on twitter with the [#fsharp](https://twitter.com/search?q=%23fsharp&src=typd) tag, and wait for the plethora of responses to come in from the help and very active community members.
+And actually we see that in 2008 when FSharp first appeared it took a long time for questions to get closed. This is the year F# was introduced and I suspect there was only a handful of people outside of Microsoft Research that actually where able to answer these questions. 
+However as time has progressed we see an exponential improvement it the time for questions to get answered, which typically bottoms out with an average of 25 hours and a median of about 30 mins. This is clearly a sign of a responsive community, that is indeed growing. Whats more, 
+I still don't think that an average of 25 hours is actually representative. In my experience I rarely use Stack Overflow for F# questions, instead I direct my questions to the [fsharp github repository](https://github.com/Microsoft/visualfsharp) previously on codeplex, 
+the repository of the project I am using, or finally twitter with the [#fsharp](https://twitter.com/search?q=%23fsharp&src=typd) tag, and wait for the plethora of responses to come in from the help and very active community members. And in these domains the response time is typically around ~5 minutes. 
 
 In fact as I write this I'm wondering whether the comment
 
