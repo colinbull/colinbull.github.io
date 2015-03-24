@@ -170,7 +170,7 @@ let statsByYear =
     |> Seq.sortBy (fun (y, _, _) -> y)
     |> Seq.toArray
 
-(** This gives the following results. *)
+(** This gives the following results.*)
 
 (*** include-value: statsByYear ***)
 
