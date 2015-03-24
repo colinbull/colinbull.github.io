@@ -260,9 +260,11 @@ title: Why I like F#.
 <span class="l">2: </span>
 <span class="l">3: </span>
 <span class="l">4: </span>
+<span class="l">5: </span>
 </pre>
 </td>
 <td class="snippet"><pre class="fssnip">
+<span class="c">//[hide]</span>
 (<span class="i">Chart</span><span class="o">.</span><span class="i">Combine</span> [
     <span class="i">Chart</span><span class="o">.</span><span class="i">Line</span>(<span class="i">statsByYear</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 67)" onmouseover="showTip(event, 'fs13', 67)" class="i">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 68)" onmouseover="showTip(event, 'fs29', 68)" class="i">map</span> (<span class="k">fun</span> (<span class="i">y</span>, <span class="i">a</span>, _) <span class="k">-&gt;</span> <span class="i">y</span>, <span class="i">a</span>), <span class="i">Name</span> <span class="o">=</span> <span class="s">&quot;</span><span class="s">Average</span><span class="s">&quot;</span>, <span class="i">XTitle</span> <span class="o">=</span> <span class="s">&quot;</span><span class="s">Year</span><span class="s">&quot;</span>, <span class="i">YTitle</span> <span class="o">=</span> <span class="s">&quot;</span><span class="s">Average</span><span class="s">&quot;</span>)
     <span class="i">Chart</span><span class="o">.</span><span class="i">Line</span>(<span class="i">statsByYear</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 69)" onmouseover="showTip(event, 'fs13', 69)" class="i">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 70)" onmouseover="showTip(event, 'fs29', 70)" class="i">map</span> (<span class="k">fun</span> (<span class="i">y</span>, _, <span class="i">m</span>) <span class="k">-&gt;</span> <span class="i">y</span>, <span class="i">m</span>), <span class="i">Name</span> <span class="o">=</span> <span class="s">&quot;</span><span class="s">Median</span><span class="s">&quot;</span>, <span class="i">XTitle</span> <span class="o">=</span> <span class="s">&quot;</span><span class="s">Year</span><span class="s">&quot;</span>, <span class="i">YTitle</span> <span class="o">=</span> <span class="s">&quot;</span><span class="s">Median</span><span class="s">&quot;</span>)
