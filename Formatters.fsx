@@ -35,7 +35,7 @@ let (@@) a b = Path.Combine(a, b)
 
 
 /// Builds FSI evaluator that can render System.Image, F# Charts, series & frames
-let createFsiEvaluator root output (floatFormat:string) =
+let createFsiEvaluator output (floatFormat:string) =
 
   /// Counter for saving files
   let imageCounter = 
@@ -51,7 +51,7 @@ let createFsiEvaluator root output (floatFormat:string) =
         let file = "chart" + id + ".png"
         ensureDirectory (output @@ "images")
         img.Save(output @@ "images" @@ file, System.Drawing.Imaging.ImageFormat.Png) 
-        Some [ Paragraph [DirectImage ("", (root + "/images/" + file, None))]  ]
+        Some [ Paragraph [DirectImage ("", ("images/" + file, None))]  ]
 
     | :? ChartTypes.GenericChart as ch ->
         // Pretty print F# Chart - save the chart to the "images" directory 
@@ -63,7 +63,7 @@ let createFsiEvaluator root output (floatFormat:string) =
         // We need to reate host control, but it does not have to be visible
         ( use ctl = new ChartControl(chartStyle ch, Dock = DockStyle.Fill, Width=500, Height=300)
           ch.CopyAsBitmap().Save(output @@ "images" @@ file, System.Drawing.Imaging.ImageFormat.Png) )
-        Some [ Paragraph [DirectImage ("", (root + "/images/" + file, None))]  ]
+        Some [ Paragraph [DirectImage ("", ("images/" + file, None))]  ]
 
     | _ -> None 
     

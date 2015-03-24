@@ -170,11 +170,11 @@ let statsByYear =
     |> Seq.sortBy (fun (y, _, _) -> y)
     |> Seq.toArray
 
+(** This gives *)
 
 (*** include-value: statsByYear ***)
 
 (*** define-output:statchart ***)
-
 (Chart.Combine [
     Chart.Line(statsByYear |> Seq.map (fun (y, a, _) -> y, a), Name = "Average", XTitle = "Year", YTitle = "Average")
     Chart.Line(statsByYear |> Seq.map (fun (y, _, m) -> y, m), Name = "Median", XTitle = "Year", YTitle = "Median")

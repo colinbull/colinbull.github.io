@@ -8,6 +8,6 @@ open System.IO
 
 let codeDirectory = __SOURCE_DIRECTORY__ + "/code"
 let postsDirectory = __SOURCE_DIRECTORY__ + "/_posts"
-let fsiEval = Formatters.createFsiEvaluator codeDirectory postsDirectory "#.####"
+let fsiEval = Formatters.createFsiEvaluator postsDirectory "#.####"
 
 Literate.ProcessDirectory(codeDirectory, outputDirectory = postsDirectory, format = OutputKind.Html, lineNumbers = true, fsiEvaluator = fsiEval, generateAnchors = true)
