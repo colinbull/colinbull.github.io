@@ -177,8 +177,8 @@ let statsByYear =
 (** Which we can then plot using *)
 (*** define-output:statchart ***)
 (Chart.Combine [
-    Chart.Line(statsByYear |> Seq.map (fun (y, a, _) -> y, a), Name = "Average", XTitle = "Year", YTitle = "Average")
-    Chart.Line(statsByYear |> Seq.map (fun (y, _, m) -> y, m), Name = "Median", XTitle = "Year", YTitle = "Median")
+    Chart.Line(statsByYear |> Seq.map (fun (y, a, _) -> y, a), Name = "Average")
+    Chart.Line(statsByYear |> Seq.map (fun (y, _, m) -> y, m), Name = "Median")
 ]).WithLegend(true)
 
 (*** include-it:statchart ***)
