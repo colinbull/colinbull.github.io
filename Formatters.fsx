@@ -47,23 +47,23 @@ let createFsiEvaluator output (floatFormat:string) =
     | :? System.Drawing.Image as img ->
         // Pretty print image - save the image to the "images" directory 
         // and return a DirectImage reference to the appropriate location
-        let id = imageCounter().ToString()
-        let file = "chart" + id + ".png"
+        let id = System.Guid.NewGuid().ToString()
+        let file = "image_" + id + ".png"
         ensureDirectory (output @@ "images")
         img.Save(output @@ "images" @@ file, System.Drawing.Imaging.ImageFormat.Png) 
-        Some [ Paragraph [DirectImage ("", ("_posts/images/" + file, None))]  ]
+        Some [ Paragraph [DirectImage ("", ("{{ site.baseurl }}public/blog_imgs/" + file, None))]  ]
 
     | :? ChartTypes.GenericChart as ch ->
         // Pretty print F# Chart - save the chart to the "images" directory 
         // and return a DirectImage reference to the appropriate location
-        let id = imageCounter().ToString()
-        let file = "chart" + id + ".png"
+        let id = System.Guid.NewGuid().ToString()
+        let file = "chart_" + id + ".png"
         ensureDirectory (output @@ "images")
       
         // We need to reate host control, but it does not have to be visible
         ( use ctl = new ChartControl(chartStyle ch, Dock = DockStyle.Fill, Width=500, Height=300)
           ch.CopyAsBitmap().Save(output @@ "images" @@ file, System.Drawing.Imaging.ImageFormat.Png) )
-        Some [ Paragraph [DirectImage ("", ("_posts/images/" + file, None))]  ]
+        Some [ Paragraph [DirectImage ("", ("{{ site.baseurl }}public/blog_imgs/" + file, None))]  ]
 
     | _ -> None 
     
