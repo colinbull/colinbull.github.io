@@ -51,7 +51,7 @@ let createFsiEvaluator output (floatFormat:string) =
         let file = "chart" + id + ".png"
         ensureDirectory (output @@ "images")
         img.Save(output @@ "images" @@ file, System.Drawing.Imaging.ImageFormat.Png) 
-        Some [ Paragraph [DirectImage ("", ("images/" + file, None))]  ]
+        Some [ Paragraph [DirectImage ("", ("_posts/images/" + file, None))]  ]
 
     | :? ChartTypes.GenericChart as ch ->
         // Pretty print F# Chart - save the chart to the "images" directory 
@@ -63,7 +63,7 @@ let createFsiEvaluator output (floatFormat:string) =
         // We need to reate host control, but it does not have to be visible
         ( use ctl = new ChartControl(chartStyle ch, Dock = DockStyle.Fill, Width=500, Height=300)
           ch.CopyAsBitmap().Save(output @@ "images" @@ file, System.Drawing.Imaging.ImageFormat.Png) )
-        Some [ Paragraph [DirectImage ("", ("images/" + file, None))]  ]
+        Some [ Paragraph [DirectImage ("", ("_posts/images/" + file, None))]  ]
 
     | _ -> None 
     
