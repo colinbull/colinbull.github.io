@@ -155,7 +155,7 @@ printfn "%f Hours - To Accepted answer" (timeToClose |> List.averageBy (fun x ->
 (*** include-output:average ***)
 
 (**
-And actually we see 110 hours. Which actually, isn't as good as I was expecting, but then again, the F# compiler has been open sourced for quiet some time now. Typically this has mean't questions are directed to [fsharp github repository](https://github.com/Microsoft/visualfsharp) previously on codeplex, or people simply take a look at the code and figure it out for themselves. Or ask on twitter with the #fsharp tag, and wait for the plethora of responses to come in from the help and very active community members.
+And actually we see 110 hours. Which actually, isn't as good as I was expecting, but then again, the F# compiler has been open sourced for quiet some time now. Typically this has mean't questions are directed to [fsharp github repository](https://github.com/Microsoft/visualfsharp) previously on codeplex, or people simply take a look at the code and figure it out for themselves. Or ask on twitter with the [#fsharp](https://twitter.com/search?q=%23fsharp&src=typd) tag, and wait for the plethora of responses to come in from the help and very active community members.
 
 In fact as I write this I'm wondering whether the comment
 
