@@ -4,6 +4,9 @@ NUGET
     Cricket (0.0.8-alpha)
       FsPickler (>= 0.9.9)
     FAKE (3.8.5)
+    FSharp.Data (2.2.0)
+      Zlib.Portable (>= 1.10.0) - portable-7.0
     FSharpx.TypeProviders.Xaml (1.8.41)
-    FsPickler (1.0.3)
+    FsPickler (1.0.15)
     RavenDB.Server (2.5.2935)
+    Zlib.Portable (1.10.0)

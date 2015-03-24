@@ -1,0 +1,366 @@
+//---
+//layout: page
+//title: Why I like F#.
+//---
+
+<p>Recently Dr. James McCaffery, posted <a href="https://jamesmccaffery.wordpress.com/2015/03/01/why-i-dont-like-the-f-language/">Why he doesn't like the F# language</a>. Quite a few of his points are subjective. People have different preferences and it seems like F# and more generally functional programming takes him outside of this comfort zone. This is fine, and I have absolutly no objections about views like this. I have a similar feeling when I'm in C# or Java. I don't feel safe, or comfortable, again it is just a preference thing.</p>
+
+<p>However, there are two points raised in the blog post that I don't really agree with. I'll tackle each one seperatly not to loose any context.</p>
+
+<blockquote>
+<ol>
+<li>F# has a tiny user base.</li>
+</ol>
+
+  <p>I did a quick search on the day I wrote this post at a job aggregation site and found 109 job listings that mentioned F#. There were over 34,000 job listings that mentioned C#. And at MSDN Magazine, where I��m the Senior Contributing Editor, our F# articles get very few reads. The tiny user base means there is relatively weak community technical support on sites like Stack Overflow, compared to mainstream languages. Additionally, unlike other languages with relatively few users (such as R), there��s no real motivation for me to adopt F# from a career point of view, because of the very limited job opportunities.</p>
+</blockquote>
+
+<p>While I somewhat agree, that F# adoption in industry has been slow. I think alot of this is to do with the fact that in the early days F# wasn't pushed as a general purpose programming language. This was obviously a marketing decision made in Microsoft, for reasons that are unknown to me. This decision caused an elitist view of F# in the early days with the preception that you need a advanced degree in a mathematical subject to use it, categorising it as only being good for Data Science, Finance, Mathematics and Research. Thus these areas were the early adoptors. In fact a quick browse of the <a href="http://www.fsharp.org/testimonials">testimonials page</a> on FSharp.org backs this up. With testimonails coming from one of these areas. There are of course some exceptions most notably the design of Louvre in Abu Dhabi and it's use at GameSys.</p>
+
+<p>However this metric is only one dimension and just because there are currently only a few jobs in a language doesn't mean you should not learn it. I'm currently learning langauges like Haskell, Coq and Idris. For the latter I doubt there is a single role in this country (although I'm willing to be proved wrong on this). Why do I do this? I hear you ask. Well I believe by learning different langauges and paradigms pushes me slightly out of my comfort zone and makes me a better programmer, in which-ever language I ultimately end up coding a commercial product in.</p>
+
+<p>With the commercial prospects aside a conslusion is drawn that a small user base => a weak technical community. I don't know about other languages but I can categorically say that with F# this is simply not true. In fact, as I started writing this blog post, I raised an issue in the <a href="https://github.com/fsprojects/Paket/issues/719#event-263240044">Paket</a> project on github and within an hour, I had a fix presented too me.</p>
+
+<p>For other sites like Stack Overflow, I can really comment on the experience as I don't tend to use it much myself, but we can use F# to do some data munging to see how the community it doing. i.e. What is the average time for questions with an accepted answer to have got that answer?</p>
+
+<p>To acheive this we can download the first 10000 questions with the F# tag, and write the result of each request out to a set of files.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 58)" onmouseover="showTip(event, 'fs30', 58)" class="i">baseUri</span> <span class="o">=</span> <span class="s">&quot;</span><span class="s">https</span><span class="s">:</span><span class="s">/</span><span class="s">/</span><span class="s">api</span><span class="s">.</span><span class="s">stackexchange</span><span class="s">.</span><span class="s">com</span><span class="s">/</span><span class="s">2</span><span class="s">.</span><span class="s">2</span><span class="s">/</span><span class="s">&quot;</span>
+<span class="k">let</span> [&lt;<span onmouseout="hideTip(event, 'fs31', 59)" onmouseover="showTip(event, 'fs31', 59)" class="i">Literal</span>&gt;] <span onmouseout="hideTip(event, 'fs32', 60)" onmouseover="showTip(event, 'fs32', 60)" class="i">dataPath</span> <span class="o">=</span> <span class="k">__SOURCE_DIRECTORY__</span> <span class="o">+</span> <span class="s">&quot;</span><span class="s">/</span><span class="s">data</span><span class="s">/</span><span class="s">stackoverflow</span><span class="s">/</span><span class="s">&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs33', 61)" onmouseover="showTip(event, 'fs33', 61)" class="i">dataDir</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs34', 62)" onmouseover="showTip(event, 'fs34', 62)" class="i">path</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs35', 63)" onmouseover="showTip(event, 'fs35', 63)" class="i">DirectoryInfo</span>(<span onmouseout="hideTip(event, 'fs32', 64)" onmouseover="showTip(event, 'fs32', 64)" class="i">dataPath</span>)
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs36', 65)" onmouseover="showTip(event, 'fs36', 65)" class="i">not</span>(<span onmouseout="hideTip(event, 'fs34', 66)" onmouseover="showTip(event, 'fs34', 66)" class="i">path</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 67)" onmouseover="showTip(event, 'fs37', 67)" class="i">Exists</span>)
+    <span class="k">then</span> <span onmouseout="hideTip(event, 'fs34', 68)" onmouseover="showTip(event, 'fs34', 68)" class="i">path</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 69)" onmouseover="showTip(event, 'fs38', 69)" class="i">Create</span>()
+    <span onmouseout="hideTip(event, 'fs34', 70)" onmouseover="showTip(event, 'fs34', 70)" class="i">path</span>
+    
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs39', 71)" onmouseover="showTip(event, 'fs39', 71)" class="i">getQuestions</span>(<span onmouseout="hideTip(event, 'fs40', 72)" onmouseover="showTip(event, 'fs40', 72)" class="i">page</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs41', 73)" onmouseover="showTip(event, 'fs41', 73)" class="i">outputPath</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs42', 74)" onmouseover="showTip(event, 'fs42', 74)" class="i">FileInfo</span>(<span onmouseout="hideTip(event, 'fs43', 75)" onmouseover="showTip(event, 'fs43', 75)" class="i">Path</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 76)" onmouseover="showTip(event, 'fs44', 76)" class="i">Combine</span>(<span onmouseout="hideTip(event, 'fs33', 77)" onmouseover="showTip(event, 'fs33', 77)" class="i">dataDir</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 78)" onmouseover="showTip(event, 'fs45', 78)" class="i">FullName</span>, <span onmouseout="hideTip(event, 'fs46', 79)" onmouseover="showTip(event, 'fs46', 79)" class="i">sprintf</span> <span class="s">&quot;</span><span class="s">questions_</span><span class="s">%</span><span class="s">d</span><span class="s">.</span><span class="s">questions</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs40', 80)" onmouseover="showTip(event, 'fs40', 80)" class="i">page</span>))
+    <span class="k">if</span>(<span onmouseout="hideTip(event, 'fs36', 81)" onmouseover="showTip(event, 'fs36', 81)" class="i">not</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs41', 82)" onmouseover="showTip(event, 'fs41', 82)" class="i">outputPath</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 83)" onmouseover="showTip(event, 'fs47', 83)" class="i">Exists</span>)
+    <span class="k">then</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs48', 84)" onmouseover="showTip(event, 'fs48', 84)" class="i">results</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs49', 85)" onmouseover="showTip(event, 'fs49', 85)" class="i">Http</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs50', 86)" onmouseover="showTip(event, 'fs50', 86)" class="i">RequestString</span>(<span onmouseout="hideTip(event, 'fs30', 87)" onmouseover="showTip(event, 'fs30', 87)" class="i">baseUri</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs46', 88)" onmouseover="showTip(event, 'fs46', 88)" class="i">sprintf</span> <span class="s">&quot;</span><span class="s">search</span><span class="s">?</span><span class="s">page</span><span class="s">=</span><span class="s">%</span><span class="s">d</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs40', 89)" onmouseover="showTip(event, 'fs40', 89)" class="i">page</span> <span class="o">+</span> <span class="s">&quot;</span><span class="s">&amp;</span><span class="s">pagesize</span><span class="s">=</span><span class="s">100</span><span class="s">&amp;</span><span class="s">order</span><span class="s">=</span><span class="s">desc</span><span class="s">&amp;</span><span class="s">sort</span><span class="s">=</span><span class="s">creation</span><span class="s">&amp;</span><span class="s">tagged</span><span class="s">=</span><span class="s">f</span><span class="s">%</span><span class="s">23</span><span class="s">&amp;</span><span class="s">site</span><span class="s">=</span><span class="s">stackoverflow</span><span class="s">&quot;</span>)
+        <span onmouseout="hideTip(event, 'fs51', 90)" onmouseover="showTip(event, 'fs51', 90)" class="i">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 91)" onmouseover="showTip(event, 'fs52', 91)" class="i">WriteAllText</span>(<span onmouseout="hideTip(event, 'fs41', 92)" onmouseover="showTip(event, 'fs41', 92)" class="i">outputPath</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 93)" onmouseover="showTip(event, 'fs45', 93)" class="i">FullName</span>, <span onmouseout="hideTip(event, 'fs48', 94)" onmouseover="showTip(event, 'fs48', 94)" class="i">results</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs53', 95)" onmouseover="showTip(event, 'fs53', 95)" class="i">writeQuestions</span>() <span class="o">=</span>
+    [<span class="n">1</span> <span class="o">..</span> <span class="n">100</span>] <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs54', 96)" onmouseover="showTip(event, 'fs54', 96)" class="i">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs55', 97)" onmouseover="showTip(event, 'fs55', 97)" class="i">iter</span> <span onmouseout="hideTip(event, 'fs39', 98)" onmouseover="showTip(event, 'fs39', 98)" class="i">getQuestions</span></pre>
+</td>
+</tr>
+</table>
+
+<p>Next we can merge all of these questions using the <a href="http://fsharp.github.io/FSharp.Data/library/JsonProvider.html">Json type provider</a> into a single list,</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">let</span> [&lt;<span onmouseout="hideTip(event, 'fs31', 99)" onmouseover="showTip(event, 'fs31', 99)" class="i">Literal</span>&gt;] <span onmouseout="hideTip(event, 'fs56', 100)" onmouseover="showTip(event, 'fs56', 100)" class="i">questionPath</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs32', 101)" onmouseover="showTip(event, 'fs32', 101)" class="i">dataPath</span> <span class="o">+</span> <span class="s">&quot;</span><span class="s">questions</span><span class="s">.</span><span class="s">json</span><span class="s">&quot;</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs57', 102)" onmouseover="showTip(event, 'fs57', 102)" class="i">Questions</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs58', 103)" onmouseover="showTip(event, 'fs58', 103)" class="i">JsonProvider</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs56', 104)" onmouseover="showTip(event, 'fs56', 104)" class="i">questionPath</span><span class="o">&gt;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs59', 105)" onmouseover="showTip(event, 'fs59', 105)" class="i">questions</span> <span class="o">=</span>
+    [
+       <span class="k">for</span> <span onmouseout="hideTip(event, 'fs60', 106)" onmouseover="showTip(event, 'fs60', 106)" class="i">file</span> <span class="k">in</span>  <span onmouseout="hideTip(event, 'fs33', 107)" onmouseover="showTip(event, 'fs33', 107)" class="i">dataDir</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs61', 108)" onmouseover="showTip(event, 'fs61', 108)" class="i">EnumerateFiles</span>(<span class="s">&quot;</span><span class="s">*</span><span class="s">.</span><span class="s">questions</span><span class="s">&quot;</span>) <span class="k">do</span>
+           <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs57', 109)" onmouseover="showTip(event, 'fs57', 109)" class="i">Questions</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs62', 110)" onmouseover="showTip(event, 'fs62', 110)" class="i">Load</span>(<span onmouseout="hideTip(event, 'fs60', 111)" onmouseover="showTip(event, 'fs60', 111)" class="i">file</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 112)" onmouseover="showTip(event, 'fs45', 112)" class="i">FullName</span>)<span class="o">.</span><span class="i">Items</span>
+    ]</pre>
+</td>
+</tr>
+</table>
+
+<p>Next up is getting the accepted answers. Firstly we build a map of the accepted answersId against the questions so we can relate them again later, then we use <code>getAcceptedAnswers</code> to chunk the requests and write the results out to a file. Once we have the results we again use the Json type provider to merge the results up into a single list.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs63', 113)" onmouseover="showTip(event, 'fs63', 113)" class="i">questionAnswerMap</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs59', 114)" onmouseover="showTip(event, 'fs59', 114)" class="i">questions</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs64', 115)" onmouseover="showTip(event, 'fs64', 115)" class="i">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs65', 116)" onmouseover="showTip(event, 'fs65', 116)" class="i">fold</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs66', 117)" onmouseover="showTip(event, 'fs66', 117)" class="i">state</span> <span onmouseout="hideTip(event, 'fs67', 118)" onmouseover="showTip(event, 'fs67', 118)" class="i">question</span> <span class="k">-&gt;</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs67', 119)" onmouseover="showTip(event, 'fs67', 119)" class="i">question</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs68', 120)" onmouseover="showTip(event, 'fs68', 120)" class="i">AcceptedAnswerId</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs69', 121)" onmouseover="showTip(event, 'fs69', 121)" class="i">Some</span> <span onmouseout="hideTip(event, 'fs70', 122)" onmouseover="showTip(event, 'fs70', 122)" class="i">answerId</span> <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs70', 123)" onmouseover="showTip(event, 'fs70', 123)" class="i">answerId</span>, <span onmouseout="hideTip(event, 'fs67', 124)" onmouseover="showTip(event, 'fs67', 124)" class="i">question</span>) <span class="o">::</span> <span onmouseout="hideTip(event, 'fs66', 125)" onmouseover="showTip(event, 'fs66', 125)" class="i">state</span>  
+        | <span onmouseout="hideTip(event, 'fs71', 126)" onmouseover="showTip(event, 'fs71', 126)" class="i">None</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs66', 127)" onmouseover="showTip(event, 'fs66', 127)" class="i">state</span>
+    ) []  
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs72', 128)" onmouseover="showTip(event, 'fs72', 128)" class="i">Map</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs73', 129)" onmouseover="showTip(event, 'fs73', 129)" class="i">ofSeq</span>
+    
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs74', 130)" onmouseover="showTip(event, 'fs74', 130)" class="i">getAcceptedAnswers</span>() <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs75', 131)" onmouseover="showTip(event, 'fs75', 131)" class="i">answerIds</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs63', 132)" onmouseover="showTip(event, 'fs63', 132)" class="i">questionAnswerMap</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs72', 133)" onmouseover="showTip(event, 'fs72', 133)" class="i">Map</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs76', 134)" onmouseover="showTip(event, 'fs76', 134)" class="i">toSeq</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs64', 135)" onmouseover="showTip(event, 'fs64', 135)" class="i">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs77', 136)" onmouseover="showTip(event, 'fs77', 136)" class="i">map</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs70', 137)" onmouseover="showTip(event, 'fs70', 137)" class="i">answerId</span>,_) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs70', 138)" onmouseover="showTip(event, 'fs70', 138)" class="i">answerId</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs78', 139)" onmouseover="showTip(event, 'fs78', 139)" class="i">ToString</span>())
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs79', 140)" onmouseover="showTip(event, 'fs79', 140)" class="i">counter</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 141)" onmouseover="showTip(event, 'fs17', 141)" class="i">ref</span> <span class="n">1</span>
+    <span class="k">for</span> <span onmouseout="hideTip(event, 'fs80', 142)" onmouseover="showTip(event, 'fs80', 142)" class="i">answers</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs5', 143)" onmouseover="showTip(event, 'fs5', 143)" class="i">chunkBySize</span> <span class="n">100</span> <span onmouseout="hideTip(event, 'fs75', 144)" onmouseover="showTip(event, 'fs75', 144)" class="i">answerIds</span> <span class="k">do</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs41', 145)" onmouseover="showTip(event, 'fs41', 145)" class="i">outputPath</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs42', 146)" onmouseover="showTip(event, 'fs42', 146)" class="i">FileInfo</span>(<span onmouseout="hideTip(event, 'fs43', 147)" onmouseover="showTip(event, 'fs43', 147)" class="i">Path</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 148)" onmouseover="showTip(event, 'fs44', 148)" class="i">Combine</span>(<span onmouseout="hideTip(event, 'fs33', 149)" onmouseover="showTip(event, 'fs33', 149)" class="i">dataDir</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 150)" onmouseover="showTip(event, 'fs45', 150)" class="i">FullName</span>, <span onmouseout="hideTip(event, 'fs46', 151)" onmouseover="showTip(event, 'fs46', 151)" class="i">sprintf</span> <span class="s">&quot;</span><span class="s">answers_</span><span class="s">%</span><span class="s">d</span><span class="s">.</span><span class="s">answers</span><span class="s">&quot;</span> <span class="o">!</span><span onmouseout="hideTip(event, 'fs79', 152)" onmouseover="showTip(event, 'fs79', 152)" class="i">counter</span>))
+        <span class="k">if</span> (<span onmouseout="hideTip(event, 'fs36', 153)" onmouseover="showTip(event, 'fs36', 153)" class="i">not</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs41', 154)" onmouseover="showTip(event, 'fs41', 154)" class="i">outputPath</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 155)" onmouseover="showTip(event, 'fs47', 155)" class="i">Exists</span>)
+        <span class="k">then</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs81', 156)" onmouseover="showTip(event, 'fs81', 156)" class="i">answersStr</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs82', 157)" onmouseover="showTip(event, 'fs82', 157)" class="i">String</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs83', 158)" onmouseover="showTip(event, 'fs83', 158)" class="i">Join</span>(<span class="s">&quot;</span><span class="s">;</span><span class="s">&quot;</span>, <span onmouseout="hideTip(event, 'fs80', 159)" onmouseover="showTip(event, 'fs80', 159)" class="i">answers</span>)
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs84', 160)" onmouseover="showTip(event, 'fs84', 160)" class="i">answers</span> <span class="o">=</span>
+                <span onmouseout="hideTip(event, 'fs49', 161)" onmouseover="showTip(event, 'fs49', 161)" class="i">Http</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs50', 162)" onmouseover="showTip(event, 'fs50', 162)" class="i">RequestString</span>(
+                     <span onmouseout="hideTip(event, 'fs30', 163)" onmouseover="showTip(event, 'fs30', 163)" class="i">baseUri</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs46', 164)" onmouseover="showTip(event, 'fs46', 164)" class="i">sprintf</span> <span class="s">&quot;</span><span class="s">answers</span><span class="s">/</span><span class="s">%</span><span class="s">s</span><span class="s">?</span><span class="s">order</span><span class="s">=</span><span class="s">desc</span><span class="s">&amp;</span><span class="s">sort</span><span class="s">=</span><span class="s">creation</span><span class="s">&amp;</span><span class="s">site</span><span class="s">=</span><span class="s">stackoverflow</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs81', 165)" onmouseover="showTip(event, 'fs81', 165)" class="i">answersStr</span>
+                )
+            <span onmouseout="hideTip(event, 'fs85', 166)" onmouseover="showTip(event, 'fs85', 166)" class="i">printfn</span> <span class="s">&quot;</span><span class="s">Writing</span><span class="s"> </span><span class="s">answers</span><span class="s"> </span><span class="s">%</span><span class="s">s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs41', 167)" onmouseover="showTip(event, 'fs41', 167)" class="i">outputPath</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 168)" onmouseover="showTip(event, 'fs45', 168)" class="i">FullName</span>
+            <span onmouseout="hideTip(event, 'fs51', 169)" onmouseover="showTip(event, 'fs51', 169)" class="i">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 170)" onmouseover="showTip(event, 'fs52', 170)" class="i">WriteAllText</span>(<span onmouseout="hideTip(event, 'fs41', 171)" onmouseover="showTip(event, 'fs41', 171)" class="i">outputPath</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 172)" onmouseover="showTip(event, 'fs45', 172)" class="i">FullName</span>, <span onmouseout="hideTip(event, 'fs84', 173)" onmouseover="showTip(event, 'fs84', 173)" class="i">answers</span>)
+            <span onmouseout="hideTip(event, 'fs86', 174)" onmouseover="showTip(event, 'fs86', 174)" class="i">incr</span>(<span onmouseout="hideTip(event, 'fs79', 175)" onmouseover="showTip(event, 'fs79', 175)" class="i">counter</span>)
+
+<span class="k">let</span> [&lt;<span onmouseout="hideTip(event, 'fs31', 176)" onmouseover="showTip(event, 'fs31', 176)" class="i">Literal</span>&gt;] <span onmouseout="hideTip(event, 'fs87', 177)" onmouseover="showTip(event, 'fs87', 177)" class="i">answersPath</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs32', 178)" onmouseover="showTip(event, 'fs32', 178)" class="i">dataPath</span> <span class="o">+</span> <span class="s">&quot;</span><span class="s">answers</span><span class="s">.</span><span class="s">json</span><span class="s">&quot;</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs88', 179)" onmouseover="showTip(event, 'fs88', 179)" class="i">Answers</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs58', 180)" onmouseover="showTip(event, 'fs58', 180)" class="i">JsonProvider</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs87', 181)" onmouseover="showTip(event, 'fs87', 181)" class="i">answersPath</span><span class="o">&gt;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs89', 182)" onmouseover="showTip(event, 'fs89', 182)" class="i">answers</span> <span class="o">=</span>
+    [
+       <span class="k">for</span> <span onmouseout="hideTip(event, 'fs60', 183)" onmouseover="showTip(event, 'fs60', 183)" class="i">file</span> <span class="k">in</span>  <span onmouseout="hideTip(event, 'fs33', 184)" onmouseover="showTip(event, 'fs33', 184)" class="i">dataDir</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs61', 185)" onmouseover="showTip(event, 'fs61', 185)" class="i">EnumerateFiles</span>(<span class="s">&quot;</span><span class="s">*</span><span class="s">.</span><span class="s">answers</span><span class="s">&quot;</span>) <span class="k">do</span>
+           <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs88', 186)" onmouseover="showTip(event, 'fs88', 186)" class="i">Answers</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs62', 187)" onmouseover="showTip(event, 'fs62', 187)" class="i">Load</span>(<span onmouseout="hideTip(event, 'fs60', 188)" onmouseover="showTip(event, 'fs60', 188)" class="i">file</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 189)" onmouseover="showTip(event, 'fs45', 189)" class="i">FullName</span>)<span class="o">.</span><span class="i">Items</span>
+    ]</pre>
+</td>
+</tr>
+</table>
+
+<p>Next up we pair the questions with the accepted answers.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs90', 190)" onmouseover="showTip(event, 'fs90', 190)" class="i">mergeQuestionAnswers</span> <span class="o">=</span>
+    [
+        <span class="k">for</span> <span onmouseout="hideTip(event, 'fs91', 191)" onmouseover="showTip(event, 'fs91', 191)" class="i">answer</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs89', 192)" onmouseover="showTip(event, 'fs89', 192)" class="i">answers</span> <span class="k">do</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs63', 193)" onmouseover="showTip(event, 'fs63', 193)" class="i">questionAnswerMap</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs92', 194)" onmouseover="showTip(event, 'fs92', 194)" class="i">TryFind</span> <span onmouseout="hideTip(event, 'fs91', 195)" onmouseover="showTip(event, 'fs91', 195)" class="i">answer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs93', 196)" onmouseover="showTip(event, 'fs93', 196)" class="i">AnswerId</span> <span class="k">with</span>
+            | <span onmouseout="hideTip(event, 'fs69', 197)" onmouseover="showTip(event, 'fs69', 197)" class="i">Some</span> <span onmouseout="hideTip(event, 'fs67', 198)" onmouseover="showTip(event, 'fs67', 198)" class="i">question</span> <span class="k">-&gt;</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs67', 199)" onmouseover="showTip(event, 'fs67', 199)" class="i">question</span>, <span onmouseout="hideTip(event, 'fs91', 200)" onmouseover="showTip(event, 'fs91', 200)" class="i">answer</span>
+            | <span onmouseout="hideTip(event, 'fs71', 201)" onmouseover="showTip(event, 'fs71', 201)" class="i">None</span> <span class="k">-&gt;</span> ()            
+    ]</pre>
+</td>
+</tr>
+</table>
+
+<p>An we are now at a point where we can work out the average time to close a question.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs94', 202)" onmouseover="showTip(event, 'fs94', 202)" class="i">getTimeToClose</span> (<span onmouseout="hideTip(event, 'fs67', 203)" onmouseover="showTip(event, 'fs67', 203)" class="i">question</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs57', 204)" onmouseover="showTip(event, 'fs57', 204)" class="i">Questions</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs95', 205)" onmouseover="showTip(event, 'fs95', 205)" class="i">Item</span>, <span onmouseout="hideTip(event, 'fs91', 206)" onmouseover="showTip(event, 'fs91', 206)" class="i">answer</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs88', 207)" onmouseover="showTip(event, 'fs88', 207)" class="i">Answers</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs96', 208)" onmouseover="showTip(event, 'fs96', 208)" class="i">Item</span>) <span class="o">=</span>
+    (<span onmouseout="hideTip(event, 'fs20', 209)" onmouseover="showTip(event, 'fs20', 209)" class="i">unixToDateTime</span> <span onmouseout="hideTip(event, 'fs91', 210)" onmouseover="showTip(event, 'fs91', 210)" class="i">answer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs97', 211)" onmouseover="showTip(event, 'fs97', 211)" class="i">CreationDate</span>)<span class="o">.</span><span class="i">Subtract</span>(<span onmouseout="hideTip(event, 'fs20', 212)" onmouseover="showTip(event, 'fs20', 212)" class="i">unixToDateTime</span> <span onmouseout="hideTip(event, 'fs67', 213)" onmouseover="showTip(event, 'fs67', 213)" class="i">question</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs97', 214)" onmouseover="showTip(event, 'fs97', 214)" class="i">CreationDate</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs98', 215)" onmouseover="showTip(event, 'fs98', 215)" class="i">timeToClose</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs54', 216)" onmouseover="showTip(event, 'fs54', 216)" class="i">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs99', 217)" onmouseover="showTip(event, 'fs99', 217)" class="i">map</span> <span onmouseout="hideTip(event, 'fs94', 218)" onmouseover="showTip(event, 'fs94', 218)" class="i">getTimeToClose</span> (<span onmouseout="hideTip(event, 'fs90', 219)" onmouseover="showTip(event, 'fs90', 219)" class="i">mergeQuestionAnswers</span>)</pre>
+</td>
+</tr>
+</table>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span onmouseout="hideTip(event, 'fs85', 220)" onmouseover="showTip(event, 'fs85', 220)" class="i">printfn</span> <span class="s">&quot;</span><span class="s">%</span><span class="s">f</span><span class="s"> </span><span class="s">Hours</span><span class="s"> </span><span class="s">-</span><span class="s"> </span><span class="s">To</span><span class="s"> </span><span class="s">Accepted</span><span class="s"> </span><span class="s">answer</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs98', 221)" onmouseover="showTip(event, 'fs98', 221)" class="i">timeToClose</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs54', 222)" onmouseover="showTip(event, 'fs54', 222)" class="i">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs100', 223)" onmouseover="showTip(event, 'fs100', 223)" class="i">averageBy</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs101', 224)" onmouseover="showTip(event, 'fs101', 224)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs101', 225)" onmouseover="showTip(event, 'fs101', 225)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs102', 226)" onmouseover="showTip(event, 'fs102', 226)" class="i">TotalHours</span>))</pre>
+</td>
+</tr>
+</table>
+
+<table class="pre"><tr><td><pre><code>110.647214 Hours - To Accepted answer
+</code></pre></td></tr></table>
+
+<p>And actually we see 110 hours. Which actually, isn't as good as I was expecting, but then again, the F# compiler has been open sourced for quiet some time now. Typically this has mean't questions are directed to <a href="https://github.com/Microsoft/visualfsharp">fsharp github repository</a> previously on codeplex, or people simply take a look at the code and figure it out for themselves. Or ask on twitter with the #fsharp tag, and wait for the plethora of responses to come in from the help and very active community members.</p>
+
+<p>In fact as I write this I'm wondering whether the comment</p>
+
+<blockquote>
+  <p>few irritatingly vocal people in the F# community implicitly try to guilt non-believers into F# adoption.</p>
+</blockquote>
+
+<p>has been spurred by the willingness to help in the community. Yes there is a certain amount of advertisment that goes on for features specific to F#, but in general it is just sound fundamental programming advice. I'm fairly sure every single one of those people would offer examples in C#, Haskell or VB if asked. Anyway I digress.</p>
+
+<p>The second comment that stood out for me in the post was,</p>
+
+<blockquote>
+<ol>
+<li>F# has no compelling technical advantage.
+Some overly zealous F# fans claim that F# can do things that general purpose languages like Perl and C# can��t. Thi>s all depends on how you define features of languages. But more reasonable F# proponents usually state, correctly,> that F# isn��t intended to replace languages like C# and that F# doesn��t have any unique, magic capabilities. So, >there��s no technical reason for me to use F#, and the cost of context switching between the primarily procedural C># and the primarily functional F# is a huge price to pay.</li>
+</ol>
+</blockquote>
+
+<p>I think you only have to look at type providers, which are used to analyse the Stack Overflow questions above are certainly a nice feature. That to my knowledge only one other language has <a href="https://github.com/david-christiansen/idris-type-providers">Idris</a>. Sure you can do the analysis I have done above in C# but there will be alot more typing and additionally a lot less safety, since you will ultimately loose the strongly typed data access, that type providers offer. Moreover it is this safety that F# and statically typed functional programming languages in general offers you and makes it worth the context switch.</p>
+
+<p>Since I adopted F# and functional programming it has completely changed the way I think about coding problems in all of the other languages I use, most notable C#. It has made me a better developer.</p>
+
+
+<div class="tip" id="fs1">namespace FSharp</div>
+<div class="tip" id="fs2">namespace FSharp.Data</div>
+<div class="tip" id="fs3">namespace System</div>
+<div class="tip" id="fs4">namespace System.IO</div>
+<div class="tip" id="fs5">val chunkBySize : chunkSize:int -&gt; source:seq&lt;&#39;a&gt; -&gt; seq&lt;&#39;a []&gt;<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.chunkBySize</div>
+<div class="tip" id="fs6">val chunkSize : int</div>
+<div class="tip" id="fs7">val source : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs8">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs9">val e : Collections.Generic.IEnumerator&lt;&#39;a&gt;</div>
+<div class="tip" id="fs10">Collections.Generic.IEnumerable.GetEnumerator() : Collections.Generic.IEnumerator&lt;&#39;a&gt;</div>
+<div class="tip" id="fs11">val nextChunk : (unit -&gt; &#39;a [])</div>
+<div class="tip" id="fs12">val res : &#39;a []</div>
+<div class="tip" id="fs13">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : params indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs14">val zeroCreate : count:int -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.zeroCreate</div>
+<div class="tip" id="fs15">property Collections.Generic.IEnumerator.Current: &#39;a</div>
+<div class="tip" id="fs16">val i : int ref</div>
+<div class="tip" id="fs17">Multiple items<br />val ref : value:&#39;T -&gt; &#39;T ref<br /><br />Full name: Microsoft.FSharp.Core.Operators.ref<br /><br />--------------------<br />type &#39;T ref = Ref&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.ref&lt;_&gt;</div>
+<div class="tip" id="fs18">Collections.IEnumerator.MoveNext() : bool</div>
+<div class="tip" id="fs19">val sub : array:&#39;T [] -&gt; startIndex:int -&gt; count:int -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.sub</div>
+<div class="tip" id="fs20">val unixToDateTime : timestamp:int -&gt; DateTime<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.unixToDateTime</div>
+<div class="tip" id="fs21">val timestamp : int</div>
+<div class="tip" id="fs22">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs23">val dateTime : DateTime</div>
+<div class="tip" id="fs24">Multiple items<br />type DateTime =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : ticks:int64 -&gt; DateTime + 10 overloads<br />&#160;&#160;&#160;&#160;member Add : value:TimeSpan -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddDays : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddHours : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMilliseconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMinutes : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMonths : months:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddSeconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddTicks : value:int64 -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddYears : value:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.DateTime<br /><br />--------------------<br />DateTime()<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(ticks: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(ticks: int64, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, calendar: Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, calendar: Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs25">type DateTimeKind =<br />&#160;&#160;| Unspecified = 0<br />&#160;&#160;| Utc = 1<br />&#160;&#160;| Local = 2<br /><br />Full name: System.DateTimeKind</div>
+<div class="tip" id="fs26">field DateTimeKind.Utc = 1</div>
+<div class="tip" id="fs27">val ret : DateTime</div>
+<div class="tip" id="fs28">DateTime.AddSeconds(value: float) : DateTime</div>
+<div class="tip" id="fs29">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.float<br /><br />--------------------<br />type float = Double<br /><br />Full name: Microsoft.FSharp.Core.float<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float<br /><br />Full name: Microsoft.FSharp.Core.float&lt;_&gt;</div>
+<div class="tip" id="fs30">val baseUri : string<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.baseUri</div>
+<div class="tip" id="fs31">Multiple items<br />type LiteralAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; LiteralAttribute<br /><br />Full name: Microsoft.FSharp.Core.LiteralAttribute<br /><br />--------------------<br />new : unit -&gt; LiteralAttribute</div>
+<div class="tip" id="fs32">val dataPath : string<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.dataPath</div>
+<div class="tip" id="fs33">val dataDir : DirectoryInfo<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.dataDir</div>
+<div class="tip" id="fs34">val path : DirectoryInfo</div>
+<div class="tip" id="fs35">Multiple items<br />type DirectoryInfo =<br />&#160;&#160;inherit FileSystemInfo<br />&#160;&#160;new : path:string -&gt; DirectoryInfo<br />&#160;&#160;member Create : unit -&gt; unit + 1 overload<br />&#160;&#160;member CreateSubdirectory : path:string -&gt; DirectoryInfo + 1 overload<br />&#160;&#160;member Delete : unit -&gt; unit + 1 overload<br />&#160;&#160;member EnumerateDirectories : unit -&gt; IEnumerable&lt;DirectoryInfo&gt; + 2 overloads<br />&#160;&#160;member EnumerateFileSystemInfos : unit -&gt; IEnumerable&lt;FileSystemInfo&gt; + 2 overloads<br />&#160;&#160;member EnumerateFiles : unit -&gt; IEnumerable&lt;FileInfo&gt; + 2 overloads<br />&#160;&#160;member Exists : bool<br />&#160;&#160;member GetAccessControl : unit -&gt; DirectorySecurity + 1 overload<br />&#160;&#160;member GetDirectories : unit -&gt; DirectoryInfo[] + 2 overloads<br />&#160;&#160;...<br /><br />Full name: System.IO.DirectoryInfo<br /><br />--------------------<br />DirectoryInfo(path: string) : unit</div>
+<div class="tip" id="fs36">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs37">property DirectoryInfo.Exists: bool</div>
+<div class="tip" id="fs38">DirectoryInfo.Create() : unit<br />DirectoryInfo.Create(directorySecurity: Security.AccessControl.DirectorySecurity) : unit</div>
+<div class="tip" id="fs39">val getQuestions : page:int -&gt; unit<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.getQuestions</div>
+<div class="tip" id="fs40">val page : int</div>
+<div class="tip" id="fs41">val outputPath : FileInfo</div>
+<div class="tip" id="fs42">Multiple items<br />type FileInfo =<br />&#160;&#160;inherit FileSystemInfo<br />&#160;&#160;new : fileName:string -&gt; FileInfo<br />&#160;&#160;member AppendText : unit -&gt; StreamWriter<br />&#160;&#160;member CopyTo : destFileName:string -&gt; FileInfo + 1 overload<br />&#160;&#160;member Create : unit -&gt; FileStream<br />&#160;&#160;member CreateText : unit -&gt; StreamWriter<br />&#160;&#160;member Decrypt : unit -&gt; unit<br />&#160;&#160;member Delete : unit -&gt; unit<br />&#160;&#160;member Directory : DirectoryInfo<br />&#160;&#160;member DirectoryName : string<br />&#160;&#160;member Encrypt : unit -&gt; unit<br />&#160;&#160;...<br /><br />Full name: System.IO.FileInfo<br /><br />--------------------<br />FileInfo(fileName: string) : unit</div>
+<div class="tip" id="fs43">type Path =<br />&#160;&#160;static val DirectorySeparatorChar : char<br />&#160;&#160;static val AltDirectorySeparatorChar : char<br />&#160;&#160;static val VolumeSeparatorChar : char<br />&#160;&#160;static val InvalidPathChars : char[]<br />&#160;&#160;static val PathSeparator : char<br />&#160;&#160;static member ChangeExtension : path:string * extension:string -&gt; string<br />&#160;&#160;static member Combine : params paths:string[] -&gt; string + 3 overloads<br />&#160;&#160;static member GetDirectoryName : path:string -&gt; string<br />&#160;&#160;static member GetExtension : path:string -&gt; string<br />&#160;&#160;static member GetFileName : path:string -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.Path</div>
+<div class="tip" id="fs44">Path.Combine(params paths: string []) : string<br />Path.Combine(path1: string, path2: string) : string<br />Path.Combine(path1: string, path2: string, path3: string) : string<br />Path.Combine(path1: string, path2: string, path3: string, path4: string) : string</div>
+<div class="tip" id="fs45">property FileSystemInfo.FullName: string</div>
+<div class="tip" id="fs46">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs47">property FileInfo.Exists: bool</div>
+<div class="tip" id="fs48">val results : string</div>
+<div class="tip" id="fs49">type Http =<br />&#160;&#160;private new : unit -&gt; Http<br />&#160;&#160;static member private AppendQueryToUrl : url:string * query:(string * string) list -&gt; string<br />&#160;&#160;static member AsyncRequest : url:string * ?query:(string * string) list * ?headers:seq&lt;string * string&gt; * ?httpMethod:string * ?body:HttpRequestBody * ?cookies:seq&lt;string * string&gt; * ?cookieContainer:CookieContainer * ?silentHttpErrors:bool * ?responseEncodingOverride:string * ?customizeHttpRequest:(HttpWebRequest -&gt; HttpWebRequest) -&gt; Async&lt;HttpResponse&gt;<br />&#160;&#160;static member AsyncRequestStream : url:string * ?query:(string * string) list * ?headers:seq&lt;string * string&gt; * ?httpMethod:string * ?body:HttpRequestBody * ?cookies:seq&lt;string * string&gt; * ?cookieContainer:CookieContainer * ?silentHttpErrors:bool * ?customizeHttpRequest:(HttpWebRequest -&gt; HttpWebRequest) -&gt; Async&lt;HttpResponseWithStream&gt;<br />&#160;&#160;static member AsyncRequestString : url:string * ?query:(string * string) list * ?headers:seq&lt;string * string&gt; * ?httpMethod:string * ?body:HttpRequestBody * ?cookies:seq&lt;string * string&gt; * ?cookieContainer:CookieContainer * ?silentHttpErrors:bool * ?responseEncodingOverride:string * ?customizeHttpRequest:(HttpWebRequest -&gt; HttpWebRequest) -&gt; Async&lt;string&gt;<br />&#160;&#160;static member private InnerRequest : url:string * toHttpResponse:(string -&gt; int -&gt; string -&gt; string -&gt; string -&gt; &#39;a0 option -&gt; Map&lt;string,string&gt; -&gt; Map&lt;string,string&gt; -&gt; Stream -&gt; Async&lt;&#39;a1&gt;) * ?query:(string * string) list * ?headers:seq&lt;string * string&gt; * ?httpMethod:string * ?body:HttpRequestBody * ?cookies:seq&lt;string * string&gt; * ?cookieContainer:CookieContainer * ?silentHttpErrors:bool * ?responseEncodingOverride:&#39;a0 * ?customizeHttpRequest:(HttpWebRequest -&gt; HttpWebRequest) -&gt; Async&lt;&#39;a1&gt;<br />&#160;&#160;static member Request : url:string * ?query:(string * string) list * ?headers:seq&lt;string * string&gt; * ?httpMethod:string * ?body:HttpRequestBody * ?cookies:seq&lt;string * string&gt; * ?cookieContainer:CookieContainer * ?silentHttpErrors:bool * ?responseEncodingOverride:string * ?customizeHttpRequest:(HttpWebRequest -&gt; HttpWebRequest) -&gt; HttpResponse<br />&#160;&#160;static member RequestStream : url:string * ?query:(string * string) list * ?headers:seq&lt;string * string&gt; * ?httpMethod:string * ?body:HttpRequestBody * ?cookies:seq&lt;string * string&gt; * ?cookieContainer:CookieContainer * ?silentHttpErrors:bool * ?customizeHttpRequest:(HttpWebRequest -&gt; HttpWebRequest) -&gt; HttpResponseWithStream<br />&#160;&#160;static member RequestString : url:string * ?query:(string * string) list * ?headers:seq&lt;string * string&gt; * ?httpMethod:string * ?body:HttpRequestBody * ?cookies:seq&lt;string * string&gt; * ?cookieContainer:CookieContainer * ?silentHttpErrors:bool * ?responseEncodingOverride:string * ?customizeHttpRequest:(HttpWebRequest -&gt; HttpWebRequest) -&gt; string<br /><br />Full name: FSharp.Data.Http</div>
+<div class="tip" id="fs50">static member Http.RequestString : url:string * ?query:(string * string) list * ?headers:seq&lt;string * string&gt; * ?httpMethod:string * ?body:HttpRequestBody * ?cookies:seq&lt;string * string&gt; * ?cookieContainer:Net.CookieContainer * ?silentHttpErrors:bool * ?responseEncodingOverride:string * ?customizeHttpRequest:(Net.HttpWebRequest -&gt; Net.HttpWebRequest) -&gt; string</div>
+<div class="tip" id="fs51">type File =<br />&#160;&#160;static member AppendAllLines : path:string * contents:IEnumerable&lt;string&gt; -&gt; unit + 1 overload<br />&#160;&#160;static member AppendAllText : path:string * contents:string -&gt; unit + 1 overload<br />&#160;&#160;static member AppendText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Copy : sourceFileName:string * destFileName:string -&gt; unit + 1 overload<br />&#160;&#160;static member Create : path:string -&gt; FileStream + 3 overloads<br />&#160;&#160;static member CreateText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Decrypt : path:string -&gt; unit<br />&#160;&#160;static member Delete : path:string -&gt; unit<br />&#160;&#160;static member Encrypt : path:string -&gt; unit<br />&#160;&#160;static member Exists : path:string -&gt; bool<br />&#160;&#160;...<br /><br />Full name: System.IO.File</div>
+<div class="tip" id="fs52">File.WriteAllText(path: string, contents: string) : unit<br />File.WriteAllText(path: string, contents: string, encoding: Text.Encoding) : unit</div>
+<div class="tip" id="fs53">val writeQuestions : unit -&gt; unit<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.writeQuestions</div>
+<div class="tip" id="fs54">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs55">val iter : action:(&#39;T -&gt; unit) -&gt; list:&#39;T list -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.List.iter</div>
+<div class="tip" id="fs56">val questionPath : string<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.questionPath</div>
+<div class="tip" id="fs57">type Questions = JsonProvider&lt;...&gt;<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.Questions</div>
+<div class="tip" id="fs58">type JsonProvider<br /><br />Full name: FSharp.Data.JsonProvider<br /><em><br /><br />&lt;summary&gt;Typed representation of a JSON document.&lt;/summary&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Sample&#39;&gt;Location of a JSON sample file or a string containing a sample JSON document.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;SampleIsList&#39;&gt;If true, sample should be a list of individual samples for the inference.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;RootName&#39;&gt;The name to be used to the root type. Defaults to `Root`.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Culture&#39;&gt;The culture used for parsing numbers and dates. Defaults to the invariant culture.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Encoding&#39;&gt;The encoding used to read the sample. You can specify either the character set name or the codepage number. Defaults to UTF8 for files, and to ISO-8859-1 the for HTTP requests, unless `charset` is specified in the `Content-Type` response header.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;ResolutionFolder&#39;&gt;A directory that is used when resolving relative file references (at design time and in hosted execution).&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;EmbeddedResource&#39;&gt;When specified, the type provider first attempts to load the sample from the specified resource <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(e.g. &#39;MyCompany.MyAssembly, resource_name.json&#39;). This is useful when exposing types generated by the type provider.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;InferTypesFromValues&#39;&gt;If true, turns on additional type inference from values. <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(e.g. type inference infers string values such as &quot;123&quot; as ints and values constrained to 0 and 1 as booleans.)&lt;/param&gt;</em></div>
+<div class="tip" id="fs59">val questions : JsonProvider&lt;...&gt;.Item list<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.questions</div>
+<div class="tip" id="fs60">val file : FileInfo</div>
+<div class="tip" id="fs61">DirectoryInfo.EnumerateFiles() : Collections.Generic.IEnumerable&lt;FileInfo&gt;<br />DirectoryInfo.EnumerateFiles(searchPattern: string) : Collections.Generic.IEnumerable&lt;FileInfo&gt;<br />DirectoryInfo.EnumerateFiles(searchPattern: string, searchOption: SearchOption) : Collections.Generic.IEnumerable&lt;FileInfo&gt;</div>
+<div class="tip" id="fs62">JsonProvider&lt;...&gt;.Load(uri: string) : JsonProvider&lt;...&gt;.Root<br /><em><br /><br />Loads JSON from the specified uri</em><br />JsonProvider&lt;...&gt;.Load(reader: TextReader) : JsonProvider&lt;...&gt;.Root<br /><em><br /><br />Loads JSON from the specified reader</em><br />JsonProvider&lt;...&gt;.Load(stream: Stream) : JsonProvider&lt;...&gt;.Root<br /><em><br /><br />Loads JSON from the specified stream</em></div>
+<div class="tip" id="fs63">val questionAnswerMap : Map&lt;int,JsonProvider&lt;...&gt;.Item&gt;<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.questionAnswerMap</div>
+<div class="tip" id="fs64">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs65">val fold : folder:(&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state:&#39;State -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;State<br /><br />Full name: Microsoft.FSharp.Collections.Seq.fold</div>
+<div class="tip" id="fs66">val state : (int * JsonProvider&lt;...&gt;.Item) list</div>
+<div class="tip" id="fs67">val question : JsonProvider&lt;...&gt;.Item</div>
+<div class="tip" id="fs68">property JsonProvider&lt;...&gt;.Item.AcceptedAnswerId: Option&lt;int&gt;</div>
+<div class="tip" id="fs69">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs70">val answerId : int</div>
+<div class="tip" id="fs71">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs72">Multiple items<br />module Map<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Map&lt;&#39;Key,&#39;Value (requires comparison)&gt; =<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface ICollection&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface IDictionary&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member Add : key:&#39;Key * value:&#39;Value -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member ContainsKey : key:&#39;Key -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member Remove : key:&#39;Key -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Map&lt;_,_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;</div>
+<div class="tip" id="fs73">val ofSeq : elements:seq&lt;&#39;Key * &#39;T&gt; -&gt; Map&lt;&#39;Key,&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Map.ofSeq</div>
+<div class="tip" id="fs74">val getAcceptedAnswers : unit -&gt; unit<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.getAcceptedAnswers</div>
+<div class="tip" id="fs75">val answerIds : seq&lt;string&gt;</div>
+<div class="tip" id="fs76">val toSeq : table:Map&lt;&#39;Key,&#39;T&gt; -&gt; seq&lt;&#39;Key * &#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Map.toSeq</div>
+<div class="tip" id="fs77">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs78">Int32.ToString() : string<br />Int32.ToString(provider: IFormatProvider) : string<br />Int32.ToString(format: string) : string<br />Int32.ToString(format: string, provider: IFormatProvider) : string</div>
+<div class="tip" id="fs79">val counter : int ref</div>
+<div class="tip" id="fs80">val answers : string []</div>
+<div class="tip" id="fs81">val answersStr : string</div>
+<div class="tip" id="fs82">Multiple items<br />type String =<br />&#160;&#160;new : value:char -&gt; string + 7 overloads<br />&#160;&#160;member Chars : int -&gt; char<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;member Contains : value:string -&gt; bool<br />&#160;&#160;member CopyTo : sourceIndex:int * destination:char[] * destinationIndex:int * count:int -&gt; unit<br />&#160;&#160;member EndsWith : value:string -&gt; bool + 2 overloads<br />&#160;&#160;member Equals : obj:obj -&gt; bool + 2 overloads<br />&#160;&#160;member GetEnumerator : unit -&gt; CharEnumerator<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;...<br /><br />Full name: System.String<br /><br />--------------------<br />String(value: nativeptr&lt;char&gt;) : unit<br />String(value: nativeptr&lt;sbyte&gt;) : unit<br />String(value: char []) : unit<br />String(c: char, count: int) : unit<br />String(value: nativeptr&lt;char&gt;, startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int) : unit<br />String(value: char [], startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int, enc: Text.Encoding) : unit</div>
+<div class="tip" id="fs83">String.Join(separator: string, values: Collections.Generic.IEnumerable&lt;string&gt;) : string<br />String.Join&lt;&#39;T&gt;(separator: string, values: Collections.Generic.IEnumerable&lt;&#39;T&gt;) : string<br />String.Join(separator: string, params values: obj []) : string<br />String.Join(separator: string, params value: string []) : string<br />String.Join(separator: string, value: string [], startIndex: int, count: int) : string</div>
+<div class="tip" id="fs84">val answers : string</div>
+<div class="tip" id="fs85">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs86">val incr : cell:int ref -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.incr</div>
+<div class="tip" id="fs87">val answersPath : string<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.answersPath</div>
+<div class="tip" id="fs88">type Answers = JsonProvider&lt;...&gt;<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.Answers</div>
+<div class="tip" id="fs89">val answers : JsonProvider&lt;...&gt;.Item list<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.answers</div>
+<div class="tip" id="fs90">val mergeQuestionAnswers : (JsonProvider&lt;...&gt;.Item * JsonProvider&lt;...&gt;.Item) list<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.mergeQuestionAnswers</div>
+<div class="tip" id="fs91">val answer : JsonProvider&lt;...&gt;.Item</div>
+<div class="tip" id="fs92">member Map.TryFind : key:&#39;Key -&gt; &#39;Value option</div>
+<div class="tip" id="fs93">property JsonProvider&lt;...&gt;.Item.AnswerId: int</div>
+<div class="tip" id="fs94">val getTimeToClose : question:JsonProvider&lt;...&gt;.Item * answer:JsonProvider&lt;...&gt;.Item -&gt; TimeSpan<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.getTimeToClose</div>
+<div class="tip" id="fs95">type Item =<br />&#160;&#160;inherit IJsonDocument<br />&#160;&#160;new : tags: string [] * owner: Owner * isAnswered: bool * viewCount: int * acceptedAnswerId: Option&lt;int&gt; * answerCount: int * score: int * lastActivityDate: int * creationDate: int * questionId: int * link: string * title: string * closedDate: Option&lt;int&gt; * closedReason: Option&lt;string&gt; * lastEditDate: Option&lt;int&gt; -&gt; Item + 1 overload<br />&#160;&#160;member AcceptedAnswerId : Option&lt;int&gt;<br />&#160;&#160;member AnswerCount : int<br />&#160;&#160;member ClosedDate : Option&lt;int&gt;<br />&#160;&#160;member ClosedReason : Option&lt;string&gt;<br />&#160;&#160;member CreationDate : int<br />&#160;&#160;member IsAnswered : bool<br />&#160;&#160;member JsonValue : JsonValue<br />&#160;&#160;member LastActivityDate : int<br />&#160;&#160;...<br /><br />Full name: FSharp.Data.JsonProvider,Sample=&quot;D:\\Appdev\\colinbull.github.io\\code/data/stackoverflow/questions.json&quot;.Item</div>
+<div class="tip" id="fs96">type Item =<br />&#160;&#160;inherit IJsonDocument<br />&#160;&#160;new : owner: Owner * isAccepted: bool * score: int * lastActivityDate: int * creationDate: int * answerId: int * questionId: int * lastEditDate: Option&lt;int&gt; -&gt; Item + 1 overload<br />&#160;&#160;member AnswerId : int<br />&#160;&#160;member CreationDate : int<br />&#160;&#160;member IsAccepted : bool<br />&#160;&#160;member JsonValue : JsonValue<br />&#160;&#160;member LastActivityDate : int<br />&#160;&#160;member LastEditDate : Option&lt;int&gt;<br />&#160;&#160;member Owner : Owner<br />&#160;&#160;member QuestionId : int<br />&#160;&#160;...<br /><br />Full name: FSharp.Data.JsonProvider,Sample=&quot;D:\\Appdev\\colinbull.github.io\\code/data/stackoverflow/answers.json&quot;.Item</div>
+<div class="tip" id="fs97">property JsonProvider&lt;...&gt;.Item.CreationDate: int</div>
+<div class="tip" id="fs98">val timeToClose : TimeSpan list<br /><br />Full name: 2015-03-24_Why_I_Like_FSharp.timeToClose</div>
+<div class="tip" id="fs99">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.map</div>
+<div class="tip" id="fs100">val averageBy : projection:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U (requires member ( + ) and member DivideByInt and member get_Zero)<br /><br />Full name: Microsoft.FSharp.Collections.List.averageBy</div>
+<div class="tip" id="fs101">val x : TimeSpan</div>
+<div class="tip" id="fs102">property TimeSpan.TotalHours: float</div>

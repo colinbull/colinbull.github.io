@@ -4,3 +4,4 @@ nuget Fake
 nuget FSharpx.TypeProviders.XAML
 nuget RavenDB.Server
 nuget Cricket 0.0.8-alpha
+nuget FSharp.Data
