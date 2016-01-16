@@ -197,7 +197,9 @@
         match predicate(data) with
         | [] ->  context.Log (Error ("No data found", None))
         | data -> (* . dosomethingWithIt . *)
-
+    
+    complexBusinessLogic { Log = (fun entry -> printfn "%A") }
+    
 ' partial application && higher order funcs  thanks
 ' need context add it as a parameter
 ' no action at a distance.
