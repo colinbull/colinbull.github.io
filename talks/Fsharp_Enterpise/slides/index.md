@@ -10,7 +10,7 @@
 
 - Physics
 - Software consultant
-- Typically worked in Commodity Trading E.On, RWE, Petroineos..
+- Commodity Trading.
 - Commercial F# since ~2008
 - Open Source contributor
         - SqlProvider
@@ -37,19 +37,19 @@
 - 0 bugs in production
 
 **Key F# Features**
-> REPL, Type System (UoM, DU's), Immutability 
+> REPL, Type System, Immutability 
 
 ' Two calculation problems Balancing / P.N following
 ' First F# deployment (April 2010)
 ' Right click add F#
 ' Describe how interfacing works C# inputs -> cast to F# domain 
 ' (REPL) Quick feedback
-' (Type System) Correctness, Tame Complex domain
+' (Type System) Correctness, Tame Complex domain, UoM, DU
 ' (Immutability) Parallelism
 
 ***
 
-### U.K Gas pipeline management system
+### Gas pipeline management system
 
 - Complete F# Silverlight application
 - Rewritten from exsiting C# application + Spreadsheet
@@ -65,7 +65,7 @@
 
 ***
 
-### Ancillary Service Contract Management System
+### Contract Management System
 
 - Full F# web application 
 - Rewrite from long running (failing) C# application
@@ -90,7 +90,7 @@
 - Full F# application
 - Lots of data feeds (~500)
 - Transient data feed
-- Unique parsing problems (images, custom data formats, web scraping)
+- Lots of parsing (images, custom data formats, web scraping)
 - User defined models and views over data
 
 **Key F# Features**
@@ -106,63 +106,42 @@
 
 ***
 
-### Common Themes
-
-- Lack of bugs
-- Quick time to market
-- Easy to change 
-
-' Very few bug in production
-' A few F# devs go a long way
-' Archtiecture typically fell out throu playing in the REPL
-' Minimal commitment to design (mention mistake in NTI, how this help w.r.t BA and Business reqs)
-' Refactoring is simple (just move functions around)
-
-***
-
 ### So what does a F# application look like?
 
 ***
 
 ### Build
 
-- F#
-
-' Fake + paket
+*F# (FAKE + Paket)*
 
 ***
 
 ### Data Access
 
-- F#
-
-' SqlProvider + JsonProvider
+*F# (TypeProviders)*
 
 ***
 
 ### Services
 
-- F#
-
-' WebApi (more recently Suave)
+*F# (Suave / WebApi)*
 
 ***
 
 ### UI
 
-- F#, Javascript
+*F#, Javascript*
 
 ' XamlProvider, Observable
 ' First class events
 ' FunScript, WebSharper
-' And as always unavoidable JS. When i want to spend hours tracking
-down a spelling mistake.
+' And as always unavoidable JS. When i want to spend hours tracking down a spelling mistake.
 
 ***
 
 ### Deployment
 
-- F#
+*F# (FAKE)*
 
 ' FSX as deployment scripts
 ' Can run standalone
@@ -172,7 +151,7 @@ down a spelling mistake.
 
 ### Documentation
 
-- F# + Markdown
+*F# (FSharp.Formatting / FsReveal) + Markdown*
 
 ' FSharp.Formatting, FsReveal
 
@@ -180,7 +159,7 @@ down a spelling mistake.
 
 ### But whats different?
 
-- After all it is still a .NET language.
+*After all it is still a .NET language.*
 
 ' We probably could have achieved that in C# couldnt we?
 ' Remeber Enterprises don't care about software developemnt
@@ -190,16 +169,19 @@ down a spelling mistake.
 
 ### Simple core language
 
+*#light syntax*
+
 ' More features often detriments syntax.
 ' Scala - all things to all people (mixins, type classes..)
 ' C# - heading similar direction to scala
 ' let / let rec - delimting cycles.
+' doesn't scarifice readability.
 
 ***
 
 ### Consistent project structure
 
-- Bottom up file ordering (Single pass compilation)
+*Bottom up file ordering (Single pass compilation)*
 - pic representing trying to find my way around a C# project compared
   to F#
 
@@ -232,12 +214,11 @@ down a spelling mistake.
 
 ### No action at a distance
     
-- Read as (No containers)
-
     [lang=fs]
     
     type LogEntry = | Info of string | Error of string * exn option
     type Context = { Log : LogEntry -> unit }
+    type Data = { A : int }
     
     let complexBusinessLogic context predicate data = 
         match predicate(data) with
@@ -245,24 +226,25 @@ down a spelling mistake.
             context.Log (Error ("No data found", None))
             Result.fail "No Data found" 
         | data -> 
-            let result = (* . dosomethingWithIt . *)
+            let result =
+                data |> List.map (fun x -> { x with A = x.A + 1 }) 
             Result.success result
             
     complexBusinessLogic { Log = (fun entry -> printfn "%A") }
 
-' Major bug squasher.
-' Explain why not needed -  partial application && higher order funcs  thanks
+' Major bug squasher (immutability FTW).
+' partial application && higher order funcs thanks
 ' need context add it as a parameter
-' only time is when something forces it on you (ehm, Web API)
+' strong return type
+' results in no containers, only time is when something forces it on you (ehm, Web API)
 
 ***
 
 ### No large scale dependencies 
 
-- Read as (No frameworks)
+*Read as (No frameworks)*
 
-    [lang=fs]
-    
+    [lang=fs]    
     let process context readContract validateContract  processContract =
         use conn = context.GetConnection("ContractDb")
         readContract conn
@@ -274,32 +256,56 @@ down a spelling mistake.
 ' Small sets of the correct combinators in your domain go a long way.
 ' Mention Thomas's post (library vs frameworks) and Scotts posts (about various dependency cycles)
 
-### Reduced assembly references aswell. 
+***
 
-- Paket FTW. 
-- paket.dependencies
+### Seperation of IO and computation
+
+- Find / draw a graph.. typical IO / computation in enterprise vs
+  typical IO / computation in F#
+
+' Can structure a C# application like this but I haven't ever seen one
+in a enterprise.
+
+***
+
+### Reduced assembly references. 
+
+*Paket FTW.* 
+
+paket.dependencies
     
     [lang=fs]
     github fsharp/FAKE src/app/FakeLib/Globbing/Globbing.fs
     
-- paket.references
+paket.references
     
     [lang=fs]
     File:Globbing.fs .
     
 ' Can reference files, and include them rather than libraries.
 ' Reduces chance of assembly conflicts and improves debugging. 
+' Git dependencies take this furthur, haven't had chance to expliot
+this yet thou.
 
 ***
 
-### There are somethings it doesn't solve
 
-- Consuming a rubbish API. 
 
-' Some protection against failure, Options, Result types
-' Can't protect against wierd memory models in native APIs
-' Typically just create an internal representation and put it in
-psuedo locked cage 
+***
+
+### And all this means
+
+- Lack of bugs
+- Quick time to market
+- Easy to change 
+
+' Very few bug in production
+' A few F# devs go a long way
+' Archtiecture typically fell out throu playing in the REPL
+' Minimal commitment to design (mention mistake in NTI, how this help w.r.t BA and Business reqs)
+' Refactoring is simple (just move functions around)
+' Maximised reuse.
+
 
 
  
