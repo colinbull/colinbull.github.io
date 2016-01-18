@@ -150,11 +150,13 @@
 
 ### UI
 
-- F#
+- F#, Javascript
 
 ' XamlProvider, Observable
 ' First class events
 ' FunScript, WebSharper
+' And as always unavoidable JS. When i want to spend hours tracking
+down a spelling mistake.
 
 ***
 
@@ -174,7 +176,6 @@
 
 ' FSharp.Formatting, FsReveal
 
-
 ***
 
 ### But whats different?
@@ -182,46 +183,8 @@
 - After all it is still a .NET language.
 
 ' We probably could have achieved that in C# couldnt we?
-' Maybe but F# functional
-
-***
-
-### No Containers
-    
-    [lang=fs]
-    
-    type LogEntry = | Info of string | Error of string * exn option
-    type Context = { Log : LogEntry -> unit }
-    
-    let complexBusinessLogic context predicate data = 
-        match predicate(data) with
-        | [] ->  context.Log (Error ("No data found", None))
-        | data -> (* . dosomethingWithIt . *)
-    
-    complexBusinessLogic { Log = (fun entry -> printfn "%A") }
-    
-' partial application && higher order funcs  thanks
-' need context add it as a parameter
-' no action at a distance.
-' only time is when something forces it on you (ehm, Web API)
-
-***
-
-### No Frameworks
-
-    [lang=fs]
-    
-    let process context dataAccess processContract resultHandler =
-        asyncResult {
-            use conn = context.GetConnection("ContractDb")
-            let! data = Result.protect (dataAccess conn)
-            let! result = processContract data
-            return! resultHandler result
-        }
-
-' composition
-' reuse
-' Small sets of the correct combinators go a long way.
+' Remeber Enterprises don't care about software developemnt
+' F# allows / forces somethings on us.
 
 ***
 
@@ -230,20 +193,115 @@
 ' More features often detriments syntax.
 ' Scala - all things to all people (mixins, type classes..)
 ' C# - heading similar direction to scala
+' let / let rec - delimting cycles.
 
 ***
 
-### Easy to get devs up to speed
+### Consistent project structure
 
+- Bottom up file ordering (Single pass compilation)
 - pic representing trying to find my way around a C# project compared
   to F#
 
-' project file ordering (new devs see this as a problem)
-' small composable functions
-' true single responsability
-' one language
+' Things aren't order alphabetically (WTF!)
+' This is probably the biggest win for the enterprise
+' Also we use projectscaffold consistent solution structures
 
 ***
+
+### Consistent file structure
+
+    [lang=fs]
+    
+    [<AutoOpen>]
+    module DomainTypes = 
+    
+        type A = .....
+        
+    
+    module A = 
+    
+        let validate data = ....
+        
+        let map data = .....
+
+
+' This one isn't forced, but you will probably fall onto something like this naturally given time. 
+
+***
+
+### No action at a distance
+    
+- Read as (No containers)
+
+    [lang=fs]
+    
+    type LogEntry = | Info of string | Error of string * exn option
+    type Context = { Log : LogEntry -> unit }
+    
+    let complexBusinessLogic context predicate data = 
+        match predicate(data) with
+        | [] ->  
+            context.Log (Error ("No data found", None))
+            Result.fail "No Data found" 
+        | data -> 
+            let result = (* . dosomethingWithIt . *)
+            Result.success result
+            
+    complexBusinessLogic { Log = (fun entry -> printfn "%A") }
+
+' Major bug squasher.
+' Explain why not needed -  partial application && higher order funcs  thanks
+' need context add it as a parameter
+' only time is when something forces it on you (ehm, Web API)
+
+***
+
+### No large scale dependencies 
+
+- Read as (No frameworks)
+
+    [lang=fs]
+    
+    let process context readContract validateContract  processContract =
+        use conn = context.GetConnection("ContractDb")
+        readContract conn
+        |> validateContract
+        |> processContract
+       
+' composition
+' reuse
+' Small sets of the correct combinators in your domain go a long way.
+' Mention Thomas's post (library vs frameworks) and Scotts posts (about various dependency cycles)
+
+### Reduced assembly references aswell. 
+
+- Paket FTW. 
+- paket.dependencies
+    
+    [lang=fs]
+    github fsharp/FAKE src/app/FakeLib/Globbing/Globbing.fs
+    
+- paket.references
+    
+    [lang=fs]
+    File:Globbing.fs .
+    
+' Can reference files, and include them rather than libraries.
+' Reduces chance of assembly conflicts and improves debugging. 
+
+***
+
+### There are somethings it doesn't solve
+
+- Consuming a rubbish API. 
+
+' Some protection against failure, Options, Result types
+' Can't protect against wierd memory models in native APIs
+' Typically just create an internal representation and put it in
+psuedo locked cage 
+
+
  
 
 
