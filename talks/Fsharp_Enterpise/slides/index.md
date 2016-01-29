@@ -106,13 +106,18 @@
 
 ***
 
-### So what does a F# application look like?
+### So what does an Enterprise F# application look like?
 
 ***
 
 ### Build
 
-*F# (FAKE + Paket)*
+*F# (FAKE + Paket + ProjectScaffold)*
+
+' Nice build DSL.
+' Lots of helper functions
+' Have one build to rule them all
+' See steffans talk
 
 ***
 
@@ -120,11 +125,36 @@
 
 *F# (TypeProviders)*
 
+	[lang=fs]
+	
+	type DB = SqlProvider<..>
+	
+	let clearTable connection tableName = etl {
+		command (nonQuery connection (sprintf "DELETE FROM %s" tableName))
+	}
+	
+	let getCosts = query { for trade in ctx.Trades .. } 
+	
+	let filterNoMtm trade = 
+		trade.MTM.IsSome
+	
+	let loadCosts targetConnection log = etl {
+		command (clearTable sourceConnection "TargetTable")
+		query (getCosts DB.GetContext())
+		transform (Seq.filter filterNoMtm)
+		bulkLoad targetConnection "TargetTable"
+	}
+
+' Most enterprise work is shoveling data from system A to B
+' DSL's...
+
 ***
 
-### Services
+### Web Services
 
-*F# (Suave / WebApi)*
+*F# (Suave)*
+
+' Nice and composable easy to extend
 
 ***
 
@@ -132,8 +162,9 @@
 
 *F#, Javascript*
 
-' XamlProvider, Observable
+' XamlProvider
 ' First class events
+' Observable combinators
 ' FunScript, WebSharper
 ' And as always unavoidable JS. When i want to spend hours tracking down a spelling mistake.
 
@@ -185,7 +216,7 @@
 - pic representing trying to find my way around a C# project compared
   to F#
 
-' Things aren't order alphabetically (WTF!)
+' Things aren't ordered alphabetically (WTF!)
 ' This is probably the biggest win for the enterprise
 ' Also we use projectscaffold consistent solution structures
 
@@ -213,25 +244,16 @@
 ***
 
 ### No action at a distance
-    
-    [lang=fs]
-    
-    type LogEntry = | Info of string | Error of string * exn option
-    type Context = { Log : LogEntry -> unit }
-    type Data = { A : int }
-    
-    let complexBusinessLogic context predicate data = 
-        match predicate(data) with
-        | [] ->  
-            context.Log (Error ("No data found", None))
-            Result.fail "No Data found" 
-        | data -> 
-            let result =
-                data |> List.map (fun x -> { x with A = x.A + 1 }) 
-            Result.success result
-            
-    complexBusinessLogic { Log = (fun entry -> printfn "%A") }
 
+    [lang=fs]    
+    let process context readContract validateContract  processContract =
+        use conn = context.GetConnection("ContractDb")
+        readContract conn
+        |> validateContract
+        |> processContract
+
+
+' Pure functions
 ' Major bug squasher (immutability FTW).
 ' partial application && higher order funcs thanks
 ' need context add it as a parameter
@@ -240,21 +262,13 @@
 
 ***
 
-### No large scale dependencies 
+### Libraries not Frameworks 
 
-*Read as (No frameworks)*
 
-    [lang=fs]    
-    let process context readContract validateContract  processContract =
-        use conn = context.GetConnection("ContractDb")
-        readContract conn
-        |> validateContract
-        |> processContract
-       
-' composition
-' reuse
-' Small sets of the correct combinators in your domain go a long way.
-' Mention Thomas's post (library vs frameworks) and Scotts posts (about various dependency cycles)
+* composition
+* reuse
+* Small sets of the correct combinators in your domain go a long way.
+* Reduced dependency cycles
 
 ***
 
@@ -263,33 +277,28 @@
 - Find / draw a graph.. typical IO / computation in enterprise vs
   typical IO / computation in F#
 
+' Important because this is a seperation of concerns
+' Interlaced IO and Computation hard to reason about (Perf, Errors)
 ' Can structure a C# application like this but I haven't ever seen one
 in a enterprise.
 
 ***
 
-### Reduced assembly references. 
-
-*Paket FTW.* 
-
-paket.dependencies
-    
-    [lang=fs]
-    github fsharp/FAKE src/app/FakeLib/Globbing/Globbing.fs
-    
-paket.references
-    
-    [lang=fs]
-    File:Globbing.fs .
-    
-' Can reference files, and include them rather than libraries.
-' Reduces chance of assembly conflicts and improves debugging. 
-' Git dependencies take this furthur, haven't had chance to expliot
-this yet thou.
+### Whats the same? 
 
 ***
 
+### Access to the whole .NET ecosystem. 
 
+' BCL, Nuget
+
+***
+
+### It won't save you from a bad 3rd party API
+
+*But you can limit the damage*
+
+' Wrap the API (result types)
 
 ***
 
@@ -298,6 +307,7 @@ this yet thou.
 - Lack of bugs
 - Quick time to market
 - Easy to change 
+- Familiar libaries
 
 ' Very few bug in production
 ' A few F# devs go a long way
@@ -305,6 +315,22 @@ this yet thou.
 ' Minimal commitment to design (mention mistake in NTI, how this help w.r.t BA and Business reqs)
 ' Refactoring is simple (just move functions around)
 ' Maximised reuse.
+
+
+*** 
+
+### Great so how do I introduce F# 
+
+* FAKE -> PAKET -> (C# Interface -> F# Lib) -> Full F# Application
+
+' Build is a familar problem
+' PAKET solves lots of familiar problems. 
+' C# interface breaks the ice. 
+' The nivarna. 
+
+***
+
+
 
 
 
