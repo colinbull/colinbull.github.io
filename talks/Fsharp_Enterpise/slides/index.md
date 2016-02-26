@@ -87,10 +87,9 @@
 
 ### Market Data Interface System
 
-- Full F# application
-- Lots of data feeds (~500)
-- Transient data feed
+- Lots of data feeds (~500) some transient
 - Lots of parsing (images, custom data formats, web scraping)
+- Full F# application
 - User defined models and views over data
 
 **Key F# Features**
@@ -99,14 +98,14 @@
 ' Had to be robust, as some data feeds where transient and if we missed the data it was for good
 ' Had to detect direction & position of arrows
 ' Active patterns heavily used to parse custom data formats
-' People don't respect standards.
 ' Web scraping initial implementation Html parser
 ' Actors for rate limiting to prevent API bans, isolating state in computation graph.
 ' Immutability provided almost carefree concurrency. (mention mutable types in immutable objects, mistake!!!)
+' Biggest thing learnt - devs don't respect standards.
 
 ***
 
-### So what does an Enterprise F# application look like?
+### So what is an Enterprise F# application made from?
 
 ***
 
@@ -123,38 +122,39 @@
 
 ### Data Access
 
-*F# (TypeProviders)*
+*F# (TypeProviders or just ADO.NET)*
 
 	[lang=fs]
 	
 	type DB = SqlProvider<..>
-	
-	let clearTable connection tableName = etl {
-		command (nonQuery connection (sprintf "DELETE FROM %s" tableName))
-	}
-	
+		
 	let getCosts = query { for trade in ctx.Trades .. } 
 	
 	let filterNoMtm trade = 
 		trade.MTM.IsSome
 	
-	let loadCosts targetConnection log = etl {
-		command (clearTable sourceConnection "TargetTable")
-		query (getCosts DB.GetContext())
+	let loadCosts connection = etl {
+		command (nonQuery connection "DELETE FROM cost_base")
+		query (getCosts DB.GetContext(connection.ConnectionString))
 		transform (Seq.filter filterNoMtm)
-		bulkLoad targetConnection "TargetTable"
+		bulkLoad targetConnection "cost_base"
 	}
 
 ' Most enterprise work is shoveling data from system A to B
-' DSL's...
+' DSL's can simplfiy this.. computation expression are really
+powerful..  
+' However still have the same old ADO.NET programming model everyone
+is used to.
 
 ***
 
 ### Web Services
 
-*F# (Suave)*
+*F# (Suave / Web API)*
 
+' Prefer Suave at this point. 
 ' Nice and composable easy to extend
+' But can be a bit of a jump for new devs.
 
 ***
 
@@ -172,11 +172,12 @@
 
 ### Deployment
 
-*F# (FAKE)*
+*F# (FAKE as a scripting engine)*
 
 ' FSX as deployment scripts
 ' Can run standalone
 ' Can run via FAKE.
+' Cana run via octopus deploy.
 
 ***
 
@@ -193,8 +194,16 @@
 *After all it is still a .NET language.*
 
 ' We probably could have achieved that in C# couldnt we?
-' Remeber Enterprises don't care about software developemnt
-' F# allows / forces somethings on us.
+' Well / Yes it terms on pure technical level, but practically C#
+isn't a scripting language. Make deployment etc. hard. 
+
+### Enterprises don't care about software development
+
+' they don't care about your build
+' they don't care that you wrote ActivePattern X 
+' you won't receive an accurate spec well an in date spec / story. 
+' this means your dev approach has to handle this.  
+' F# helps.
 
 ***
 
@@ -213,6 +222,7 @@
 ### Consistent project structure
 
 *Bottom up file ordering (Single pass compilation)*
+
 - pic representing trying to find my way around a C# project compared
   to F#
 
@@ -246,29 +256,19 @@
 ### No action at a distance
 
     [lang=fs]    
-    let process context readContract validateContract  processContract =
+    let process context readContract validateContract  applyContract =
         use conn = context.GetConnection("ContractDb")
         readContract conn
         |> validateContract
-        |> processContract
+        |> applyContract
 
 
 ' Pure functions
 ' Major bug squasher (immutability FTW).
 ' partial application && higher order funcs thanks
 ' need context add it as a parameter
-' strong return type
+' strong return type- result type etc.. 
 ' results in no containers, only time is when something forces it on you (ehm, Web API)
-
-***
-
-### Libraries not Frameworks 
-
-
-* composition
-* reuse
-* Small sets of the correct combinators in your domain go a long way.
-* Reduced dependency cycles
 
 ***
 
@@ -281,6 +281,15 @@
 ' Interlaced IO and Computation hard to reason about (Perf, Errors)
 ' Can structure a C# application like this but I haven't ever seen one
 in a enterprise.
+
+***
+
+### Libraries not Frameworks 
+
+* composition
+* reuse
+* Small sets of the correct combinators in your domain go a long way.
+* Reduced dependency cycles
 
 ***
 
@@ -298,7 +307,7 @@ in a enterprise.
 
 *But you can limit the damage*
 
-' Wrap the API (result types)
+' Wrap the API (result types / Options)
 
 ***
 
@@ -306,7 +315,7 @@ in a enterprise.
 
 - Lack of bugs
 - Quick time to market
-- Easy to change 
+- Easy to change / maintain
 - Familiar libaries
 
 ' Very few bug in production
@@ -321,7 +330,7 @@ in a enterprise.
 
 ### Great so how do I introduce F# 
 
-* FAKE -> PAKET -> (C# Interface -> F# Lib) -> Full F# Application
+* FAKE -> PAKET -> (C# Interface -> F# Lib) -> Full F# Application *
 
 ' Build is a familar problem
 ' PAKET solves lots of familiar problems. 
@@ -330,6 +339,9 @@ in a enterprise.
 
 ***
 
+### Thanks for listening
+
+* Questions?
 
 
 
