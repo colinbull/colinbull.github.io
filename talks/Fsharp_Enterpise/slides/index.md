@@ -95,13 +95,14 @@
 **Key F# Features**
 > REPL, Actors / Async, Immutability, Type Providers, Active Patterns, Type System
 
-' Had to be robust, as some data feeds where transient and if we missed the data it was for good
+' Had to be robust, as some data feeds where transientd
 ' Had to detect direction & position of arrows
+' Ease of refactoring mention the mistake. 
 ' Active patterns heavily used to parse custom data formats
 ' Web scraping initial implementation Html parser
 ' Actors for rate limiting to prevent API bans, isolating state in computation graph.
 ' Immutability provided almost carefree concurrency. (mention mutable types in immutable objects, mistake!!!)
-' Biggest thing learnt - devs don't respect standards.
+' Biggest thing learnt - people don't respect standards.
 
 ***
 
@@ -134,7 +135,7 @@
 		trade.MTM.IsSome
 	
 	let loadCosts connection = etl {
-		command (nonQuery connection "DELETE FROM cost_base")
+		command (sql connection "DELETE FROM cost_base")
 		query (getCosts DB.GetContext(connection.ConnectionString))
 		transform (Seq.filter filterNoMtm)
 		bulkLoad targetConnection "cost_base"
@@ -177,7 +178,7 @@ is used to.
 ' FSX as deployment scripts
 ' Can run standalone
 ' Can run via FAKE.
-' Cana run via octopus deploy.
+' Can run via octopus deploy.
 
 ***
 
@@ -291,6 +292,9 @@ in a enterprise.
 * Small sets of the correct combinators in your domain go a long way.
 * Reduced dependency cycles
 
+'At this point we have a common repository but I rarely ref dll. Use
+file instead
+
 ***
 
 ### Whats the same? 
@@ -300,6 +304,7 @@ in a enterprise.
 ### Access to the whole .NET ecosystem. 
 
 ' BCL, Nuget
+' Interop is pretty seamless. 
 
 ***
 
@@ -325,7 +330,6 @@ in a enterprise.
 ' Refactoring is simple (just move functions around)
 ' Maximised reuse.
 
-
 *** 
 
 ### Great so how do I introduce F# 
@@ -335,7 +339,7 @@ in a enterprise.
 ' Build is a familar problem
 ' PAKET solves lots of familiar problems. 
 ' C# interface breaks the ice. 
-' The nivarna. 
+' Finally full F# 
 
 ***
 
