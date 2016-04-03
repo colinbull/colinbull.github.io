@@ -21,12 +21,36 @@
 
 ***
 
-### A Few F# Projects
+### Definition: Enterpise
+
+- Pic of diamond showing managers v people people who talk about doing
+  things v people who actually do things
+
+' > $ 1bn
+' Lots of talking few doing
+' Opaque requirements
+
+***
+
+### Enterprises don't care about software development
+
+' they don't care about your build
+' they don't care that you wrote ActivePattern X 
+' you won't receive an accurate spec well an in date spec / story. 
+' this means your dev approach has to handle this.  
+' F# helps.
+
+***
+
+### So why am I talking about this
 
 - U.K Power scheduling system
 - U.K Gas pipeline management system
 - Ancillary Service Contract Management
 - Real-time Market Data interface
+
+' These are all large projects
+' Some reasonably important
 
 ***
 
@@ -39,15 +63,34 @@
 **Key F# Features**
 > REPL, Type System, Immutability 
 
-' Two calculation problems Balancing / P.N following
 ' First F# deployment (April 2010)
 ' Right click add F#
-' Describe how interfacing works C# inputs -> cast to F# domain 
-' (REPL) Quick feedback
-' (Type System) Correctness, Tame Complex domain, UoM, DU
-' (Immutability) Parallelism
 
 ***
+
+### C# interface over F#
+
+     [lang=cs]
+	 pubic interface IPNFollowing
+	 {
+	     BidOffer[] ComputeBidOffers(double currentOutput, Bmu unit);
+		 //other domain actions
+	 }
+	 
+	 
+	 [lang=fs]
+	 let bidOfferEngine = 
+		 { new IBidOfferEngine with
+			 member x.ComputeBidOffers(currentOutput, bmu) =
+				 let bmu = mapBmu currentOutput bmu
+				 match computeBidOffers bmu with
+				 | Success x -> x
+				 | Failure err -> log err; raise(BidOfferComputation err)
+		 }
+	 
+
+' Describe how interfacing works C# inputs -> cast to F# domain 
+' Do not return any F# specific types. (Note; Null)
 
 ### Gas pipeline management system
 
@@ -61,7 +104,7 @@
 ' Rewritten due to big problems with calculation engine in C#
 ' After deciphering logic in Spreadsheet and typing with Units of measure price had (£^2 / th) fsharp compiler told me so..
 ' Actually tried TDD on this, but gave up and went to the REPL test are there fro regressions thou
-' No bugs after go live in calculation engine, a few UI issues thou (I'll admit I not the greatest UX guy)
+' No bugs after go live in calculation engine, a few UI issues thou.
 
 ***
 
@@ -89,7 +132,7 @@
 
 - Lots of data feeds (~500) some transient
 - Lots of parsing (images, custom data formats, web scraping)
-- Full F# application
+- Rate limiting / Concurrency
 - User defined models and views over data
 
 **Key F# Features**
@@ -106,7 +149,20 @@
 
 ***
 
-### So what is an Enterprise F# application made from?
+### How did F# help?
+
+- example of simple internal DSL's
+
+' Other than features mentioned above. 
+'Internal dsl cut copy code give it to user they think it is psuedo
+code. 
+' Really easy to refactor
+
+***
+
+### What does an Enterprise F# application look like?
+
+' Same as any application, Build, Data, Services, UI
 
 ***
 
@@ -131,11 +187,11 @@
 		
 	let getCosts = query { for trade in ctx.Trades .. } 
 	
-	let filterNoMtm trade = 
+	let filterNxoMtm trade = 
 		trade.MTM.IsSome
 	
 	let loadCosts connection = etl {
-		command (sql connection "DELETE FROM cost_base")
+		nonQuery (sql connection "DELETE FROM cost_base")
 		query (getCosts DB.GetContext(connection.ConnectionString))
 		transform (Seq.filter filterNoMtm)
 		bulkLoad targetConnection "cost_base"
@@ -144,18 +200,37 @@
 ' Most enterprise work is shoveling data from system A to B
 ' DSL's can simplfiy this.. computation expression are really
 powerful..  
-' However still have the same old ADO.NET programming model everyone
-is used to.
 
 ***
 
-### Web Services
+### Services
 
 *F# (Suave / Web API)*
 
+	[lang=fs]
+	
+	module Trade =
+		module Web =
+			let app = 
+				choose [
+					GET >=> pathScan "/trades/portfolio/%d" getTradesByPortfolio >=> asJson
+					GET >=> pathScan "/trade/%d" getTrade >=> asJson
+				]
+		
+	
+	let app = 
+		choose [
+			Trade.Web.app
+			Position.Web.app
+		]
+	
+	let main() =
+		startWebServer ..
+	
 ' Prefer Suave at this point. 
 ' Nice and composable easy to extend
 ' But can be a bit of a jump for new devs.
+' Web API interop, show reverse compat.
 
 ***
 
@@ -163,11 +238,12 @@ is used to.
 
 *F#, Javascript*
 
+' Errm! try and leave that to someone else 
 ' XamlProvider
 ' First class events
 ' Observable combinators
 ' FunScript, WebSharper
-' And as always unavoidable JS. When i want to spend hours tracking down a spelling mistake.
+
 
 ***
 
@@ -197,14 +273,6 @@ is used to.
 ' We probably could have achieved that in C# couldnt we?
 ' Well / Yes it terms on pure technical level, but practically C#
 isn't a scripting language. Make deployment etc. hard. 
-
-### Enterprises don't care about software development
-
-' they don't care about your build
-' they don't care that you wrote ActivePattern X 
-' you won't receive an accurate spec well an in date spec / story. 
-' this means your dev approach has to handle this.  
-' F# helps.
 
 ***
 
