@@ -21,24 +21,26 @@
 
 ***
 
-### Definition: Enterpise
+### Enterpise - definition
 
-- Pic of diamond showing managers v people people who talk about doing
-  things v people who actually do things
+![enterprise_heirarcy](images/enterprise_heirarcy.jpg)
 
-' > $ 1bn
+' $1bn+
 ' Lots of talking few doing
-' Opaque requirements
 
 ***
 
-### Enterprises don't care about software development
+### Enterprise - Software 
 
-' they don't care about your build
-' they don't care that you wrote ActivePattern X 
-' you won't receive an accurate spec well an in date spec / story. 
-' this means your dev approach has to handle this.  
-' F# helps.
+- Opaque Initial Requirements
+- Moving Targets
+- Pass the buck
+
+' Necessary evil, not part of core business
+' Easily dismissed - always blamed.
+' Agile can be good but often it is bad, 
+' this means your dev approach has to handle this. 
+' the language / toolset must make a difference.
 
 ***
 
@@ -51,6 +53,7 @@
 
 ' These are all large projects
 ' Some reasonably important
+' All successful
 
 ***
 
@@ -60,46 +63,16 @@
 - C# interface defines interop layer for F#
 - 0 bugs in production
 
-**Key F# Features**
-> REPL, Type System, Immutability 
-
-' First F# deployment (April 2010)
+' Early F# deployment to production (April 2010)
 ' Right click add F#
 
 ***
-
-### C# interface over F#
-
-     [lang=cs]
-	 pubic interface IPNFollowing
-	 {
-	     BidOffer[] ComputeBidOffers(double currentOutput, Bmu unit);
-		 //other domain actions
-	 }
-	 
-	 
-	 [lang=fs]
-	 let bidOfferEngine = 
-		 { new IBidOfferEngine with
-			 member x.ComputeBidOffers(currentOutput, bmu) =
-				 let bmu = mapBmu currentOutput bmu
-				 match computeBidOffers bmu with
-				 | Success x -> x
-				 | Failure err -> log err; raise(BidOfferComputation err)
-		 }
-	 
-
-' Describe how interfacing works C# inputs -> cast to F# domain 
-' Do not return any F# specific types. (Note; Null)
 
 ### Gas pipeline management system
 
 - Complete F# Silverlight application
 - Rewritten from exsiting C# application + Spreadsheet
 - Found previously unknown significant financial error via Units of Measure
-
-**Key F# Features**
-> REPL, Type System, First Class Events, Async
 
 ' Rewritten due to big problems with calculation engine in C#
 ' After deciphering logic in Spreadsheet and typing with Units of measure price had (£^2 / th) fsharp compiler told me so..
@@ -114,9 +87,6 @@
 - Rewrite from long running (failing) C# application
 - http://simontylercousins.net/does-the-language-you-use-make-a-difference-revisited
 
-**Key F# Features**
-> REPL, Actors / Async, Type System, Type Providers
-
 ' Can fit the F# entire solution in the blank lines of the C#
 ' Can process 24 hours of information in less time than the previous solution took to process a minute
 ' Time to market (3 devs max ~10 months, C# ~5 years, 8 devs, never finished)
@@ -128,163 +98,120 @@
 
 ***
 
-### Market Data Interface System
-
-- Lots of data feeds (~500) some transient
-- Lots of parsing (images, custom data formats, web scraping)
-- Rate limiting / Concurrency
-- User defined models and views over data
-
-**Key F# Features**
-> REPL, Actors / Async, Immutability, Type Providers, Active Patterns, Type System
-
-' Had to be robust, as some data feeds where transientd
-' Had to detect direction & position of arrows
-' Ease of refactoring mention the mistake. 
-' Active patterns heavily used to parse custom data formats
-' Web scraping initial implementation Html parser
-' Actors for rate limiting to prevent API bans, isolating state in computation graph.
-' Immutability provided almost carefree concurrency. (mention mutable types in immutable objects, mistake!!!)
-' Biggest thing learnt - people don't respect standards.
-
-***
-
-### How did F# help?
-
-- example of simple internal DSL's
-
-' Other than features mentioned above. 
-'Internal dsl cut copy code give it to user they think it is psuedo
-code. 
-' Really easy to refactor
-
-***
-
-### What does an Enterprise F# application look like?
-
-' Same as any application, Build, Data, Services, UI
-
-***
-
-### Build
-
-*F# (FAKE + Paket + ProjectScaffold)*
-
-' Nice build DSL.
-' Lots of helper functions
-' Have one build to rule them all
-' See steffans talk
-
-***
-
-### Data Access
-
-*F# (TypeProviders or just ADO.NET)*
-
-	[lang=fs]
-	
-	type DB = SqlProvider<..>
-		
-	let getCosts = query { for trade in ctx.Trades .. } 
-	
-	let filterNxoMtm trade = 
-		trade.MTM.IsSome
-	
-	let loadCosts connection = etl {
-		nonQuery (sql connection "DELETE FROM cost_base")
-		query (getCosts DB.GetContext(connection.ConnectionString))
-		transform (Seq.filter filterNoMtm)
-		bulkLoad targetConnection "cost_base"
-	}
-
-' Most enterprise work is shoveling data from system A to B
-' DSL's can simplfiy this.. computation expression are really
-powerful..  
-
-***
-
-### Services
-
-*F# (Suave / Web API)*
-
-	[lang=fs]
-	
-	module Trade =
-		module Web =
-			let app = 
-				choose [
-					GET >=> pathScan "/trades/portfolio/%d" getTradesByPortfolio >=> asJson
-					GET >=> pathScan "/trade/%d" getTrade >=> asJson
-				]
-		
-	
-	let app = 
-		choose [
-			Trade.Web.app
-			Position.Web.app
-		]
-	
-	let main() =
-		startWebServer ..
-	
-' Prefer Suave at this point. 
-' Nice and composable easy to extend
-' But can be a bit of a jump for new devs.
-' Web API interop, show reverse compat.
-
-***
-
-### UI
-
-*F#, Javascript*
-
-' Errm! try and leave that to someone else 
-' XamlProvider
-' First class events
-' Observable combinators
-' FunScript, WebSharper
-
-
-***
-
-### Deployment
-
-*F# (FAKE as a scripting engine)*
-
-' FSX as deployment scripts
-' Can run standalone
-' Can run via FAKE.
-' Can run via octopus deploy.
-
-***
-
-### Documentation
-
-*F# (FSharp.Formatting / FsReveal) + Markdown*
-
-' FSharp.Formatting, FsReveal
-
-***
-
-### But whats different?
-
-*After all it is still a .NET language.*
-
-' We probably could have achieved that in C# couldnt we?
-' Well / Yes it terms on pure technical level, but practically C#
-isn't a scripting language. Make deployment etc. hard. 
+### So how does F# help?
 
 ***
 
 ### Simple core language
 
-*#light syntax*
+- #light syntax
+- Easily picked up by non-professional programmers
 
 ' More features often detriments syntax.
 ' Scala - all things to all people (mixins, type classes..)
 ' C# - heading similar direction to scala
 ' let / let rec - delimting cycles.
-' doesn't scarifice readability.
+
+***
+
+### Strong type system - Unions, UoM
+
+    let fuelCost (heatRate:float<GJ>) (fuelMix:seq<float*Fuel>) =
+        let computeFuelCost fuel =
+            match fuel with
+            | Gas(gas) -> 
+                let fuelCost = 
+                    ((gas.Price + gas.ExitFee) * gas.GrossToNetConversionRate)
+                    |> Therm.toGigajouleRate 
+                heatRate * fuelCost
+            | Oil(oil) -> heatRate * oil.Price
+            | Coal(coal) -> heatRate * coal.Price
+         fuelMix
+         |> Seq.fold (fun total (factor,fuel) -> 
+                   total + (factor * (computeFuelCost fuel))
+         ) 0.<``£``>
+
+' Does everyone understand this? Explain?
+' Making the compiler do the hard work.
+' DU exhustive matches, new fuel = warning
+' Uom - Encourages use of SI units, which can simpify things greatly. 
+' Expressive - Can give this to a domain expert to verify.
+
+***
+
+### Active Patterns
+
+    let (|PARTICIPANT_UMM|TSO_UMM|INVALID|) (element : XElement) = 
+	    match element with
+        | ROOT "participant_umm" 
+            (ELEMENTS 
+             (ELEMENT "affected_fuels" fuels & 
+              ELEMENT "affected_units" units & 
+              ELEMENT "effect_during" effect_during & 
+              ELEMENT "effect_installed" & 
+              ELEMENT "prodcons" & 
+              ELEMENT "station" station & 
+              UMM umm)) -> PARTICIPANT_UMM({ .. set record fields .. })
+        | ROOT "tso_umm"  
+            (ELEMENTS 
+             (ELEMENT "capacity_a_b_during" ab_during & 
+              ELEMENT "capacity_a_b_installed" ab_installed & 
+              ELEMENT "capacity_b_a_during" ba_during & 
+              ELEMENT "capacity_b_a_installed" ba_installed & 
+              ELEMENT "line" line &  
+              UMM umm)) -> TSO_UMM({ .. set record fields .. })
+        | _ -> INVALID
+
+' Parsing elements out of a 
+' Awesome for parsing / transformations
+' Of course could replace this with a TP now.
+
+
+***
+
+### Computation Expressions
+
+    type DB = SqlProvider<..>
+		
+    let trades ctx = 
+        query { for trade in ctx.Trades .. } 
+	
+    let mapToCanonicalForm trade = ...
+	
+    let loadCosts sourceConnection targetConnection = etl {
+        let! source = resolveConnectionString sourceConnection
+        let! target = resolveConnectionString targetConnection
+        nonQuery (sql connection "DELETE FROM trade_data")
+        query (trades DB.GetContext(source))
+        transform (Seq.filter mapToCanonicalForm)
+        bulkLoad target "trade_data"
+    }
+ 
+' Async, Maybe, Result etc.. 
+' Allows expressive dsl's
+' More than monads..
+' CustomOperations
+
+***
+### There is more
+
+- Pattern Matching 
+- Immutability
+- Type Providers
+- Mailbox Processors
+- Type Inference
+- Structural Equality / Comparison
+- Partial Application
+
+' And probably more.. 
+' These are all language features, but there are macro features also 
+' Scott Wlaschin has a good list. 
+
+***
+
+### REPL, REPL, REPL
+
+' Iteratively develop solutions 
 
 ***
 
@@ -292,19 +219,34 @@ isn't a scripting language. Make deployment etc. hard.
 
 *Bottom up file ordering (Single pass compilation)*
 
-- pic representing trying to find my way around a C# project compared
-  to F#
+![alphabetical_wtf](images/alphabetical_wtf.jpg)
 
-' Things aren't ordered alphabetically (WTF!)
-' This is probably the biggest win for the enterprise
-' Also we use projectscaffold consistent solution structures
+' Consistent place to start when I open new project.
+' The project explorer is telling me something more about my project
+' I actually miss this on large solutions when using emacs. 
+' This is probably the biggest win for the enterprise.
 
 ***
 
-### Consistent file structure
+### Easy to refactor
 
-    [lang=fs]
-    
+**No tools required just a keyboard with TAB, space, Ctrl, c, v**
+
+' Mention NTI. 
+' And maybe an editor of some sort. 
+
+***
+
+### Other observations
+
+**YMMV**
+
+' but YMMV with these but somethings I have observed
+
+***
+
+### Uniformly structured code. 
+
     [<AutoOpen>]
     module DomainTypes = 
     
@@ -318,28 +260,10 @@ isn't a scripting language. Make deployment etc. hard.
         let map data = .....
 
 
-' This one isn't forced, but you will probably fall onto something like this naturally given time. 
+' Without a conversation our team kinda converged on this.
+' Not sure whether we all read the same blogs or what.
 
-***
-
-### No action at a distance
-
-    [lang=fs]    
-    let process context readContract validateContract  applyContract =
-        use conn = context.GetConnection("ContractDb")
-        readContract conn
-        |> validateContract
-        |> applyContract
-
-
-' Pure functions
-' Major bug squasher (immutability FTW).
-' partial application && higher order funcs thanks
-' need context add it as a parameter
-' strong return type- result type etc.. 
-' results in no containers, only time is when something forces it on you (ehm, Web API)
-
-***
+*** 
 
 ### Seperation of IO and computation
 
@@ -353,67 +277,24 @@ in a enterprise.
 
 ***
 
-### Libraries not Frameworks 
 
-* composition
-* reuse
-* Small sets of the correct combinators in your domain go a long way.
-* Reduced dependency cycles
+### Very little magic. 
 
-'At this point we have a common repository but I rarely ref dll. Use
-file instead
+- No Containers (Except when frmeworks force it)
+- No Action at a distance. 
+- Far simpler dependencies
 
-***
+' Web API
+' Pure functions - IO pushed to the edges
+' Type system provides a nice balance between complexity and expressivity.
 
-### Whats the same? 
 
-***
 
-### Access to the whole .NET ecosystem. 
 
-' BCL, Nuget
-' Interop is pretty seamless. 
 
-***
 
-### It won't save you from a bad 3rd party API
 
-*But you can limit the damage*
 
-' Wrap the API (result types / Options)
-
-***
-
-### And all this means
-
-- Lack of bugs
-- Quick time to market
-- Easy to change / maintain
-- Familiar libaries
-
-' Very few bug in production
-' A few F# devs go a long way
-' Archtiecture typically fell out throu playing in the REPL
-' Minimal commitment to design (mention mistake in NTI, how this help w.r.t BA and Business reqs)
-' Refactoring is simple (just move functions around)
-' Maximised reuse.
-
-*** 
-
-### Great so how do I introduce F# 
-
-* FAKE -> PAKET -> (C# Interface -> F# Lib) -> Full F# Application *
-
-' Build is a familar problem
-' PAKET solves lots of familiar problems. 
-' C# interface breaks the ice. 
-' Finally full F# 
-
-***
-
-### Thanks for listening
-
-* Questions?
 
 
 
