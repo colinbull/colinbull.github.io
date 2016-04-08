@@ -1,3 +1,52 @@
+' These are all large projects
+' Some reasonably important (Balancing UK power portfolio, gas
+pipeline mgmt)
+' All successful
+
+***
+
+### U.K Power Scheduling system
+
+- C# desktop appliction with embedded F# libraries 
+- C# interface defines interop layer for F#
+- 0 bugs in production
+
+' Early F# deployment to production (April 2010)
+' Right click add F#
+
+***
+
+### Gas pipeline management system
+
+- Complete F# Silverlight application
+- Rewritten from exsiting C# application + Spreadsheet
+- Found previously unknown significant financial error via Units of Measure
+
+' Rewritten due to big problems with calculation engine in C#
+' After deciphering logic in Spreadsheet and typing with Units of measure price had (£^2 / th) fsharp compiler told me so..
+' Actually tried TDD on this, but gave up and went to the REPL test are there fro regressions thou
+' No bugs after go live in calculation engine, a few UI issues thou.
+
+***
+
+### Contract Management System
+
+- Full F# web application 
+- Rewrite from long running (failing) C# application
+
+
+' Can fit the F# entire solution in the blank lines of the C#
+' Can process 24 hours of information in less time than the previous solution took to process a minute
+' Time to market (3 devs max ~10 months, C# ~5 years, 8 devs, never finished)
+' Little hindsight as no intersection between devs
+' Actors provide rate limiting for job requests
+' Async everywhere
+' Immutability everywhere including at the DB.
+' Easy to change as contracts change follow the trail of compiler errors
+
+***
+
+
 ### Implementation
 
 **C# interface**

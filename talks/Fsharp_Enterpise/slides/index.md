@@ -44,57 +44,160 @@
 
 ***
 
-### So why am I talking about this
-
-- U.K Power scheduling system
-- U.K Gas pipeline management system
-- Ancillary Service Contract Management
-- Real-time Market Data interface
-
-' These are all large projects
-' Some reasonably important
-' All successful
+### So why am I talking about this?
 
 ***
 
-### U.K Power Scheduling system
-
-- C# desktop appliction with embedded F# libraries 
-- C# interface defines interop layer for F#
-- 0 bugs in production
-
-' Early F# deployment to production (April 2010)
-' Right click add F#
+### Most successful projects I have written have all been in F#
 
 ***
 
-### Gas pipeline management system
+### A case study - Contract management system
 
-- Complete F# Silverlight application
-- Rewritten from exsiting C# application + Spreadsheet
-- Found previously unknown significant financial error via Units of Measure
+- An opportunity to directly compare a C# and F# project over the same requirements
 
-' Rewritten due to big problems with calculation engine in C#
-' After deciphering logic in Spreadsheet and typing with Units of measure price had (£^2 / th) fsharp compiler told me so..
-' Actually tried TDD on this, but gave up and went to the REPL test are there fro regressions thou
-' No bugs after go live in calculation engine, a few UI issues thou.
+' You will have all seen this before but it is compelling. 
 
 ***
 
-### Contract Management System
+### Large typical enterprise system
 
-- Full F# web application 
-- Rewrite from long running (failing) C# application
-- http://simontylercousins.net/does-the-language-you-use-make-a-difference-revisited
+- Complex legal contracts
+- Tight computation timelines, 1 minute by minute constriants
+- Lots of different data sources.
 
-' Can fit the F# entire solution in the blank lines of the C#
-' Can process 24 hours of information in less time than the previous solution took to process a minute
-' Time to market (3 devs max ~10 months, C# ~5 years, 8 devs, never finished)
-' Little hindsight as no intersection between devs
-' Actors provide rate limiting for job requests
-' Async everywhere
-' Immutability everywhere including at the DB.
-' Easy to change as contracts change follow the trail of compiler errors
+***
+
+### Original - C# solution
+
+- 5 years
+- 8 devs
+- Never fully implemented all of the contracts
+- An interesting way of dealing with computation timeouts
+
+***
+
+### New - F# solution
+
+- 1 year
+- 3 devs at peak
+- All contracts implemented
+- Could process 24hrs of data in less time than it took the previous
+one to process a minute
+
+***
+
+### No intersection between dev teams
+
+**We were free to potentially make the same mistakes**
+
+***
+
+### Some numbers
+
+- From: http://simontylercousins.net/does-the-language-you-use-make-a-difference-revisited
+
+' You will have probably seen this before
+
+***
+
+### Lines of code
+![loc](images/loc_fsharp.png)
+
+'Notice null checks (actually surprisingly few)
+
+***
+
+### Exceptions as control flow
+
+![try_catch](images/ascm_comparison_try.png)
+
+' This is where the nulls checks went.
+
+***
+
+### The raw data
+
+![raw_date](images/fsharp_numbers.png)
+
+' Can fit the new solution in the blanks lines of the old solution.
+***
+
+### So what was the problem in the old solution?
+
+*** 
+
+### Cargo cult - Object orientation
+
+** If you have just read about a pattern use it**
+
+***
+
+### Global Error Flags
+
+' These ofcourse only yield the last error. 
+
+***
+
+### Massive call trees to do trivial tasks
+
+' Multiply a couple of numbers
+
+***
+
+### Lots of code duplication
+
+- Contract implementations copied on a change of input data source
+
+***
+
+### But this is just one case 
+
+' Well not quite.. Although the code here is probably the degenerate case 
+
+***
+
+### A case study 2 - Pipeline managment system
+
+***
+
+### Old - C# Application + VBA - Spreadsheet
+
+- 2 devs (1 C# + 1 DB)
+- ~10 Months
+
+***
+
+### New - F# Silverlight
+
+- 1 dev
+- ~8 Months
+
+***
+
+### Units of Measure FTW!
+
+- Instead of total cost (£) had (£^2 / thm)
+
+***
+
+### Async everywhere
+
+- Pre C# async await
+- Silverlight and F# really nice combination
+
+***
+
+### Am I being fair? 
+
+- Maybe not depends on your point of view
+- More experienced devs? 
+
+***
+
+### But isn't this the point? 
+
+** The language didn't guide them away from this **
 
 ***
 
@@ -193,6 +296,7 @@
 ' CustomOperations
 
 ***
+
 ### There is more
 
 - Pattern Matching 
@@ -211,7 +315,8 @@
 
 ### REPL, REPL, REPL
 
-' Iteratively develop solutions 
+' Changes your worflow
+' Iteratively develop solutions
 
 ***
 
@@ -267,8 +372,7 @@
 
 ### Seperation of IO and computation
 
-- Find / draw a graph.. typical IO / computation in enterprise vs
-  typical IO / computation in F#
+![io-computation](images/io-computation.jpg)
 
 ' Important because this is a seperation of concerns
 ' Interlaced IO and Computation hard to reason about (Perf, Errors)
@@ -277,33 +381,29 @@ in a enterprise.
 
 ***
 
-
 ### Very little magic. 
 
 - No Containers (Except when frmeworks force it)
-- No Action at a distance. 
+- No Action at a distance - inheritance 
 - Far simpler dependencies
 
 ' Web API
 ' Pure functions - IO pushed to the edges
 ' Type system provides a nice balance between complexity and expressivity.
 
+***
+
+### Adoption 
+
+* PAKET -> FAKE -> (C# Interface -> F# Lib) -> Full F# Application *
+
+' PAKET - not actually Failure but solves alot of familar problems
+' Build is a familar problem
+' PAKET solves lots of familiar problems. 
+' C# interface breaks the ice. 
+' Finally full F# 
+
+***
 
 
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
+***
