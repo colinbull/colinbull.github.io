@@ -23,24 +23,37 @@
 
 ### Enterpise - definition
 
-![enterprise_heirarcy](images/enterprise_heirarcy.jpg)
-
-' $1bn+
-' Lots of talking few doing
+*Necessary evil, not part of core business*
 
 ***
 
 ### Enterprise - Software 
 
-- Opaque Initial Requirements
-- Moving Targets
-- Pass the buck
+![enterprise_heirarcy](images/enterprise_heirarcy.jpg)
 
-' Necessary evil, not part of core business
-' Easily dismissed - always blamed.
-' Agile can be good but often it is bad, 
-' this means your dev approach has to handle this. 
-' the language / toolset must make a difference.
+' $1bn+
+' Lots of talking few doing
+
+*** 
+
+*Opaque Initial Requirements*
+
+***
+
+*Agile - Sort of*
+
+***
+
+*Easily dismissed - always blamed.*
+
+
+***
+
+*This means your dev approach has to handle this.*
+
+***
+
+*The language toolset must make a difference.*
 
 ***
 
@@ -82,8 +95,7 @@
 - 1 year
 - 3 devs at peak
 - All contracts implemented
-- Could process 24hrs of data in less time than it took the previous
-one to process a minute
+- Performace
 
 ***
 
@@ -104,7 +116,7 @@ one to process a minute
 ### Lines of code
 ![loc](images/loc_fsharp.png)
 
-'Notice null checks (actually surprisingly few)
+' Notice null checks (actually surprisingly few)
 
 ***
 
@@ -121,6 +133,7 @@ one to process a minute
 ![raw_date](images/fsharp_numbers.png)
 
 ' Can fit the new solution in the blanks lines of the old solution.
+
 ***
 
 ### So what was the problem in the old solution?
@@ -129,7 +142,7 @@ one to process a minute
 
 ### Cargo cult - Object orientation
 
-** If you have just read about a pattern use it**
+**If you have just read about a pattern use it**
 
 ***
 
@@ -175,6 +188,26 @@ one to process a minute
 
 ***
 
+### So what was the problem?
+
+***
+
+### Mix of data - behaviour and data
+
+***
+
+### Framework magic
+
+- WCF Data Services
+- IOC
+- Forced Logical Cohesion
+
+***
+
+### Small changes = Large impact.
+
+*** 
+
 ### Units of Measure FTW!
 
 - Instead of total cost (£) had (£^2 / thm)
@@ -213,7 +246,6 @@ one to process a minute
 ' More features often detriments syntax.
 ' Scala - all things to all people (mixins, type classes..)
 ' C# - heading similar direction to scala
-' let / let rec - delimting cycles.
 
 ***
 
@@ -383,9 +415,8 @@ in a enterprise.
 
 ### Very little magic. 
 
-- No Containers (Except when frmeworks force it)
-- No Action at a distance - inheritance 
-- Far simpler dependencies
+- No Containers (Except when frameworks force it)
+- No Action at a distance
 
 ' Web API
 ' Pure functions - IO pushed to the edges
@@ -393,17 +424,72 @@ in a enterprise.
 
 ***
 
-### Adoption 
+### Simpler dependencies
 
-* PAKET -> FAKE -> (C# Interface -> F# Lib) -> Full F# Application *
+*Libraries not Frameworks*
 
-' PAKET - not actually Failure but solves alot of familar problems
-' Build is a familar problem
-' PAKET solves lots of familiar problems. 
-' C# interface breaks the ice. 
-' Finally full F# 
+*** 
+
+### Adopting F#
 
 ***
 
+### Misconceptions
+
+- F# should only be used in mathematical domains
+- It is a general purpose language
+
+***
+
+### Baby steps
+
+- Do not try and introduce a new language and a new paradigm
+
+***
+
+### Language First 
+
+- Paradigm Second
+
+***
+
+### Build
+
+- FAKE
+- Common problem most devs understand
+- Mostly imperative
+
+***
+
+### DevOps 
+
+- One off scripts
+- FAKE 
+- Powershell provider
+- WMI Provider
+
+***
+
+### An F# island
+
+- C# application using an F# libary
+- Gives an opportunity to back out to C#
+
+***
+
+### A Full F# web service
+
+- Complete FSharp application
+
+- Suave, Web API
+- Topshelf
+- NLog
+
+***
+
+### A full stack F# application
+
+- F# as the default choice for your enterprise.
+- NIRVANA!! 
 
 ***
