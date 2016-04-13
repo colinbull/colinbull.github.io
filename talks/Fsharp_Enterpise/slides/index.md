@@ -164,71 +164,37 @@
 
 ***
 
-### But this is just one case 
-
-' Well not quite.. Although the code here is probably the degenerate case 
-
-***
-
-### A case study 2 - Pipeline managment system
-
-***
-
-### Old - C# Application + VBA - Spreadsheet
-
-- 2 devs (1 C# + 1 DB)
-- ~10 Months
-
-***
-
-### New - F# Silverlight
-
-- 1 dev
-- ~8 Months
-
-***
-
-### So what was the problem?
-
-***
-
-### Mix of data - behaviour and data
-
-***
-
-### Framework magic
-
-- WCF Data Services
-- IOC
-- Forced Logical Cohesion
-
-***
-
-### Small changes = Large impact.
-
-*** 
-
-### Units of Measure FTW!
-
-- Instead of total cost (£) had (£^2 / thm)
-
-***
-
-### Async everywhere
-
-- Pre C# async await
-- Silverlight and F# really nice combination
-
-***
-
 ### Am I being fair? 
 
 - Maybe not depends on your point of view
-- More experienced devs? 
+- What could we improve?
 
 ***
 
-### But isn't this the point? 
+### More experienced Developers?
+
+- Hiring is hard enough, if your google / facebook!
+
+***
+
+### More Tests / Testing?
+
+- Maybe would have improved the cohesion of the code?
+
+***
+
+### Coding Standards.
+
+- TODO: insert screen grab here
+
+**Taken from Nuclear Reactor Coding Standards (pg.33)**
+
+' This actually looks like it is converging on functional programming.
+' Coding standards hard to enforce rigourously
+
+***
+
+### Isn't this the point? 
 
 ** The language didn't guide them away from this **
 
@@ -301,7 +267,6 @@
 ' Awesome for parsing / transformations
 ' Of course could replace this with a TP now.
 
-
 ***
 
 ### Computation Expressions
@@ -340,7 +305,6 @@
 - Partial Application
 
 ' And probably more.. 
-' These are all language features, but there are macro features also 
 ' Scott Wlaschin has a good list. 
 
 ***
@@ -404,7 +368,10 @@
 
 ### Seperation of IO and computation
 
-![io-computation](images/io-computation.jpg)
+![io_computation](images/io-computation.jpg)
+
+*(() -> 'a) -> ('a -> 'b) -> ('b -> unit)*
+**      The enterprise function          **
 
 ' Important because this is a seperation of concerns
 ' Interlaced IO and Computation hard to reason about (Perf, Errors)
@@ -417,10 +384,7 @@ in a enterprise.
 
 - No Containers (Except when frameworks force it)
 - No Action at a distance
-
-' Web API
-' Pure functions - IO pushed to the edges
-' Type system provides a nice balance between complexity and expressivity.
+- Large proportion of application is simply pure functions
 
 ***
 
@@ -437,7 +401,8 @@ in a enterprise.
 ### Misconceptions
 
 - F# should only be used in mathematical domains
-- It is a general purpose language
+- F# is **not** a general purpose language
+- F# is an academic language
 
 ***
 
@@ -449,7 +414,19 @@ in a enterprise.
 
 ### Language First 
 
-- Paradigm Second
+- Explicit interfaces
+- Syntax
+- Records vs Classes vs Modules
+
+*** 
+
+### Then Paradigm
+
+- Partial function application
+- Currying
+- Pure functions
+- Higher order functions
+- etc..
 
 ***
 
@@ -463,7 +440,6 @@ in a enterprise.
 
 ### DevOps 
 
-- One off scripts
 - FAKE 
 - Powershell provider
 - WMI Provider
@@ -481,7 +457,7 @@ in a enterprise.
 
 - Complete FSharp application
 
-- Suave, Web API
+- Suave
 - Topshelf
 - NLog
 
@@ -490,6 +466,10 @@ in a enterprise.
 ### A full stack F# application
 
 - F# as the default choice for your enterprise.
-- NIRVANA!! 
+- And yes F# is **Excellent** in the UI as well. 
+
+***
+
+### Thanks!!! Questions? 
 
 ***
