@@ -185,9 +185,9 @@
 
 ### Coding Standards.
 
-- TODO: insert screen grab here
+![nuc_stds](images/nuc_code_stds.png)
 
-**Taken from Nuclear Reactor Coding Standards (pg.33)**
+*Review guidelines for Software Languages for Use in Nuclear Power Plant Safety Systems (pg.33)*
 
 ' This actually looks like it is converging on functional programming.
 ' Coding standards hard to enforce rigourously
@@ -371,12 +371,12 @@
 ![io_computation](images/io-computation.jpg)
 
 *(() -> 'a) -> ('a -> 'b) -> ('b -> unit)*
+
 **      The enterprise function          **
 
 ' Important because this is a seperation of concerns
 ' Interlaced IO and Computation hard to reason about (Perf, Errors)
 ' Can structure a C# application like this but I haven't ever seen one
-in a enterprise.
 
 ***
 
