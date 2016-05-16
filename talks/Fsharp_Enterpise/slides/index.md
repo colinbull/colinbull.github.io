@@ -6,33 +6,33 @@
 
 ***
 
-### About Me 
+### Me 
 
 - Physics
 - Software consultant
-- Commodity Trading.
+- Commodity Trading
 - Commercial F# since ~2008
 - Open Source contributor
         - SqlProvider
-        - HtmlProvider (FSharp.Data)
+        - HtmlProvider 
         - Fake
         - Plus a few others
 - Twitter: @colinbul
 
 ***
 
-### Enterpise - definition
-
-*Necessary evil, not part of core business*
-
-***
-
-### Enterprise - Software 
+### Enterprise - definition 
 
 ![enterprise_heirarcy](images/enterprise_heirarcy.jpg)
 
 ' $1bn+
 ' Lots of talking few doing
+
+***
+
+### Enterpise - software
+
+*Necessary evil, not part of core business*
 
 *** 
 
@@ -40,7 +40,7 @@
 
 ***
 
-*Agile - Sort of*
+*Agile = WTF*
 
 ***
 
@@ -67,7 +67,7 @@
 
 ### A case study - Contract management system
 
-- An opportunity to directly compare a C# and F# project over the same requirements
+**An opportunity to directly compare a C# and F# project over the same requirements**
 
 ' You will have all seen this before but it is compelling. 
 
@@ -76,7 +76,7 @@
 ### Large typical enterprise system
 
 - Complex legal contracts
-- Tight computation timelines, 1 minute by minute constriants
+- Tight computation timelines, Minute by minute
 - Lots of different data sources.
 
 ***
@@ -108,8 +108,10 @@
 ### Some numbers
 
 - From: http://simontylercousins.net/does-the-language-you-use-make-a-difference-revisited
+ 
+**Sorry, if you have seen this before**
 
-' You will have probably seen this before
+' You will have seen this before
 
 ***
 
@@ -160,7 +162,7 @@
 
 ### Lots of code duplication
 
-- Contract implementations copied on a change of input data source
+**Contract implementations copied on a change of input data source**
 
 ***
 
@@ -173,13 +175,13 @@
 
 ### More experienced Developers?
 
-- Hiring is hard enough, if your google / facebook!
+**Hiring is hard!!!**
 
 ***
 
 ### More Tests / Testing?
 
-- Maybe would have improved the cohesion of the code?
+**Maybe would have improved the cohesion of the code?**
 
 ***
 
@@ -202,6 +204,8 @@
 
 ### So how does F# help?
 
+**Why not javascript??**
+
 ***
 
 ### Simple core language
@@ -215,9 +219,9 @@
 
 ***
 
-### Strong type system - Unions, UoM
+### Expressiveness 
 
-    let fuelCost (heatRate:float<GJ>) (fuelMix:seq<float*Fuel>) =
+    let fuelCost (heatRate:float<GJ>) (fuelMix:seq<float*Fuel>) : float<``£``> =
         let computeFuelCost fuel =
             match fuel with
             | Gas(gas) -> 
@@ -232,7 +236,8 @@
                    total + (factor * (computeFuelCost fuel))
          ) 0.<``£``>
 
-' Does everyone understand this? Explain?
+*Heed warnings*
+	
 ' Making the compiler do the hard work.
 ' DU exhustive matches, new fuel = warning
 ' Uom - Encourages use of SI units, which can simpify things greatly. 
@@ -240,8 +245,8 @@
 
 ***
 
-### Active Patterns
-
+### Data is terrible
+	
     let (|PARTICIPANT_UMM|TSO_UMM|INVALID|) (element : XElement) = 
 	    match element with
         | ROOT "participant_umm" 
@@ -250,7 +255,7 @@
               ELEMENT "affected_units" units & 
               ELEMENT "effect_during" effect_during & 
               ELEMENT "effect_installed" & 
-              ELEMENT "prodcons" & 
+              ELEMENT "prodcons" pc & 
               ELEMENT "station" station & 
               UMM umm)) -> PARTICIPANT_UMM({ .. set record fields .. })
         | ROOT "tso_umm"  
@@ -269,7 +274,7 @@
 
 ***
 
-### Computation Expressions
+### DSL's
 
     type DB = SqlProvider<..>
 		
@@ -294,6 +299,26 @@
 
 ***
 
+### Consistent project structure
+
+*Bottom - Up Ordering*
+
+![alphabetical_wtf](images/alphabetical_wtf.jpg)
+
+' Consistent place to start when I open new project.
+' The project explorer is telling me something more about my project
+' I actually miss this on large solutions when using emacs. 
+' This is probably the biggest win for the enterprise.
+
+***
+
+### REPL, REPL, REPL
+
+' Changes your worflow
+' Iteratively develop solutions
+
+***
+
 ### There is more
 
 - Pattern Matching 
@@ -309,29 +334,9 @@
 
 ***
 
-### REPL, REPL, REPL
-
-' Changes your worflow
-' Iteratively develop solutions
-
-***
-
-### Consistent project structure
-
-*Bottom up file ordering (Single pass compilation)*
-
-![alphabetical_wtf](images/alphabetical_wtf.jpg)
-
-' Consistent place to start when I open new project.
-' The project explorer is telling me something more about my project
-' I actually miss this on large solutions when using emacs. 
-' This is probably the biggest win for the enterprise.
-
-***
-
 ### Easy to refactor
 
-**No tools required just a keyboard with TAB, space, Ctrl, c, v**
+**Pure functions, simple structure**
 
 ' Mention NTI. 
 ' And maybe an editor of some sort. 
@@ -370,10 +375,6 @@
 
 ![io_computation](images/io-computation.jpg)
 
-*(() -> 'a) -> ('a -> 'b) -> ('b -> unit)*
-
-**      The enterprise function          **
-
 ' Important because this is a seperation of concerns
 ' Interlaced IO and Computation hard to reason about (Perf, Errors)
 ' Can structure a C# application like this but I haven't ever seen one
@@ -408,7 +409,7 @@
 
 ### Baby steps
 
-- Do not try and introduce a new language and a new paradigm
+**Do not try and introduce a new language and a new paradigm**
 
 ***
 
@@ -420,7 +421,9 @@
 
 *** 
 
-### Then Paradigm
+### Paradigm Second
+
+**This scary stuff and easily opposed**
 
 - Partial function application
 - Currying
@@ -453,9 +456,7 @@
 
 ***
 
-### A Full F# web service
-
-- Complete FSharp application
+### A Full F# Web service
 
 - Suave
 - Topshelf
