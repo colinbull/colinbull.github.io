@@ -41,7 +41,7 @@ So based on a gut feel and no real quantitive evidence, :) I would say that a la
 
 For the sake of argument, lets say that the requirement for our application is to read data from a CSV file, apply some transformations and that write it out to another CSV file.
 
-Now this is a fairly trivial problem, to solve and there are many ways to do it all fairly simple, for example a naive solution might be to do something like the following.
+There are many ways to solve this problem, for example a simple solution might be to do something like the following.
       
 *)
 
