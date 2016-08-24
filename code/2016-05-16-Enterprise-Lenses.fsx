@@ -19,31 +19,73 @@ open Aether
 open Aether.Operators
 open FSharp.Data
 
-type CsvFile private(data : IDictionary<_,_>) = 
+type Csv private(headers : string[], data : string [] []) = 
      
-     let data = Dictionary<string, string[]>(data)
+     let headers = ResizeArray<string>(headers)
+     let data = ResizeArray(data |> Array.map (ResizeArray)) 
+
+     static member Empty = Csv([||], [||])
 
      static member Read(file:string) = 
-            let data = new Dictionary<_,_>() :> IDictionary<_,_>
             let csv = CsvFile.Load(file)
             let headers = 
                 match csv.Headers with
                 | Some hs -> hs 
                 | None -> failwithf "The csv file must have headers"
-            
-            for header in headers do
-                data.[header] <- [|for row in csv.Rows  -> row.GetColumn(header)|]
 
-            new CsvFile(data)
+            new Csv(headers, [| for header in headers do yield [|for row in csv.Rows -> row.GetColumn(header)|] |])
 
-     member x.GetValue(col, indx) = data.[col].[indx]      
-     member x.SetValue(col, indx, value) = data.[col].[indx] <- value
+     member x.GetValue(col, indx) = 
+        match data |> Seq.tryItem indx with
+        | Some row ->
+            headers 
+            |> Seq.tryFindIndex ((=) col)
+            |> Option.bind (fun colIndx -> row |> Seq.tryItem colIndx)
+        | None -> None
+
+     member x.SetValue(col, indx, value) = 
+        match data |> Seq.tryItem indx with
+        | Some row ->
+            match headers |> Seq.tryFindIndex ((=) col) with
+            | Some colIndex ->
+                row.Insert(colIndex, value)
+            | None -> 
+                headers.Add(col)
+                row.Insert(headers.Count - 1, value) 
+        | None -> 
+            let row = ResizeArray<_>()
+            match headers |> Seq.tryFindIndex ((=) col) with
+            | Some colIndex ->
+                row.Insert(colIndex, value)
+            | None -> 
+                headers.Add(col)
+                row.Insert(headers.Count - 1, value)
+            data.Insert(indx, row) 
+
+     member x.Data 
+        with get() = 
+            [|
+                yield headers |> Seq.toArray
+                for row in data do
+                    yield [| for value in row -> value |]
+            |]
+    
+     override x.ToString() = 
+        let sb = new Text.StringBuilder()
+        for row in x.Data do 
+            sb.AppendLine(String.concat "," row) |> ignore
+        sb.ToString()
+
+     member x.Save(path) = 
+        IO.File.WriteAllText(path, x.ToString())
+
 
 [<AutoOpen>]
 module Lenses = 
 
-      let getValue (x:obj) =
+      let getValue defaultV (x:obj) =
             match x with
+            | null -> defaultV
             | :? XAttribute as a -> a.Value
             | :? XElement as e -> e.Value
             | _ -> failwithf "unable to set value"
@@ -55,40 +97,64 @@ module Lenses =
           | _ -> failwithf "unable to set value"
           unbox<_> x
 
-      let xpath_<'a> (path:string) : Prism<XElement, _> = 
-          (fun x -> 
-            match (x.XPathEvaluate(path) :?> IEnumerable).Cast<'a>() |> Seq.toList with
-            | [] -> None
-            | h :: _ -> Some h),
+      let xpath_<'a> (path:string) : Lens<XElement, _> = 
+          (fun x -> (x.XPathEvaluate(path) :?> IEnumerable).Cast<'a>().FirstOrDefault()),
           (fun s x -> x)
       
-      let xml_<'a> path = 
-          let l : Lens<_,_> = (fun x -> getValue x), (fun s x -> setValue x s)
-          xpath_<'a> path >?> l
+      let xml_<'a> defaultV path = 
+          let l : Lens<_,_> = (fun x -> getValue defaultV x), (fun s x -> setValue x s)
+          xpath_<'a> path >-> l
 
       let xattr_ = xml_<XAttribute>
 
-      let xelem_ =xml_<XElement>
+      let xelem_ = xml_<XElement> 
 
-      let csvValue_ (indx:int) (col:string) : Lens<CsvFile, _> =
+      let null_ defaultV : Lens<_,_> = 
+          (fun x -> if x = defaultV then None else Some x),
+          (fun s x -> defaultArg s defaultV)
+
+      let csv_ indx (col:string) : Prism<Csv, _> =
           (fun x -> x.GetValue(col,indx)),
           (fun s x -> x.SetValue(col, indx, s); x)
 
-let doc = XDocument.Load("code/data/lenses/source_data.xml")
-let products = doc.XPathSelectElements("//catalog_item") |> Seq.toArray
+      let inline getSet (get,set) target source =
+          let value = (Optic.get get source)
+          Optic.set set value target
 
-let values = 
+      let inline etl mappings target data = 
+          data 
+          |> Seq.indexed
+          |> Seq.fold (fun s (i, x) -> Seq.fold (fun s mapping -> getSet mapping s x) s (mappings i)) target
+
+let doc = XDocument.Load("code/data/lenses/source_data.xml")
+let products = doc.XPathSelectElements("//catalog_item/size")
+
+let xmlToCsv indx = 
+    let shortHandSize : Isomorphism<_,_> = 
+        (function 
+         | "S" -> "Small"
+         | "M" -> "Medium"
+         | "L" -> "Large"
+         | "XL" -> "Extra Large"
+         | a -> a),
+        (function 
+         | "Small" -> "S"
+         | "Medium" -> "M"
+         | "Large" -> "L"
+         | "Extra Large" -> "XL"
+         | a -> a)
+        
     [
-       xattr_ "parent::product/@description"
-       xelem_ "item_number"
-       xelem_ "price"          
+       xelem_ "NULL" "parent::catalog_item/item_number", (csv_ indx "item_no")
+       xattr_ "NULL" "ancestor::product/@description", (csv_ indx "description")
+       xattr_ "NULL" "parent::catalog_item/@gender", (csv_ indx "gender")
+       xattr_ "NULL" "@description", (csv_ indx "size")
+       xattr_ "NULL" "@description", (csv_ indx "short_size" >?> shortHandSize)
+       xelem_ "NULL" "parent::catalog_item/price", (csv_ indx "price")       
     ]
 
-let readValues values doc = 
-    List.map (fun (path:Prism<_,_>) -> Optic.get path doc) values
-
-[ for product in products -> readValues values product ]
-
+(etl xmlToCsv Csv.Empty products).ToString()
+    
 (**
 
 ## A typical enterprise problem
