@@ -1,5 +1,8 @@
 source https://nuget.org/api/v2
 
+framework: net46
+redirects: on
+
 nuget Fake
 nuget FSharpx.TypeProviders.XAML
 nuget RavenDB.Server
@@ -7,3 +10,6 @@ nuget Cricket 0.0.8-alpha
 nuget FSharp.Data
 nuget FSharp.Charting
 nuget Aether
+nuget canopy
+nuget Selenium.Support
+nuget Selenium.WebDriver

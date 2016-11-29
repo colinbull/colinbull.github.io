@@ -11,7 +11,7 @@ been removed. The reasons are explained <a href="https://groups.google.com/forum
 disagree with the reasons ayende cut the support, I wouldn't want to support something I had little knowledge of either. 
 However things have changed.... :)</p>
 
-<h2>The advent F# 3 and query expressions</h2>
+<h2><a name="The-advent-F-3-and-query-expressions" class="anchor" href="#The-advent-F-3-and-query-expressions">The advent F# 3 and query expressions</a></h2>
 
 <p>So we are now in the era of F# 3.0 and things have changed somewhat. F# is now truly in the data era... Information Rich programming is an 
 awesome feature of F# manifested in the form of <code>Type Providers</code> and <code>Query Expressions</code>. If you haven't read about or don't know what 
@@ -46,7 +46,7 @@ feature that means the gap between Linq and F# no longer exists. If you are fami
 </tr>
 </table>
 
-<h2>So What about RavenDB?</h2>
+<h2><a name="So-What-about-RavenDB" class="anchor" href="#So-What-about-RavenDB">So What about RavenDB?</a></h2>
 
 <p>Using RavenDB from C# is well documented and things are not that different when using it from F#. The in's and out's are well known and lets 
 face it the API is your safety net. It doesn't let you kill yourself, in fact you have to try very hard to actually do anything really bad in 
@@ -116,7 +116,7 @@ document store setup a little to include the converter.</p>
 </tr>
 </table>
 
-<h2>Querying raven</h2>
+<h2><a name="Querying-raven" class="anchor" href="#Querying-raven">Querying raven</a></h2>
 
 <p>With the document store setup we can now start querying Raven. As with any Raven query we need to create a session from our document store, 
 then we need to create the query.</p>
@@ -163,7 +163,7 @@ then we need to create the query.</p>
 as C#; and it is important to realise that there isn't really any magic going on in the world of F#, it is still just a .NET lanuguage it still compiles to CIL and is fully
 interoperable with any other .NET library.</p>
 
-<h2>Indexes</h2>
+<h2><a name="Indexes" class="anchor" href="#Indexes">Indexes</a></h2>
 
 <p>OK so things haven't got much better here in terms of static indexes. Basically you still need to define them in C# and then you can extend the document initialization process by
 including the assembly that contains the index definitions. However in Raven 2.0, dynamic indexes and promotion to permanent indexes have been massively improved, which reduces the need to create static indexes.</p>

@@ -1,0 +1,222 @@
+// ---
+// layout: page
+// title: Html Provider + Canopy.
+// ---
+
+<h2><a name="HTMLProvider-Canopy" class="anchor" href="#HTMLProvider-Canopy">HTMLProvider + Canopy</a></h2>
+
+<p>So recently this tweet came across my timeline.</p>
+
+<p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Why F# is the best language for screen scraping <a href="https://t.co/VinRTFApzI"><a href="https://t.co/VinRTFApzI&lt;/a&gt;.">https://t.co/VinRTFApzI</a>.</a> Nice article</p>&amp;mdash; Don Syme (@dsyme) <a href="https://twitter.com/dsyme/status/803670647515873280">November 29, 2016</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p>and indeed the article is definiately worth a read. However I have recently been using both canopy and the HTML Provider together to extract auction price data from N2EX you can see the data at <a href="http://www.nordpoolspot.com/Market-data1/N2EX/Auction-prices/UK/Hourly/?view=table"><a href="http://www.nordpoolspot.com/Market-data1/N2EX/Auction-prices/UK/Hourly/?view=table">http://www.nordpoolspot.com/Market-data1/N2EX/Auction-prices/UK/Hourly/?view=table</a></a>. Now the problem with just using the <a href="http://fsharp.github.io/FSharp.Data/">HTML Provider</a> to scrape this page is that you actually need the javascript on the page to execute and the HTML provider doesn't do this.</p>
+
+<p>However using <a href="https://lefthandedgoat.github.io/canopy/">canopy</a> with <a href="http://phantomjs.org/">phantomjs</a> we can get the javascript to execute and the table generated in the resulting HTML and therefore availble to the HTML provider. So how do we do this. Well first of all we need to find out which elements we need write a function that uses canopy to execute the page,</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="i">getN2EXPage</span> <span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="i">phantomJsDir</span> <span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="i">targetUrl</span> <span onmouseout="hideTip(event, 'fs13', 14)" onmouseover="showTip(event, 'fs13', 14)" class="i">units</span> <span onmouseout="hideTip(event, 'fs14', 15)" onmouseover="showTip(event, 'fs14', 15)" class="i">withSource</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs15', 16)" onmouseover="showTip(event, 'fs15', 16)" class="i">phantomJSDir</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="i">phantomJsDir</span>
+    <span onmouseout="hideTip(event, 'fs16', 18)" onmouseover="showTip(event, 'fs16', 18)" class="i">start</span> <span onmouseout="hideTip(event, 'fs17', 19)" onmouseover="showTip(event, 'fs17', 19)" class="i">phantomJS</span>
+    <span onmouseout="hideTip(event, 'fs18', 20)" onmouseover="showTip(event, 'fs18', 20)" class="i">url</span> <span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="i">targetUrl</span>
+    <span onmouseout="hideTip(event, 'fs19', 22)" onmouseover="showTip(event, 'fs19', 22)" class="i">waitForElement</span> <span class="s">&quot;</span><span class="s">#</span><span class="s">datatable</span><span class="s">&quot;</span>
+
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs20', 23)" onmouseover="showTip(event, 'fs20', 23)" class="i">not</span>(<span onmouseout="hideTip(event, 'fs21', 24)" onmouseover="showTip(event, 'fs21', 24)" class="i">String</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 25)" onmouseover="showTip(event, 'fs22', 25)" class="i">IsNullOrWhiteSpace</span>(<span onmouseout="hideTip(event, 'fs13', 26)" onmouseover="showTip(event, 'fs13', 26)" class="i">units</span>))
+    <span class="k">then</span> 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 27)" onmouseover="showTip(event, 'fs23', 27)" class="i">currencySelector</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs24', 28)" onmouseover="showTip(event, 'fs24', 28)" class="i">SelectElement</span>(<span onmouseout="hideTip(event, 'fs25', 29)" onmouseover="showTip(event, 'fs25', 29)" class="i">element</span> <span class="s">&quot;</span><span class="s">#</span><span class="s">data</span><span class="s">-</span><span class="s">currency</span><span class="s">-</span><span class="s">select</span><span class="s">&quot;</span>)
+        <span onmouseout="hideTip(event, 'fs23', 30)" onmouseover="showTip(event, 'fs23', 30)" class="i">currencySelector</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 31)" onmouseover="showTip(event, 'fs26', 31)" class="i">SelectByText</span>(<span onmouseout="hideTip(event, 'fs13', 32)" onmouseover="showTip(event, 'fs13', 32)" class="i">units</span>)
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 33)" onmouseover="showTip(event, 'fs27', 33)" class="i">unitDisplay</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs25', 34)" onmouseover="showTip(event, 'fs25', 34)" class="i">element</span> <span class="s">&quot;</span><span class="s">div</span><span class="s"> </span><span class="s">.</span><span class="s">dashboard</span><span class="s">-</span><span class="s">table</span><span class="s">-</span><span class="s">unit</span><span class="s">&quot;</span>)
+        <span onmouseout="hideTip(event, 'fs28', 35)" onmouseover="showTip(event, 'fs28', 35)" class="i">printfn</span> <span class="s">&quot;</span><span class="s">%</span><span class="s">A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs27', 36)" onmouseover="showTip(event, 'fs27', 36)" class="i">unitDisplay</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 37)" onmouseover="showTip(event, 'fs29', 37)" class="i">Text</span>
+        <span class="k">while</span> <span onmouseout="hideTip(event, 'fs20', 38)" onmouseover="showTip(event, 'fs20', 38)" class="i">not</span>(<span onmouseout="hideTip(event, 'fs27', 39)" onmouseover="showTip(event, 'fs27', 39)" class="i">unitDisplay</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 40)" onmouseover="showTip(event, 'fs29', 40)" class="i">Text</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 41)" onmouseover="showTip(event, 'fs30', 41)" class="i">Contains</span>(<span onmouseout="hideTip(event, 'fs13', 42)" onmouseover="showTip(event, 'fs13', 42)" class="i">units</span>)) <span class="k">do</span>
+            <span onmouseout="hideTip(event, 'fs28', 43)" onmouseover="showTip(event, 'fs28', 43)" class="i">printfn</span> <span class="s">&quot;</span><span class="s">%</span><span class="s">A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs27', 44)" onmouseover="showTip(event, 'fs27', 44)" class="i">unitDisplay</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 45)" onmouseover="showTip(event, 'fs29', 45)" class="i">Text</span>
+            <span onmouseout="hideTip(event, 'fs31', 46)" onmouseover="showTip(event, 'fs31', 46)" class="i">sleep</span> <span class="n">0.5</span>
+        <span onmouseout="hideTip(event, 'fs28', 47)" onmouseover="showTip(event, 'fs28', 47)" class="i">printfn</span> <span class="s">&quot;</span><span class="s">%</span><span class="s">A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs27', 48)" onmouseover="showTip(event, 'fs27', 48)" class="i">unitDisplay</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 49)" onmouseover="showTip(event, 'fs29', 49)" class="i">Text</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs32', 50)" onmouseover="showTip(event, 'fs32', 50)" class="i">source</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 51)" onmouseover="showTip(event, 'fs14', 51)" class="i">withSource</span> <span onmouseout="hideTip(event, 'fs33', 52)" onmouseover="showTip(event, 'fs33', 52)" class="i">browser</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 53)" onmouseover="showTip(event, 'fs34', 53)" class="i">PageSource</span>
+    <span onmouseout="hideTip(event, 'fs35', 54)" onmouseover="showTip(event, 'fs35', 54)" class="i">quit</span>()
+    <span onmouseout="hideTip(event, 'fs32', 55)" onmouseover="showTip(event, 'fs32', 55)" class="i">source</span></pre>
+</td>
+</tr>
+</table>
+
+<p>with this function we can now do a couple of things.</p>
+
+<ul>
+<li>Run a phantomjs headless browser.</li>
+<li>Wait for the javascript to run on the page and render the <code>#datatable</code> element</li>
+<li>If we specify the currency to use then change the currency select element to that currency then wait again for the page to render.</li>
+<li>Finally pass the source of the page to a function for further processing.</li>
+</ul>
+
+<p>So with this we can now create a snapshot of the page and dump it to a file.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 56)" onmouseover="showTip(event, 'fs36', 56)" class="i">toolPath</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs37', 57)" onmouseover="showTip(event, 'fs37', 57)" class="i">Path</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 58)" onmouseover="showTip(event, 'fs38', 58)" class="i">GetFullPath</span>(<span class="k">__SOURCE_DIRECTORY__</span> <span class="o">+</span> <span class="s">&quot;</span><span class="s">/</span><span class="s">Tools</span><span class="s">/</span><span class="s">phantomjs</span><span class="s">/</span><span class="s">bin</span><span class="s">&quot;</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs39', 59)" onmouseover="showTip(event, 'fs39', 59)" class="i">writePage</span> <span onmouseout="hideTip(event, 'fs40', 60)" onmouseover="showTip(event, 'fs40', 60)" class="i">path</span> <span onmouseout="hideTip(event, 'fs41', 61)" onmouseover="showTip(event, 'fs41', 61)" class="i">content</span> <span class="o">=</span> 
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs42', 62)" onmouseover="showTip(event, 'fs42', 62)" class="i">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 63)" onmouseover="showTip(event, 'fs43', 63)" class="i">Exists</span>(<span onmouseout="hideTip(event, 'fs40', 64)" onmouseover="showTip(event, 'fs40', 64)" class="i">path</span>) <span class="k">then</span> <span onmouseout="hideTip(event, 'fs42', 65)" onmouseover="showTip(event, 'fs42', 65)" class="i">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 66)" onmouseover="showTip(event, 'fs44', 66)" class="i">Delete</span> <span onmouseout="hideTip(event, 'fs40', 67)" onmouseover="showTip(event, 'fs40', 67)" class="i">path</span>
+    <span onmouseout="hideTip(event, 'fs42', 68)" onmouseover="showTip(event, 'fs42', 68)" class="i">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 69)" onmouseover="showTip(event, 'fs45', 69)" class="i">WriteAllText</span>(<span onmouseout="hideTip(event, 'fs40', 70)" onmouseover="showTip(event, 'fs40', 70)" class="i">path</span>, <span onmouseout="hideTip(event, 'fs41', 71)" onmouseover="showTip(event, 'fs41', 71)" class="i">content</span>)
+
+<span onmouseout="hideTip(event, 'fs10', 72)" onmouseover="showTip(event, 'fs10', 72)" class="i">getN2EXPage</span> <span onmouseout="hideTip(event, 'fs36', 73)" onmouseover="showTip(event, 'fs36', 73)" class="i">toolPath</span> <span class="s">&quot;</span><span class="s">http</span><span class="s">:</span><span class="s">/</span><span class="s">/</span><span class="s">www</span><span class="s">.</span><span class="s">nordpoolspot</span><span class="s">.</span><span class="s">com</span><span class="s">/</span><span class="s">Market</span><span class="s">-</span><span class="s">data1</span><span class="s">/</span><span class="s">N2EX</span><span class="s">/</span><span class="s">Auction</span><span class="s">-</span><span class="s">prices</span><span class="s">/</span><span class="s">UK</span><span class="s">/</span><span class="s">Hourly</span><span class="s">/</span><span class="s">?</span><span class="s">view</span><span class="s">=</span><span class="s">table</span><span class="s">&quot;</span> <span class="s">&quot;</span><span class="s">GBP</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs39', 74)" onmouseover="showTip(event, 'fs39', 74)" class="i">writePage</span> <span class="s">&quot;</span><span class="s">code</span><span class="s">/</span><span class="s">data</span><span class="s">/</span><span class="s">n2ex_auction_prices</span><span class="s">.</span><span class="s">html</span><span class="s">&quot;</span>)</pre>
+</td>
+</tr>
+</table>
+
+<p>Once we have executed the above function we have a template file that we can use in the type provider to generate our type space.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs46', 75)" onmouseover="showTip(event, 'fs46', 75)" class="i">N2EX</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs47', 76)" onmouseover="showTip(event, 'fs47', 76)" class="i">HtmlProvider</span><span class="o">&lt;</span><span class="s">&quot;</span><span class="s">data</span><span class="s">/</span><span class="s">n2ex_auction_prices</span><span class="s">.</span><span class="s">html</span><span class="s">&quot;</span><span class="o">&gt;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs48', 77)" onmouseover="showTip(event, 'fs48', 77)" class="i">getAuctionPriceData</span>() <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs49', 78)" onmouseover="showTip(event, 'fs49', 78)" class="i">page</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 79)" onmouseover="showTip(event, 'fs10', 79)" class="i">getN2EXPage</span> <span onmouseout="hideTip(event, 'fs36', 80)" onmouseover="showTip(event, 'fs36', 80)" class="i">toolPath</span> <span class="s">&quot;</span><span class="s">http</span><span class="s">:</span><span class="s">/</span><span class="s">/</span><span class="s">www</span><span class="s">.</span><span class="s">nordpoolspot</span><span class="s">.</span><span class="s">com</span><span class="s">/</span><span class="s">Market</span><span class="s">-</span><span class="s">data1</span><span class="s">/</span><span class="s">N2EX</span><span class="s">/</span><span class="s">Auction</span><span class="s">-</span><span class="s">prices</span><span class="s">/</span><span class="s">UK</span><span class="s">/</span><span class="s">Hourly</span><span class="s">/</span><span class="s">?</span><span class="s">view</span><span class="s">=</span><span class="s">table</span><span class="s">&quot;</span> <span class="s">&quot;</span><span class="s">GBP</span><span class="s">&quot;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs50', 81)" onmouseover="showTip(event, 'fs50', 81)" class="i">data</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs46', 82)" onmouseover="showTip(event, 'fs46', 82)" class="i">N2EX</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs51', 83)" onmouseover="showTip(event, 'fs51', 83)" class="i">Parse</span>(<span onmouseout="hideTip(event, 'fs50', 84)" onmouseover="showTip(event, 'fs50', 84)" class="i">data</span>))
+    <span onmouseout="hideTip(event, 'fs49', 85)" onmouseover="showTip(event, 'fs49', 85)" class="i">page</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 86)" onmouseover="showTip(event, 'fs52', 86)" class="i">Tables</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs53', 87)" onmouseover="showTip(event, 'fs53', 87)" class="i">Datatable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 88)" onmouseover="showTip(event, 'fs54', 88)" class="i">Rows</span></pre>
+</td>
+</tr>
+</table>
+
+<p>at this point we can use the HTML Provider as we normally would.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs55', 89)" onmouseover="showTip(event, 'fs55', 89)" class="i">data</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs48', 90)" onmouseover="showTip(event, 'fs48', 90)" class="i">getAuctionPriceData</span>() 
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs56', 91)" onmouseover="showTip(event, 'fs56', 91)" class="i">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 92)" onmouseover="showTip(event, 'fs57', 92)" class="i">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs58', 93)" onmouseover="showTip(event, 'fs58', 93)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs58', 94)" onmouseover="showTip(event, 'fs58', 94)" class="i">x</span><span class="o">.</span><span class="i">``UK time``</span>, <span onmouseout="hideTip(event, 'fs58', 95)" onmouseover="showTip(event, 'fs58', 95)" class="i">x</span><span class="o">.</span><span class="i">``30-11-2016``</span>)</pre>
+</td>
+</tr>
+</table>
+
+<p>Finally, I think it is worth noting that even though the the headers will change on the page; due to the fact that it is a rolling 9 day window. At runtime this code will carry on working as expected, because the code behind this will still be accessing the 1st and 3rd columns in the table, even though the headers have changed. However at compile time the code will fail :( because the headers and therefore the types have changed. However all is not lost, when this occurs, since the underlying type is erased to a tuple. So we could just do the following</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs59', 96)" onmouseover="showTip(event, 'fs59', 96)" class="i">dataAsTuple</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs48', 97)" onmouseover="showTip(event, 'fs48', 97)" class="i">getAuctionPriceData</span>() 
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs56', 98)" onmouseover="showTip(event, 'fs56', 98)" class="i">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 99)" onmouseover="showTip(event, 'fs57', 99)" class="i">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs58', 100)" onmouseover="showTip(event, 'fs58', 100)" class="i">x</span> <span class="k">-&gt;</span> 
+        <span class="k">let</span> (<span onmouseout="hideTip(event, 'fs60', 101)" onmouseover="showTip(event, 'fs60', 101)" class="i">ukTime</span>, _, <span onmouseout="hideTip(event, 'fs61', 102)" onmouseover="showTip(event, 'fs61', 102)" class="i">firstData</span>,_,_,_,_,_,_,_) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs58', 103)" onmouseover="showTip(event, 'fs58', 103)" class="i">x</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs62', 104)" onmouseover="showTip(event, 'fs62', 104)" class="i">box</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs63', 105)" onmouseover="showTip(event, 'fs63', 105)" class="i">unbox</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs64', 106)" onmouseover="showTip(event, 'fs64', 106)" class="i">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs64', 107)" onmouseover="showTip(event, 'fs64', 107)" class="i">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs64', 108)" onmouseover="showTip(event, 'fs64', 108)" class="i">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs64', 109)" onmouseover="showTip(event, 'fs64', 109)" class="i">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs64', 110)" onmouseover="showTip(event, 'fs64', 110)" class="i">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs64', 111)" onmouseover="showTip(event, 'fs64', 111)" class="i">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs64', 112)" onmouseover="showTip(event, 'fs64', 112)" class="i">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs64', 113)" onmouseover="showTip(event, 'fs64', 113)" class="i">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs64', 114)" onmouseover="showTip(event, 'fs64', 114)" class="i">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs64', 115)" onmouseover="showTip(event, 'fs64', 115)" class="i">string</span><span class="o">&gt;</span>
+        <span onmouseout="hideTip(event, 'fs60', 116)" onmouseover="showTip(event, 'fs60', 116)" class="i">ukTime</span>, <span onmouseout="hideTip(event, 'fs61', 117)" onmouseover="showTip(event, 'fs61', 117)" class="i">firstData</span>
+    )</pre>
+</td>
+</tr>
+</table>
+
+<p>A little verbose but, hey it's another option...</p>
+
+
+<div class="tip" id="fs1">namespace canopy</div>
+<div class="tip" id="fs2">namespace System</div>
+<div class="tip" id="fs3">namespace System.IO</div>
+<div class="tip" id="fs4">namespace FSharp</div>
+<div class="tip" id="fs5">namespace FSharp.Data</div>
+<div class="tip" id="fs6">namespace OpenQA</div>
+<div class="tip" id="fs7">namespace OpenQA.Selenium</div>
+<div class="tip" id="fs8">namespace OpenQA.Selenium.Support</div>
+<div class="tip" id="fs9">namespace OpenQA.Selenium.Support.UI</div>
+<div class="tip" id="fs10">val getN2EXPage : phantomJsDir:string -&gt; targetUrl:string -&gt; units:string -&gt; withSource:(string -&gt; &#39;a) -&gt; &#39;a<br /><br />Full name: 2016-11-29-HtmlProvider-Canopy.getN2EXPage</div>
+<div class="tip" id="fs11">val phantomJsDir : string</div>
+<div class="tip" id="fs12">val targetUrl : string</div>
+<div class="tip" id="fs13">val units : string</div>
+<div class="tip" id="fs14">val withSource : (string -&gt; &#39;a)</div>
+<div class="tip" id="fs15">val mutable phantomJSDir : string<br /><br />Full name: canopy.configuration.phantomJSDir</div>
+<div class="tip" id="fs16">val start : b:BrowserStartMode -&gt; unit<br /><br />Full name: canopy.core.start</div>
+<div class="tip" id="fs17">val phantomJS : BrowserStartMode<br /><br />Full name: canopy.core.phantomJS</div>
+<div class="tip" id="fs18">val url : u:string -&gt; unit<br /><br />Full name: canopy.core.url</div>
+<div class="tip" id="fs19">val waitForElement : cssSelector:string -&gt; unit<br /><br />Full name: canopy.core.waitForElement</div>
+<div class="tip" id="fs20">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs21">Multiple items<br />type String =<br />&#160;&#160;new : value:char -&gt; string + 7 overloads<br />&#160;&#160;member Chars : int -&gt; char<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;member Contains : value:string -&gt; bool<br />&#160;&#160;member CopyTo : sourceIndex:int * destination:char[] * destinationIndex:int * count:int -&gt; unit<br />&#160;&#160;member EndsWith : value:string -&gt; bool + 2 overloads<br />&#160;&#160;member Equals : obj:obj -&gt; bool + 2 overloads<br />&#160;&#160;member GetEnumerator : unit -&gt; CharEnumerator<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;...<br /><br />Full name: System.String<br /><br />--------------------<br />String(value: nativeptr&lt;char&gt;) : unit<br />String(value: nativeptr&lt;sbyte&gt;) : unit<br />String(value: char []) : unit<br />String(c: char, count: int) : unit<br />String(value: nativeptr&lt;char&gt;, startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int) : unit<br />String(value: char [], startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int, enc: Text.Encoding) : unit</div>
+<div class="tip" id="fs22">String.IsNullOrWhiteSpace(value: string) : bool</div>
+<div class="tip" id="fs23">val currencySelector : SelectElement</div>
+<div class="tip" id="fs24">Multiple items<br />type SelectElement =<br />&#160;&#160;new : element:IWebElement -&gt; SelectElement<br />&#160;&#160;member AllSelectedOptions : IList&lt;IWebElement&gt;<br />&#160;&#160;member DeselectAll : unit -&gt; unit<br />&#160;&#160;member DeselectByIndex : index:int -&gt; unit<br />&#160;&#160;member DeselectByText : text:string -&gt; unit<br />&#160;&#160;member DeselectByValue : value:string -&gt; unit<br />&#160;&#160;member IsMultiple : bool with get, set<br />&#160;&#160;member Options : IList&lt;IWebElement&gt;<br />&#160;&#160;member SelectByIndex : index:int -&gt; unit<br />&#160;&#160;member SelectByText : text:string -&gt; unit<br />&#160;&#160;...<br /><br />Full name: OpenQA.Selenium.Support.UI.SelectElement<br /><br />--------------------<br />SelectElement(element: OpenQA.Selenium.IWebElement) : unit</div>
+<div class="tip" id="fs25">val element : cssSelector:string -&gt; OpenQA.Selenium.IWebElement<br /><br />Full name: canopy.core.element</div>
+<div class="tip" id="fs26">SelectElement.SelectByText(text: string) : unit</div>
+<div class="tip" id="fs27">val unitDisplay : OpenQA.Selenium.IWebElement</div>
+<div class="tip" id="fs28">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs29">property OpenQA.Selenium.IWebElement.Text: string</div>
+<div class="tip" id="fs30">String.Contains(value: string) : bool</div>
+<div class="tip" id="fs31">val sleep : seconds:&#39;a -&gt; unit<br /><br />Full name: canopy.core.sleep</div>
+<div class="tip" id="fs32">val source : &#39;a</div>
+<div class="tip" id="fs33">val mutable browser : OpenQA.Selenium.IWebDriver<br /><br />Full name: canopy.types.browser</div>
+<div class="tip" id="fs34">property OpenQA.Selenium.IWebDriver.PageSource: string</div>
+<div class="tip" id="fs35">val quit : browser:&#39;a -&gt; unit<br /><br />Full name: canopy.core.quit</div>
+<div class="tip" id="fs36">val toolPath : string<br /><br />Full name: 2016-11-29-HtmlProvider-Canopy.toolPath</div>
+<div class="tip" id="fs37">type Path =<br />&#160;&#160;static val DirectorySeparatorChar : char<br />&#160;&#160;static val AltDirectorySeparatorChar : char<br />&#160;&#160;static val VolumeSeparatorChar : char<br />&#160;&#160;static val InvalidPathChars : char[]<br />&#160;&#160;static val PathSeparator : char<br />&#160;&#160;static member ChangeExtension : path:string * extension:string -&gt; string<br />&#160;&#160;static member Combine : params paths:string[] -&gt; string + 3 overloads<br />&#160;&#160;static member GetDirectoryName : path:string -&gt; string<br />&#160;&#160;static member GetExtension : path:string -&gt; string<br />&#160;&#160;static member GetFileName : path:string -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.Path</div>
+<div class="tip" id="fs38">Path.GetFullPath(path: string) : string</div>
+<div class="tip" id="fs39">val writePage : path:string -&gt; content:string -&gt; unit<br /><br />Full name: 2016-11-29-HtmlProvider-Canopy.writePage</div>
+<div class="tip" id="fs40">val path : string</div>
+<div class="tip" id="fs41">val content : string</div>
+<div class="tip" id="fs42">type File =<br />&#160;&#160;static member AppendAllLines : path:string * contents:IEnumerable&lt;string&gt; -&gt; unit + 1 overload<br />&#160;&#160;static member AppendAllText : path:string * contents:string -&gt; unit + 1 overload<br />&#160;&#160;static member AppendText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Copy : sourceFileName:string * destFileName:string -&gt; unit + 1 overload<br />&#160;&#160;static member Create : path:string -&gt; FileStream + 3 overloads<br />&#160;&#160;static member CreateText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Decrypt : path:string -&gt; unit<br />&#160;&#160;static member Delete : path:string -&gt; unit<br />&#160;&#160;static member Encrypt : path:string -&gt; unit<br />&#160;&#160;static member Exists : path:string -&gt; bool<br />&#160;&#160;...<br /><br />Full name: System.IO.File</div>
+<div class="tip" id="fs43">File.Exists(path: string) : bool</div>
+<div class="tip" id="fs44">File.Delete(path: string) : unit</div>
+<div class="tip" id="fs45">File.WriteAllText(path: string, contents: string) : unit<br />File.WriteAllText(path: string, contents: string, encoding: Text.Encoding) : unit</div>
+<div class="tip" id="fs46">type N2EX = HtmlProvider&lt;...&gt;<br /><br />Full name: 2016-11-29-HtmlProvider-Canopy.N2EX</div>
+<div class="tip" id="fs47">type HtmlProvider<br /><br />Full name: FSharp.Data.HtmlProvider<br /><em><br /><br />&lt;summary&gt;Typed representation of an HTML file.&lt;/summary&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Sample&#39;&gt;Location of an HTML sample file or a string containing a sample HTML document.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;PreferOptionals&#39;&gt;When set to true, inference will prefer to use the option type instead of nullable types, `double.NaN` or `&quot;&quot;` for missing values. Defaults to false.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;IncludeLayoutTables&#39;&gt;Includes tables that are potentially layout tables (with cellpadding=0 and cellspacing=0 attributes)&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;MissingValues&#39;&gt;The set of strings recogized as missing values. Defaults to `NaN,NA,#N/A,:,-,TBA,TBD`.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Culture&#39;&gt;The culture used for parsing numbers and dates. Defaults to the invariant culture.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Encoding&#39;&gt;The encoding used to read the sample. You can specify either the character set name or the codepage number. Defaults to UTF8 for files, and to ISO-8859-1 the for HTTP requests, unless `charset` is specified in the `Content-Type` response header.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;ResolutionFolder&#39;&gt;A directory that is used when resolving relative file references (at design time and in hosted execution).&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;EmbeddedResource&#39;&gt;When specified, the type provider first attempts to load the sample from the specified resource <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(e.g. &#39;MyCompany.MyAssembly, resource_name.html&#39;). This is useful when exposing types generated by the type provider.&lt;/param&gt;</em></div>
+<div class="tip" id="fs48">val getAuctionPriceData : unit -&gt; HtmlProvider&lt;...&gt;.Datatable.Row []<br /><br />Full name: 2016-11-29-HtmlProvider-Canopy.getAuctionPriceData</div>
+<div class="tip" id="fs49">val page : HtmlProvider&lt;...&gt;</div>
+<div class="tip" id="fs50">val data : string</div>
+<div class="tip" id="fs51">HtmlProvider&lt;...&gt;.Parse(text: string) : HtmlProvider&lt;...&gt;<br /><em><br /><br />Parses the specified HTML string</em></div>
+<div class="tip" id="fs52">property HtmlProvider&lt;...&gt;.Tables: HtmlProvider&lt;...&gt;.TablesContainer</div>
+<div class="tip" id="fs53">property HtmlProvider&lt;...&gt;.TablesContainer.Datatable: HtmlProvider&lt;...&gt;.Datatable</div>
+<div class="tip" id="fs54">property Runtime.BaseTypes.HtmlTable.Rows: HtmlProvider&lt;...&gt;.Datatable.Row []</div>
+<div class="tip" id="fs55">val data : seq&lt;string * string&gt;<br /><br />Full name: 2016-11-29-HtmlProvider-Canopy.data</div>
+<div class="tip" id="fs56">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs57">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs58">val x : HtmlProvider&lt;...&gt;.Datatable.Row</div>
+<div class="tip" id="fs59">val dataAsTuple : seq&lt;string * string&gt;<br /><br />Full name: 2016-11-29-HtmlProvider-Canopy.dataAsTuple</div>
+<div class="tip" id="fs60">val ukTime : string</div>
+<div class="tip" id="fs61">val firstData : string</div>
+<div class="tip" id="fs62">val box : value:&#39;T -&gt; obj<br /><br />Full name: Microsoft.FSharp.Core.Operators.box</div>
+<div class="tip" id="fs63">val unbox : value:obj -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.unbox</div>
+<div class="tip" id="fs64">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>

@@ -3,7 +3,7 @@ layout: page
 title: F# end to end
 ---
 
-<h2>Introduction</h2>
+<h2><a name="Introduction" class="anchor" href="#Introduction">Introduction</a></h2>
 
 <p>Recently my colleague <a href="https://twitter.com/simontcousins">@simontcousins</a> published an article comparing to similar projects one written 
 in C# one written in F#. The conclusion is that for the two projects the F# one is about 4% of the size.
@@ -34,13 +34,13 @@ maintainability I only need to have my F# brain switched on and I can change any
 libraries, but the playfulness offered by the REPL here makes testing and experimenting easy; this is especially true when it comes writing 
 build and deployment scripts, which I normally find quiet difficult to test.</p>
 
-<h2>Full stack F#</h2>
+<h2><a name="Full-stack-F" class="anchor" href="#Full-stack-F">Full stack F#</a></h2>
 
 <p>So is it possible to use F# for everything Build, Deployment, UI (Web/WPF), Documentation. The answer is simply YES!! 
 There is just a few libraries we need to know about to achieve this. Lets look at each area of a typical application and see which 
 libraries we can use.</p>
 
-<h3>Application Logic</h3>
+<h3><a name="Application-Logic" class="anchor" href="#Application-Logic">Application Logic</a></h3>
 
 <p>Ok this might seem like an obvious one, just write F#, but I thought I'd use this as an opportunity to highlight some libraries that I find useful</p>
 
@@ -49,7 +49,7 @@ libraries we can use.</p>
 <li><a href="" title="http://tpetricek.github.com/FSharp.Data">FSharp.Data</a> - Contains implementation of various type providers such as CSV, XML and JSON and I'm sure as the library matures we will see a lot more implementations to connect to wide variety of data sources.</li></li>
 </ul>
 
-<h3>Build and Deployment</h3>
+<h3><a name="Build-and-Deployment" class="anchor" href="#Build-and-Deployment">Build and Deployment</a></h3>
 
 <p>To build and deploy application with F# we can use <a href="http://fsharp.github.com/FAKE">FAKE</a>. FAKE allows you to write your build and 
 deployment scripts in F#. A simple script might look something like this</p>
@@ -116,12 +116,12 @@ deployment scripts in F#. A simple script might look something like this</p>
 also has an accompanying website, which allows you to manage your deployment agents, so you can easily deploy, upgrade or rollback 
 applications from a central place.</p>
 
-<h3>UI</h3>
+<h3><a name="UI" class="anchor" href="#UI">UI</a></h3>
 
 <p>How you tackle writing a UI in F# obviously depends on your choice of technologies. There are others obviously but the two I'm going to 
 consider are WPF and HTML/CSS/Javascript.</p>
 
-<h4>WPF</h4>
+<h4><a name="WPF" class="anchor" href="#WPF">WPF</a></h4>
 
 <p>If you choose to write your UI using WPF then things are fairly straight forward, Write XAML markup and then use code behind F#. 
 However wiring up the code behind can be a pain because of the C# code gen involved, typically you have to load the view yourself 
@@ -172,7 +172,7 @@ that helps things along here.</p>
 <p>See <a href="http://www.navision-blog.de/blog/2012/03/22/wpf-designer-for-f/">Steffan Forkmann's</a> post for more information about this. 
 Lets also not forget about first class events and the asynchronous programming model in F# that makes writing responsive UI's that much easier.</p>
 
-<h4>HTML/CSS/Javascript</h4>
+<h4><a name="HTML-CSS-Javascript" class="anchor" href="#HTML-CSS-Javascript">HTML/CSS/Javascript</a></h4>
 
 <p>If you go webby then things get a little more interesting, we have several options available here.</p>
 
@@ -182,7 +182,7 @@ Lets also not forget about first class events and the asynchronous programming m
 With fun script you still have to write the HTML markup, although providing a Combinator library to emit the markup wouldn't be that difficult. (If some one knows of one I'll add it here), but this isn't application logic anyway. The important stuff is still written in F# and compiled to javascript later on.</li>
 </ul>
 
-<h3>Documentation</h3>
+<h3><a name="Documentation" class="anchor" href="#Documentation">Documentation</a></h3>
 
 <p><a href="http://tomasp.net/blog/">@thomaspetricek</a> recently released <a href="https://github.com/tpetricek/FSharp.Formatting">FSharp.Formatting</a> we can generate documentation 
 from an F# script file, using a mix of markdown and F#, for an example see this <a href="http://tpetricek.github.com/FSharp.Formatting/">link</a>. This can then be integrated into your FAKE build script, 
@@ -216,7 +216,7 @@ using a build target something like the following example, Incidentally this is 
 </tr>
 </table>
 
-<h2>Conclusion</h2>
+<h2><a name="Conclusion" class="anchor" href="#Conclusion">Conclusion</a></h2>
 
 <p>Ok I might of over stated that <strong>everything</strong> can be written in F#, certainly at the moment there is a lack of libraries for 
 emitting XAML and HTML (with the exception of WebSharper of course). But HTML and XAML are really inconsequential when it comes the to 
