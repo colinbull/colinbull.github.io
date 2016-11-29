@@ -18,11 +18,9 @@ open FSharp.Data
 open OpenQA.Selenium.Support.UI
 
 (**
-## HTMLProvider + Canopy
-
 So recently this tweet came across my timeline. 
 
-<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Why F# is the best language for screen scraping <a href="https://t.co/VinRTFApzI">https://t.co/VinRTFApzI</a>. Nice article</p>&mdash; Don Syme (@dsyme) <a href="https://twitter.com/dsyme/status/803670647515873280">November 29, 2016</a></blockquote>
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Why F# is the best language for screen scraping <a href="https://t.co/VinRTFApzI">https://t.co/VinRTFApzI</a>. Nice article</p>Don Syme (@dsyme) <a href="https://twitter.com/dsyme/status/803670647515873280">November 29, 2016</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 and indeed the article is definiately worth a read. However I have recently been using both canopy and the HTML Provider together to extract auction price data from N2EX you can see the data at [http://www.nordpoolspot.com/Market-data1/N2EX/Auction-prices/UK/Hourly/?view=table](http://www.nordpoolspot.com/Market-data1/N2EX/Auction-prices/UK/Hourly/?view=table). Now the problem with just using the [HTML Provider](http://fsharp.github.io/FSharp.Data/) to scrape this page is that you actually need the javascript on the page to execute and the HTML provider doesn't do this. 
