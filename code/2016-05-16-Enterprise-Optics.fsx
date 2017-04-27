@@ -1,8 +1,8 @@
 (*** raw ***)
-//---
-//layout: page
-//title: Enterprise Goggles.
-//---
+---
+layout: page
+title: Enterprise Goggles.
+---
 
 (*** hide ***)
 
