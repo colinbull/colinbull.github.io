@@ -199,7 +199,7 @@ With this considered thou, performance is often not so important in the enterpri
 (**
 Here I am using [Aether](https://github.com/xyncro/aether) a lens library by Andrew Cherry and a simple (CSV file representation)[https://gist.github.com/colinbull/60797d5377be4d841f51e4f0776a24fa] but you could use anything. If you have never used Optics or just simply want a refresher then I might suggest the guide to Aether which can be found (here)[https://xyncro.tech/aether/guides/]. Also after you have read that guide you may notice that I'm not defining Optics per se, instead I'm defining functions that return optics a subtle but important distinction. 
 
-Now we have our optics (sorry, functions) we can define our mappings. But first we need to add a little extra to our domain functions, so we can use them with Optics. In terms of transformations there are two three things we can compose with Optics. Optics, Isomorphisms (a reversible function e.g. `string -> char[]` and `char[] -> string`) and Epimorphisms (which is a weaker version of the Isomorphism in that the left hand conversion may fail e.g. `string -> char[] option` and `char[] -> string`). For our little problem we only need to concern ourselves with the former since we have a total function (since we include the unknown mappings). So we can define our isomorphism as follows. 
+Now we have our optics (sorry, functions) we can define our mappings. But first we need to add a little extra to our domain functions, so we can use them with Optics. In terms of transformations there are three things we can compose with Optics. Optics, Isomorphisms (a reversible function e.g. `string -> char[]` and `char[] -> string`) and Epimorphisms (which is a weaker version of the Isomorphism in that the left hand conversion may fail e.g. `string -> char[] option` and `char[] -> string`). For our little problem we only need to concern ourselves with the former since we have a total function (since we include the unknown mappings). So we can define our isomorphism as follows. 
 *)
 
     let shortSize : Isomorphism<_,_> = 
@@ -237,7 +237,7 @@ Now we have our mappings along with our transformations we need to actually be a
 
 
 (**
-URRGH!! WTF! But as nasty as this function looks, it is actaully quiet simple; and completly general, and only needs to be written once. It simply iterates over the incoming data and applies an index to this data, this represents the row number. We then fold over this indexed data, with each fold we fold over each over the mappings, reading from the first optic supplied by the mappings list then sending the value to the second optic, because of the definition lenses of setting the value means it returns to object the value was applied to, which is then returned by the fold. 
+URRGH!! WTF! But as nasty as this function looks, it is actaully quiet simple; and completely general and only needs to be written once. It simply iterates over the incoming data and applies an index to this data, this represents the row number. We then fold over this indexed data, with each fold we fold over each over the mappings, reading from the first optic supplied by the mappings list then sending the value to the second optic, because of the definition lenses of setting the value means it returns to object the value was applied to, which is then returned by the fold. 
 *)
 
     let extract() =
