@@ -3,6 +3,208 @@ layout: page
 title: Lazy Elmish React.
 ---
 
+<p>Recently I have been doing a fair amount with Fable-React-Elmish, and I have had really good results. 
+Quick time to production, little or no bugs. Overal I have been very happy with the toolchain. Now admittedly the apps 
+I have been producing are small, boring line of business apps. Basically just utilities or forms that essentailly are nothing 
+more than data entry. However the latest application I have had to produce was abit more involved. Basically there is a simple form
+that has to query a API and then dispaly the data in a table with various levels of grouping. Armed with my recent successful experiences
+with the Fable-Elmish-React toolset I was reasonably confident I could have something running in a few days. Which I did, and
+I was pleased with my self.</p>
+
+<p>UNTIL...</p>
+
+<p>I started testing with more realistically sized datasets. And then I found out it was slow, like, really, really, slow. Over a second to render
+a single key press. This was somewhat a surprise as everything you read about React says how blazing fast the Virtual DOM and rendering are.</p>
+
+<p>In it's first cut I had a view which looked something like the following.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">let</span> <span class="i">view</span> <span class="i">model</span> <span class="i">dispatch</span> <span class="o">=</span> 
+    <span class="i">R</span><span class="o">.</span><span class="i">div</span> [<span class="i">ClassName</span> <span class="s">&quot;</span><span class="s">col</span><span class="s">-</span><span class="s">md</span><span class="s">-</span><span class="s">12</span><span class="s">&quot;</span>] [
+        <span class="k">if</span> <span class="i">model</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 17)" onmouseover="showTip(event, 'fs4', 17)" class="i">Data</span><span class="o">.</span><span class="i">Length</span> <span class="o">&gt;</span> <span class="n">0</span> 
+        <span class="k">then</span>
+            <span class="k">yield</span> <span class="i">R</span><span class="o">.</span><span class="i">form</span> [<span class="i">ClassName</span> <span class="s">&quot;</span><span class="s">form</span><span class="s"> </span><span class="s">form</span><span class="s">-</span><span class="s">inline</span><span class="s"> </span><span class="s">col</span><span class="s">-</span><span class="s">md</span><span class="s">-</span><span class="s">12</span><span class="s">&quot;</span>; <span class="i">Style</span> [<span class="i">PaddingBottom</span> <span class="s">&quot;</span><span class="s">10</span><span class="s">px</span><span class="s">&quot;</span>]] [
+                        <span class="i">R</span><span class="o">.</span><span class="i">button</span> [<span class="i">ClassName</span> <span class="s">&quot;</span><span class="s">btn</span><span class="s"> </span><span class="s">btn</span><span class="s">-</span><span class="s">default</span><span class="s"> </span><span class="s">col</span><span class="s">-</span><span class="s">md</span><span class="s">-</span><span class="s">1</span><span class="s">&quot;</span>; 
+                                   <span class="i">Disabled</span> (<span class="i">model</span><span class="o">.</span><span class="i">PendingChanged</span><span class="o">.</span><span class="i">Length</span> <span class="o">=</span> <span class="n">0</span>);
+                                   <span class="i">OnClick</span> (<span class="k">fun</span> <span class="i">x</span> <span class="k">-&gt;</span> <span class="i">x</span><span class="o">.</span><span class="i">preventDefault</span>();  <span class="i">dispatch</span> <span class="i">SaveChanges</span>)
+                                 ] [<span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="i">unbox</span> <span class="s">&quot;</span><span class="s">Save</span><span class="s"> </span><span class="s">Changes</span><span class="s">&quot;</span>]
+
+                        <span class="i">R</span><span class="o">.</span><span class="i">input</span> [ <span class="i">Id</span> <span class="s">&quot;</span><span class="s">selectedentity</span><span class="s">&quot;</span>; 
+                                  <span class="i">ClassName</span> <span class="s">&quot;</span><span class="s">form</span><span class="s">-</span><span class="s">control</span><span class="s">&quot;</span>; 
+                                  <span class="i">Style</span>[<span class="i">MarginLeft</span> <span class="s">&quot;</span><span class="s">20</span><span class="s">px</span><span class="s">&quot;</span>]; 
+                                  <span class="i">Placeholder</span> <span class="s">&quot;</span><span class="s">Select</span><span class="s"> </span><span class="s">Entity</span><span class="s">&quot;</span>; 
+                                  <span class="i">Value</span> <span class="i">model</span><span class="o">.</span><span class="i">Entity</span>]
+                ]
+       
+        <span class="k">yield</span> <span class="i">R</span><span class="o">.</span><span class="i">div</span> [<span class="i">ClassName</span> <span class="s">&quot;</span><span class="s">col</span><span class="s">-</span><span class="s">md</span><span class="s">-</span><span class="s">12</span><span class="s"> </span><span class="s">table</span><span class="s">-</span><span class="s">responsive</span><span class="s">&quot;</span>] [
+                   <span class="k">if</span> <span class="i">model</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 19)" onmouseover="showTip(event, 'fs4', 19)" class="i">Data</span><span class="o">.</span><span class="i">Length</span> <span class="o">&gt;</span> <span class="n">0</span> 
+                   <span class="k">then</span>
+                      <span class="k">yield</span> <span class="i">bootstrapTable</span> [
+                          <span class="i">KeyField</span> <span class="s">&quot;</span><span class="s">id</span><span class="s">&quot;</span>
+                          <span onmouseout="hideTip(event, 'fs4', 20)" onmouseover="showTip(event, 'fs4', 20)" class="i">Data</span> <span class="i">model</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 21)" onmouseover="showTip(event, 'fs4', 21)" class="i">Data</span>
+                          <span class="i">Columns</span> <span class="i">model</span><span class="o">.</span><span class="i">Columns</span>
+                          <span class="i">CellEdit</span> (<span class="i">CellEditFactory</span>(
+                            [
+                              <span class="s">&quot;</span><span class="s">mode</span><span class="s">&quot;</span> <span class="o">==&gt;</span> <span class="s">&quot;</span><span class="s">click</span><span class="s">&quot;</span>
+                              <span class="s">&quot;</span><span class="s">afterSaveCell</span><span class="s">&quot;</span> <span class="o">==&gt;</span> <span onmouseout="hideTip(event, 'fs9', 22)" onmouseover="showTip(event, 'fs9', 22)" class="i">ignore</span>
+                            ] <span class="o">|&gt;</span> <span class="i">createObj</span>))
+                      ]
+                   <span class="k">else</span> 
+                     <span class="k">yield</span> <span class="i">R</span><span class="o">.</span><span class="i">h1</span> [<span class="i">Style</span> [<span class="i">BackgroundColor</span> <span class="s">&quot;</span><span class="s">#</span><span class="s">eeeeee</span><span class="s">&quot;</span>; <span class="i">TextAlign</span> <span class="s">&quot;</span><span class="s">center</span><span class="s">&quot;</span>; <span class="i">Height</span> <span class="s">&quot;</span><span class="s">100</span><span class="s">%</span><span class="s">&quot;</span>]] [<span class="i">R</span><span class="o">.</span><span class="i">str</span> <span class="s">&quot;</span><span class="s">No</span><span class="s"> </span><span class="s">Data</span><span class="s">!</span><span class="s">&quot;</span>]
+              ]
+    ]</pre>
+</td>
+</tr>
+</table>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="i">However</span> <span class="k">as</span> <span class="i">innocent</span> <span class="k">as</span> <span class="i">this</span> <span class="i">looks</span> <span class="i">it</span> <span class="i">is</span> <span class="i">going</span> <span class="k">to</span> <span class="i">cause</span> <span class="i">react</span> <span class="i">some</span> <span class="i">problems</span><span class="o">.</span> <span class="i">Why</span>, <span class="i">well</span> <span class="i">the</span> <span class="i">table</span> <span class="k">in</span> <span class="i">this</span> <span class="i">case</span> <span class="i">is</span> <span class="i">going</span> <span class="k">to</span> <span class="i">contain</span></pre>
+</td>
+</tr>
+</table>
+
+<p>52 x 31 (1612) elements. That is quiet a lot of DOM elements, and the problem in this instance is that this will get rendered on every single pass. 
+So how do we go about solving this. Well..</p>
+
+<p>TL;DR RTFM - There is a description of this exact issue on the <a href="https://fable-elmish.github.io/react/#Lazy-views">Elmish.React github page</a>.</p>
+
+<blockquote>
+  <p>By default, every time the main update function is called (upon receiving and processing a message), the entire DOM is constructed anew and passed to React for >reconciliation. If there are no changes in the model of some component, its view function will under normal circumstances not return a different result. React >will then still perform reconciliation and realize that there is no need to update the component's UI. Consequently, when the DOM is sufficiently large or its >construction extremely time-consuming, this unnecessary work may have noticeable repercussions in terms of application performance. Thanks to lazy views however, >the update process can be optimized by avoiding DOM reconciliation and construction steps, but only if the model remains unchanged.</p>
+</blockquote>
+
+<p>So lazy views are the answer. Elmish-React provides several <a href="https://fable-elmish.github.io/react/common.html">lazy view functions</a>. The varients without the <code>With</code> suffix require types with equality constraint. This means that if any property on the model changes then the DOM will be updated. This is often not the behaviour you desire, since it is unlikely you will interact with your UI without changing your model. To this end you have two choices, create a lazyView component and pass the specific property or properties (as a tuple) from the model you are interested in. Or use <code>lazyViewWith</code> which allows us to specify the predicate that decides when we should update the containing DOM elements. In this example we'll use the latter.</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">let</span> <span class="i">viewLazy</span> <span class="i">model</span> <span class="i">dispatch</span> <span class="o">=</span> 
+    <span class="i">R</span><span class="o">.</span><span class="i">div</span> [<span class="i">ClassName</span> <span class="s">&quot;</span><span class="s">col</span><span class="s">-</span><span class="s">md</span><span class="s">-</span><span class="s">12</span><span class="s">&quot;</span>] [
+        <span class="k">if</span> <span class="i">model</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 23)" onmouseover="showTip(event, 'fs4', 23)" class="i">Data</span><span class="o">.</span><span class="i">Length</span> <span class="o">&gt;</span> <span class="n">0</span> 
+        <span class="k">then</span>
+            <span class="k">yield</span> <span class="i">R</span><span class="o">.</span><span class="i">form</span> [<span class="i">ClassName</span> <span class="s">&quot;</span><span class="s">form</span><span class="s"> </span><span class="s">form</span><span class="s">-</span><span class="s">inline</span><span class="s"> </span><span class="s">col</span><span class="s">-</span><span class="s">md</span><span class="s">-</span><span class="s">12</span><span class="s">&quot;</span>; <span class="i">Style</span> [<span class="i">PaddingBottom</span> <span class="s">&quot;</span><span class="s">10</span><span class="s">px</span><span class="s">&quot;</span>]] [
+                        <span class="i">R</span><span class="o">.</span><span class="i">button</span> [<span class="i">ClassName</span> <span class="s">&quot;</span><span class="s">btn</span><span class="s"> </span><span class="s">btn</span><span class="s">-</span><span class="s">default</span><span class="s"> </span><span class="s">col</span><span class="s">-</span><span class="s">md</span><span class="s">-</span><span class="s">1</span><span class="s">&quot;</span>; 
+                                   <span class="i">Disabled</span> (<span class="i">model</span><span class="o">.</span><span class="i">PendingChanged</span><span class="o">.</span><span class="i">Length</span> <span class="o">=</span> <span class="n">0</span>);
+                                   <span class="i">OnClick</span> (<span class="k">fun</span> <span class="i">x</span> <span class="k">-&gt;</span> <span class="i">x</span><span class="o">.</span><span class="i">preventDefault</span>();  <span class="i">dispatch</span> <span class="i">SaveChanges</span>)
+                                 ] [<span onmouseout="hideTip(event, 'fs8', 24)" onmouseover="showTip(event, 'fs8', 24)" class="i">unbox</span> <span class="s">&quot;</span><span class="s">Save</span><span class="s"> </span><span class="s">Changes</span><span class="s">&quot;</span>]
+
+                        <span class="i">R</span><span class="o">.</span><span class="i">input</span> [ <span class="i">Id</span> <span class="s">&quot;</span><span class="s">selectedentity</span><span class="s">&quot;</span>; 
+                                  <span class="i">ClassName</span> <span class="s">&quot;</span><span class="s">form</span><span class="s">-</span><span class="s">control</span><span class="s">&quot;</span>; 
+                                  <span class="i">Style</span>[<span class="i">MarginLeft</span> <span class="s">&quot;</span><span class="s">20</span><span class="s">px</span><span class="s">&quot;</span>]; 
+                                  <span class="i">Placeholder</span> <span class="s">&quot;</span><span class="s">Select</span><span class="s"> </span><span class="s">Entity</span><span class="s">&quot;</span>; 
+                                  <span class="i">Value</span> <span class="i">model</span><span class="o">.</span><span class="i">Entity</span>]
+                ]
+       
+        <span class="k">yield</span> <span class="i">lazyViewWith</span>
+                 (<span class="k">fun</span> <span class="i">oldM</span> <span class="i">newM</span> <span class="k">-&gt;</span> <span class="i">oldM</span><span class="o">.</span><span class="i">Entity</span> <span class="o">=</span> <span class="i">newM</span><span class="o">.</span><span class="i">Entity</span> <span class="o">&amp;&amp;</span> <span class="i">oldM</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 25)" onmouseover="showTip(event, 'fs4', 25)" class="i">Data</span> <span class="o">=</span> <span class="i">newM</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 26)" onmouseover="showTip(event, 'fs4', 26)" class="i">Data</span>) 
+                 (<span class="k">fun</span> <span class="i">model</span> <span class="k">-&gt;</span> 
+                     <span class="i">R</span><span class="o">.</span><span class="i">div</span> [<span class="i">ClassName</span> <span class="s">&quot;</span><span class="s">col</span><span class="s">-</span><span class="s">md</span><span class="s">-</span><span class="s">12</span><span class="s"> </span><span class="s">table</span><span class="s">-</span><span class="s">responsive</span><span class="s">&quot;</span>] [
+                           <span class="k">if</span> <span class="i">model</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 27)" onmouseover="showTip(event, 'fs4', 27)" class="i">Data</span><span class="o">.</span><span class="i">Length</span> <span class="o">&gt;</span> <span class="n">0</span> 
+                           <span class="k">then</span>
+                              <span class="k">yield</span> <span class="i">bootstrapTable</span> [
+                                  <span class="i">KeyField</span> <span class="s">&quot;</span><span class="s">id</span><span class="s">&quot;</span>
+                                  <span onmouseout="hideTip(event, 'fs4', 28)" onmouseover="showTip(event, 'fs4', 28)" class="i">Data</span> <span class="i">model</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 29)" onmouseover="showTip(event, 'fs4', 29)" class="i">Data</span>
+                                  <span class="i">Columns</span> <span class="i">model</span><span class="o">.</span><span class="i">Columns</span>
+                                  <span class="i">CellEdit</span> (<span class="i">CellEditFactory</span>(
+                                    [
+                                      <span class="s">&quot;</span><span class="s">mode</span><span class="s">&quot;</span> <span class="o">==&gt;</span> <span class="s">&quot;</span><span class="s">click</span><span class="s">&quot;</span>
+                                      <span class="s">&quot;</span><span class="s">afterSaveCell</span><span class="s">&quot;</span> <span class="o">==&gt;</span> <span onmouseout="hideTip(event, 'fs9', 30)" onmouseover="showTip(event, 'fs9', 30)" class="i">ignore</span>
+                                    ] <span class="o">|&gt;</span> <span class="i">createObj</span>))
+                              ]
+                           <span class="k">else</span> 
+                             <span class="k">yield</span> <span class="i">R</span><span class="o">.</span><span class="i">h1</span> [<span class="i">Style</span> [<span class="i">BackgroundColor</span> <span class="s">&quot;</span><span class="s">#</span><span class="s">eeeeee</span><span class="s">&quot;</span>; <span class="i">TextAlign</span> <span class="s">&quot;</span><span class="s">center</span><span class="s">&quot;</span>; <span class="i">Height</span> <span class="s">&quot;</span><span class="s">100</span><span class="s">%</span><span class="s">&quot;</span>]] [<span class="i">R</span><span class="o">.</span><span class="i">str</span> <span class="s">&quot;</span><span class="s">No</span><span class="s"> </span><span class="s">Data</span><span class="s">!</span><span class="s">&quot;</span>]
+                      ]
+                 ) <span class="i">model</span>
+    ]</pre>
+</td>
+</tr>
+</table>
+
+<p>Simples. Basically we have just wrapped the <code>div</code> that contains the table with the <code>lazyViewWith</code> function, and specified the predicate that helps it decide
+when to update.</p>
+
+<p>With this in place, the responsiveness of the UI returned and I could breath again. I have to admit it took me way too long to figure this out considering 
+it is actually written on the Elmish React project home page. However on the brightside I learnt a lot about React performance analysis, mainly from <a href="https://marmelab.com/blog/2017/02/06/react-is-slow-react-is-fast.html">this post</a> I suggest, you read this as I found it quiet useful as well as the links at the bottom.</p>
+
 
 <div class="tip" id="fs1">namespace Microsoft.FSharp.Core</div>
 <div class="tip" id="fs2">type obj = System.Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>

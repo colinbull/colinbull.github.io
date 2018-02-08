@@ -41,7 +41,7 @@ type TableProps =
 
 let bootstrapTable (props:IProp list) = Unchecked.defaultof<_>
 
-(*
+(**
 Recently I have been doing a fair amount with Fable-React-Elmish, and I have had really good results. 
 Quick time to production, little or no bugs. Overal I have been very happy with the toolchain. Now admittedly the apps 
 I have been producing are small, boring line of business apps. Basically just utilities or forms that essentailly are nothing 
@@ -94,7 +94,7 @@ let view model dispatch =
               ]
     ]
 
-(*
+(**
     However as innocent as this looks it is going to cause react some problems. Why, well the table in this case is going to contain
 52 x 31 (1612) elements. That is quiet a lot of DOM elements, and the problem in this instance is that this will get rendered on every single pass. 
 So how do we go about solving this. Well.. 
@@ -145,7 +145,7 @@ let viewLazy model dispatch =
                  ) model
     ]
 
-(*
+(**
 Simples. Basically we have just wrapped the `div` that contains the table with the `lazyViewWith` function, and specified the predicate that helps it decide
 when to update. 
 
