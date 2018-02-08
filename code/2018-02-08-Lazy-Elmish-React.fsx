@@ -95,7 +95,7 @@ let view model dispatch =
     ]
 
 (**
-    However as innocent as this looks it is going to cause react some problems. Why, well the table in this case is going to contain
+However as innocent as this looks it is going to cause react some problems. Why, well the table in this case is going to contain
 52 x 31 (1612) elements. That is quiet a lot of DOM elements, and the problem in this instance is that this will get rendered on every single pass. 
 So how do we go about solving this. Well.. 
 

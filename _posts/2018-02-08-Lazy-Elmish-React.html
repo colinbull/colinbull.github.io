@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Lazy Elmish React.
+title: Lazy Elmish React
 ---
 
 <p>Recently I have been doing a fair amount with Fable-React-Elmish, and I have had really good results. 
@@ -94,17 +94,8 @@ a single key press. This was somewhat a surprise as everything you read about Re
 </tr>
 </table>
 
-<table class="pre"><tr><td class="lines"><pre class="fssnip">
-<span class="l">1: </span>
-</pre>
-</td>
-<td class="snippet"><pre class="fssnip">
-<span class="i">However</span> <span class="k">as</span> <span class="i">innocent</span> <span class="k">as</span> <span class="i">this</span> <span class="i">looks</span> <span class="i">it</span> <span class="i">is</span> <span class="i">going</span> <span class="k">to</span> <span class="i">cause</span> <span class="i">react</span> <span class="i">some</span> <span class="i">problems</span><span class="o">.</span> <span class="i">Why</span>, <span class="i">well</span> <span class="i">the</span> <span class="i">table</span> <span class="k">in</span> <span class="i">this</span> <span class="i">case</span> <span class="i">is</span> <span class="i">going</span> <span class="k">to</span> <span class="i">contain</span></pre>
-</td>
-</tr>
-</table>
-
-<p>52 x 31 (1612) elements. That is quiet a lot of DOM elements, and the problem in this instance is that this will get rendered on every single pass. 
+<p>However as innocent as this looks it is going to cause react some problems. Why, well the table in this case is going to contain
+52 x 31 (1612) elements. That is quiet a lot of DOM elements, and the problem in this instance is that this will get rendered on every single pass. 
 So how do we go about solving this. Well..</p>
 
 <p>TL;DR RTFM - There is a description of this exact issue on the <a href="https://fable-elmish.github.io/react/#Lazy-views">Elmish.React github page</a>.</p>
