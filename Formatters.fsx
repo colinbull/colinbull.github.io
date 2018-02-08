@@ -3,7 +3,7 @@
 #r "FSharp.Markdown.dll"
 #r "FSharp.Literate.dll"
 #r "packages/FAKE/tools/FakeLib.dll"
-#load "packages/FSharp.Charting/FSharp.Charting.fsx"
+#load "packages/FSharp.Charting/lib/net45/FSharp.Charting.fsx"
 
 open System.IO
 open FSharp.Literate
