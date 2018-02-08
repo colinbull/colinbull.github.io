@@ -1,7 +1,7 @@
 (*** raw ***)
 ---
 layout: page
-title: Lazy Elmish React.
+title: Lazy Elmish React
 ---
 
 (*** hide ***)

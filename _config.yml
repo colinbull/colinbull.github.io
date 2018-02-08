@@ -11,7 +11,7 @@ title:            'Colin Bull'
 tagline:          'Functional .NET, F#, C#'
 description:      ''
 url:              http://colinbull.github.io
-baseurl:          /
+baseurl:          http://www.colinbull.net/
 
 author:
   name:           'Colin Bull'
