@@ -13,3 +13,14 @@ nuget Aether
 nuget canopy
 nuget Selenium.Support
 nuget Selenium.WebDriver
+
+
+nuget Fable.Core
+nuget Fable.React
+nuget Fable.ReactToolbox 
+nuget Fable.Import.Browser
+nuget Fable.Elmish
+nuget Fable.Elmish.Browser
+nuget Fable.Elmish.Debugger
+nuget Fable.Elmish.React
+nuget Fable.Elmish.HMR

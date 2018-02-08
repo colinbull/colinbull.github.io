@@ -60,7 +60,7 @@ So with this we can now create a snapshot of the page and dump it to a file.
 *)
 
 let toolPath = 
-    Path.GetFullPath(__SOURCE_DIRECTORY__ + "/Tools/phantomjs/bin")
+    Path.GetFullPath(__SOURCE_DIRECTORY__ + "/libs/Tools/phantomjs/bin")
 
 let writePage path content = 
     if File.Exists(path) then File.Delete path
