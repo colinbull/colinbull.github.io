@@ -16,4 +16,5 @@ several F# community open source projects. Including but not limited to
 * [FAKE](http://github.com/fsharp/Fake)
 * [FSharp.Data](http://github.com/fsharp/FSharp.Data)
 * [SqlProvider](http://github.com/fsprojects/SqlProvider)
+* [Visual FSharp Compiler](https://github.com/microsoft/visualfsharp)
 

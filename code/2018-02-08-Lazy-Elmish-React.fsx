@@ -1,8 +1,8 @@
 (*** raw ***)
-// ---
-// layout: page
-// title: Lazy Elmish React.
-// ---
+---
+layout: page
+title: Lazy Elmish React.
+---
 
 (*** hide ***)
 
