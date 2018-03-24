@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>FSharp.Charting</id>
+    <version>0.91.1</version>
+    <authors>Carl NolanTomas PetricekDon Syme</authors>
+    <licenseUrl>http://github.com/fslaborg/FSharp.Charting/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>http://fslab.org/FSharp.Charting</projectUrl>
+    <iconUrl>https://raw.github.com/fslaborg/FSharp.Charting/master/misc/logo.png</iconUrl>
+    <description>The F# Charting library (FSharp.Charting.dll) is a compositional library for creating charts
+from F# on Windows. Use FSharp.Charting.Gtk for other platforms. FSharp.Charting is designed
+to be a great fit for data scripting in F# Interactive, but charts can also be embedded in
+Windows applications. The library is a wrapper for .NET Chart Controls, which are only supported
+on Windows.</description>
+    <releaseNotes>Fix #133
+Add Candlestick charts. #131</releaseNotes>
+    <tags>F# fsharp interactive compiler editor charting</tags>
+  </metadata>
+</package>

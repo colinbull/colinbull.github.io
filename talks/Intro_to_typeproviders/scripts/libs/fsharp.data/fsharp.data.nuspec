@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>FSharp.Data</id>
+    <version>2.4.5</version>
+    <title>F# Data</title>
+    <authors>Tomas Petricek, Gustavo Guerra, Colin Bull</authors>
+    <owners>Tomas Petricek, Gustavo Guerra, Colin Bull</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>http://github.com/fsharp/FSharp.Data/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>http://fsharp.github.io/FSharp.Data</projectUrl>
+    <iconUrl>https://raw.github.com/fsharp/FSharp.Data/master/misc/logo.png</iconUrl>
+    <description>The F# Data library (FSharp.Data.dll) implements everything you need to access data in your F# applications and scripts. It implements F# type providers for working with structured file formats (CSV, HTML, JSON and XML) and for accessing the WorldBank data. It also includes helpers for parsing CSV, HTML and JSON files and for sending HTTP requests.</description>
+    <summary>Library of F# type providers and data access tools</summary>
+    <releaseNotes>Add an optional parameter for the `System.Text.Encoding` to use when reading data to the CSV, HTML, and Json providers. This parameter is called `encoding` and should be present on all Load and AsyncLoad methods.
+Fix handling of multipart form data payloads whose size exceeded ~80k bytes.</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>F# fsharp data typeprovider WorldBank CSV HTML CSS JSON XML HTTP linqpad-samples</tags>
+    <dependencies>
+      <group>
+        <dependency id="FSharp.Core" version="4.0.0.1" />
+      </group>
+      <group targetFramework=".NETPortable0.0-Profile7">
+        <dependency id="Zlib.Portable" version="1.11.0" />
+      </group>
+      <group targetFramework=".NETPortable0.0-Profile259">
+        <dependency id="Zlib.Portable" version="1.11.0" />
+      </group>
+      <group targetFramework=".NETFramework4.0" />
+    </dependencies>
+    <references>
+      <reference file="FSharp.Data.dll" />
+    </references>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework=".NETFramework4.0" />
+    </frameworkAssemblies>
+  </metadata>
+</package>
