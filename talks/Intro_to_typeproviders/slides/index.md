@@ -156,12 +156,14 @@
 
 Using the lego data and script provided 
 
-1. Find how the size of lego sets have grown over time?
-2. Find the lego set with the most distinct parts?
+1. Find the lego set with the most distinct parts?
+2. Find how the size of lego sets have grown over time?
 3. Plot 1. on a graph.
+4. Get the list of Formula one flags from "https://en.wikipedia.org/wiki/Formula_One"
 
-*** 
 
+***
+ 
 ## If you're interested example Type provider code.. 
 
 ***  

@@ -12,8 +12,29 @@ let [<Literal>] inventories = __SOURCE_DIRECTORY__ + "/lego-database/inventories
 let [<Literal>] inventoryParts = __SOURCE_DIRECTORY__ + "/lego-database/inventory_parts.csv"
 let [<Literal>] inventorySets = __SOURCE_DIRECTORY__ + "/lego-database/inventory_sets.csv"
 
+type Stats = {
+    Min : float 
+    Max : float
+    Avg : float 
+    StdDev : float
+    Length : float
+}
+
+let inline statsBy f data = 
+    let min = data |> Seq.minBy f |> f
+    let max = data |> Seq.maxBy f |> f
+    let avg = data |> Seq.averageBy f
+    let len = data |> Seq.length |> float
+    let ssd = data |> Seq.sumBy (fun x -> ((f x) - avg) ** 2.)
+    let stddev = sqrt (ssd / len)
+    {
+        Min = min; Max = max; Avg = avg 
+        StdDev = stddev
+        Length = len
+    }
 
 
- 
+
+
     
 

@@ -12,6 +12,26 @@ let [<Literal>] inventories = __SOURCE_DIRECTORY__ + "/lego-database/inventories
 let [<Literal>] inventoryParts = __SOURCE_DIRECTORY__ + "/lego-database/inventory_parts.csv"
 let [<Literal>] inventorySets = __SOURCE_DIRECTORY__ + "/lego-database/inventory_sets.csv"
 
+type Stats = {
+    Min : float 
+    Max : float
+    Avg : float 
+    StdDev : float
+    Length : float
+}
+
+let inline statsBy f data = 
+    let min = data |> Seq.minBy f |> f
+    let max = data |> Seq.maxBy f |> f
+    let avg = data |> Seq.averageBy f
+    let len = data |> Seq.length |> float
+    let ssd = data |> Seq.sumBy (fun x -> ((f x) - avg) ** 2.)
+    let stddev = sqrt (ssd / len)
+    {
+        Min = min; Max = max; Avg = avg 
+        StdDev = stddev
+        Length = len
+    }
 
 type Colors = CsvProvider<colors> 
 type Sets = CsvProvider<sets>
@@ -35,27 +55,30 @@ let inventorySetData =
         inv.Set_num, p
     )
 
-let minAvgMax f data = 
-    data |> Seq.minBy f |> f,
-    data |> Seq.averageBy (f >> float),
-    data |> Seq.maxBy f |> f
-
 let byYear f = 
     setData 
     |> Seq.groupBy (fun x -> x.Year)
     |> Seq.map (fun (year,sets) -> year, f sets)
     |> Seq.sortBy fst
 
-do
-    let data = 
-        byYear (minAvgMax (fun x -> x.Num_parts))
+let stats = 
+   byYear (statsBy (fun x -> float x.Num_parts))
 
+do
     Chart.Combine [
-        Chart.Line (data |> Seq.map (fun (x,(y,_,_)) -> x, y), Name = "min")
-        Chart.Line (data |> Seq.map (fun (x,(_,y,_)) -> x, y), Name = "avg")
-        Chart.Line (data |> Seq.map (fun (x,(_,_,y)) -> x, y), Name = "max")
+        Chart.Line (stats |> Seq.map (fun (x,y) -> x, y.Min), Name = "min")
+        Chart.Line (stats |> Seq.map (fun (x,y) -> x, y.Avg), Name = "avg")
+        Chart.Line (stats |> Seq.map (fun (x,y) -> x, y.Max), Name = "max")
+        Chart.Line (stats |> Seq.map (fun (x,y) -> x, y.StdDev), Name = "stddev")
     ]
     |> Chart.Show 
+
+do
+    Chart.Combine [
+        Chart.Line (stats |> Seq.map (fun (x,y) -> x, (y.StdDev / y.Avg)), Name = "growth")
+    ]
+    |> Chart.Show 
+
 
 let setWithMostDistinctParts() = 
     let setMap = setData |> Seq.map (fun x -> x.Set_num, x) |> Map.ofSeq
@@ -66,7 +89,15 @@ let setWithMostDistinctParts() =
         |> Seq.maxBy snd
     printfn "%A has the most distinct parts @ %d" setMap.[setId] distinctParts
 
+type F1 = HtmlProvider<"https://en.wikipedia.org/wiki/Formula_One">
 
+let flags =
+    let tbls = F1.GetSample().Tables
+    tbls.Flags.Rows 
+
+do 
+    for flag in flags do 
+        printfn "%A - %s" flag.Flag flag.Meaning
  
     
 
