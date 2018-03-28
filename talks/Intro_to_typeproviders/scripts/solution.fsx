@@ -40,6 +40,7 @@ type Inventories = CsvProvider<inventories>
 type InventoryParts = CsvProvider<inventoryParts>
 type InventorySets = CsvProvider<inventorySets>
 
+
 let setData = 
     Sets.Load(sets).Rows
     
@@ -52,7 +53,7 @@ let inventorySetData =
     InventoryParts.Load(inventoryParts).Rows
     |> Seq.map (fun p -> 
         let inv = inventoryData.[p.Inventory_id]
-        inv.Set_num, p
+        inv.Set_num, p.Part_num
     )
 
 let byYear f = 
@@ -81,13 +82,13 @@ do
 
 
 let setWithMostDistinctParts() = 
-    let setMap = setData |> Seq.map (fun x -> x.Set_num, x) |> Map.ofSeq
-    let (setId, distinctParts) =
+    //let setMap = setData |> Seq.map (fun x -> x.Set_num, x) |> Map.ofSeq
+    //let (setId, distinctParts) =
         inventorySetData
         |> Seq.groupBy fst 
         |> Seq.map (fun (setNum, parts) -> setNum, parts |> Seq.distinctBy (fun (_,p) -> p.Part_num) |> Seq.length)
         |> Seq.maxBy snd
-    printfn "%A has the most distinct parts @ %d" setMap.[setId] distinctParts
+    //printfn "%A has the most distinct parts @ %d" setMap.[setId] distinctParts
 
 type F1 = HtmlProvider<"https://en.wikipedia.org/wiki/Formula_One">
 
