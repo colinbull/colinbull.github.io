@@ -17,7 +17,7 @@
 
 ' Large enterprises 
 ' Not platforms
-' Adoption is key in the outsourcing
+' Ouytsourcing adoption
 
 ***
 
@@ -282,12 +282,15 @@
 ###### Probably not.
 
 ' First class support for I/O, Exceptions and mutation.
+' These layer complexity 
+' What happens if you get the implementation wrong.
+' No one will thank you for that. 
 
 *** 
 
 ## Limit to well defined abstractions 
 
-* Maybe 
+* Maybe
 * Result
 * Async
 
