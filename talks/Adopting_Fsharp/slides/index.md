@@ -11,21 +11,46 @@
 
 ***
 
-## The problem
+### The first problem
 
 ![the_enterprise](images/the_enterprise.png)
 
 ' Large enterprises 
 ' Not platforms
-' Ouytsourcing adoption
+' Outsourcing adoption
 
 ***
 
-## The inconvenient truth
+### Enterprises aren't software houses
+
+They don't claim to be best in market,
+but they do recongise the value of software.
+
+' Fall back to relying on buying in head count.
+' this leads to another problem
+
+*** 
+
+### The Stack Overflow survey
+
+![stackoverflow](images/stackoverflow_survey.png)
+
+' Architects will apply the blindly
+' To cover all basis
 
 ***
 
-## C# Is really quiet good at this stuff
+> Nobody got fired for hiring {insert-consultancy-here} 
+
+' But you did end up with crap overspecced buggy system.
+
+***
+
+### The inconvenient truth
+
+***
+
+### C# Is really quiet good at this stuff
 
 ![deal_with_it](images/deal_With_it.jpg)
 
@@ -37,10 +62,31 @@
 
 ## How do we deal with this? 
 
-* Readable
-* Understandable 
-* Maintainable
+***
 
+### Advertise F# features 
+
+* Pattern matching / Active Patters 
+* Type providers 
+* Async 
+* Immutability 
+* etc.. 
+
+' You might get a small response
+' Most likely a shrug thou.
+' They will still need to learn
+' Focusing on FSharp.Core won't help either
+
+*** 
+
+### Don't try and introduce outside of Visual Studio
+
+' This is important
+' Sorry Krystof.. 
+
+***
+
+### Lower mismatch with C#
 
 ' We need to be able to write F# that isn't like a slap in the face  
 ' Even though the C# isn't 
@@ -48,7 +94,7 @@
 
 ***
 
-## Composing with let 
+### Composing with let 
 
     let doStuff = f >> g
 
@@ -63,7 +109,7 @@
 
 ***
 
-## Use operators wisely
+### Use operators wisely
 
     let inline (!>) (b : ^b) : ^a = 
         (^a : (static member op_Explicit : ^b -> ^a) (b)) 
@@ -89,7 +135,7 @@
 
 ***
 
-## Oh yeah! Member constraints
+### Oh yeah! Member constraints
 
     let inline (!>) (b : ^b) : ^a = 
         (^a : (static member op_Explicit : ^b -> ^a) (b))
@@ -100,7 +146,7 @@
 
 ***
 
-## Prefer an interface to a record of functions 
+### Prefer an interface to a record of functions 
 
     type ProductRepository = {
         Get : string -> Product 
@@ -119,7 +165,7 @@
 
 ***
 
-## Write interop interfaces in C#
+### Write interop interfaces in C#
 
 * Carefully consider how you expose FSharp.Core
 * Consider using `[<CompiledName>]` attribute
@@ -132,7 +178,7 @@
 
 ***
 
-## Utilise the .NET ecosystem 
+### Utilise the .NET ecosystem 
 
 * Don't worry to much about non-functional interfaces
 
@@ -141,7 +187,7 @@
 
 ***
 
-## Structuring modules 
+### Structuring modules 
 
 ![microservice_db](images/microservice_db.png)
 ###### image - http://houseofbots.com/news-detail/519-1-monolithic-to-microservices-architecture-scalable-approach
@@ -174,7 +220,7 @@
 
 ***
 
-## For the stateful ones,
+### As for the stateful ones
 
     module StatefulModule = 
 
@@ -196,7 +242,7 @@
 
 ***
 
-## Consider dependencies 
+### Consider dependencies 
 
     module Trade = 
 
@@ -218,15 +264,15 @@
 
 *** 
 
-## Select your abstractions wisely
+### Select your abstractions wisely
 
 ![monad_moniod](images/monad_monoid.jpg)
 
-' 17 mins to here
+' 20 mins to here
 
 *** 
 
-## These are all super powerful abstractions
+### These are all super powerful abstractions
 
 ' You definitely should learn and apprciate them
 ' but
@@ -243,7 +289,7 @@
 
 ***
 
-## Computation expressions to the rescue
+### Computation expressions to the rescue
 
     let attemptReadMapProduct row = 
         result { 
@@ -252,7 +298,7 @@
             return! tryMapProduct marketArea product
         }
 
-## vs 
+### vs 
 
     let attemptReadMapProduct row = 
         read<String> "marketarea" row
@@ -269,12 +315,12 @@
 
 ***
 
-## But do you really need
+### But do you really need
 
     let foo = 
         asyncReaderStateResult { ... }
 
-## or 
+### or 
 
     let writeLine = 
         io { .. }
@@ -288,7 +334,13 @@
 
 *** 
 
-## Limit to well defined abstractions 
+### What happens if they go wrong?
+
+' People abandon. Honestly.
+
+*** 
+
+### Limit to well defined abstractions 
 
 * Maybe
 * Result
@@ -299,12 +351,17 @@
 
 *** 
 
-## Except the type system for what it is 
+### In Summary
+
+* Except the type system for what it is  
+* Except abstractions aren't for free.  
+* Think! Will I understand this next year?
 
 ' Do you really need to create an encoding for higher kinded types? 
-' Just use haskell 
+ 
 
 *** 
 
-#Thanks for listening!!
+# Thanks for listening!!
 
+### Questions?
