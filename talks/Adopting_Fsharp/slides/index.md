@@ -7,70 +7,149 @@
 
 ***
 
-# Easing F# Adoption.
+# Easing F# Adoption
 
 ***
 
-## Avoid symbolics
+## The problem
 
-    let buildDir = 
-        !!("some" @@ "dir")
-            ++ ("another" @@ "dir")
-            -- "**/*.obj"  
+![the_enterprise](images/the_enterprise.png)
 
-' example from FAKE
-' scares people off
+' Large enterprises 
+' Not platforms
+' Adoption is key in the outsourcing
+
+***
+
+## The inconvenient truth
+
+***
+
+## C# Is really quiet good at this stuff
+
+![deal_with_it](images/deal_With_it.jpg)
+
+' Why should a dark matter dev care? 
+' Will it help them get up the career ladder
+' Investment in learning. 
+
+***
+
+## How do we deal with this? 
+
+* Readable
+* Understandable 
+* Maintainable
+
+
+' We need to be able to write F# that isn't like a slap in the face  
+' Even though the C# isn't 
+' The rest of the talk will focus on this.
 
 ***
 
 ## Composing with let 
 
-    let doStuff f g a = 
-        let y = f a
-        g y
+    let doStuff = f >> g
 
 ### vs 
 
-    let doStuff = f >> g
-
+    let doStuff f g a = 
+        let y = f a
+        g y
 
 ' Many newcomers aren't used to REPL lifestyle
 ' Still want to set breakpoints to debug
 
 ***
 
+## Use operators wisely
 
-## Don't be afraid of objects
+    let inline (!>) (b : ^b) : ^a = 
+        (^a : (static member op_Explicit : ^b -> ^a) (b)) 
 
-    type StatefulObject(myState) = 
+    type Trade = 
+        { Product:string; Volume:float }
+        static member op_Explicit (product,volume) = 
+            { Product = product; Volume = volume }
 
-        let mutable state = myState
+    let trade : Trade = !> ("power", 5000) 
 
-        member __.DoStuff() = .. 
+###  vs 
+
+    type Trade = 
+        { Product:string; Volume:float }
+        static member Create (product,volume) = 
+            { Product = product; Volume = volume }
+
+    let trade = Trade.Create ("power", 5000)
+
+' contrived example but gets the point across
+' I have seen this example many times 
+
+***
+
+## Oh yeah! Member constraints
+
+    let inline (!>) (b : ^b) : ^a = 
+        (^a : (static member op_Explicit : ^b -> ^a) (b))
+    
+' Cryptic syntax. 
+' Rarely are actually required
+' Often other ways to encode this Interfaces for example
+
+***
+
+## Prefer an interface to a record of functions 
+
+    type ProductRepository = {
+        Get : string -> Product 
+        Save : Product -> unit 
+    } 
 
 ### vs 
 
-    module StatefulModule = 
+    type IProductRepository = 
+        abstract Get : string -> Product 
+        abstract Save : Product -> unit
 
-        let private mutable state = 1
+' More familiar to C# devs
+' Allows generic methods 
+' Object expressions allow you to turn these into values
 
-        let doStuff() = ..   
+***
 
-' F# is a very good object oriented language use it
-' If you have state, then an object is a good place to store it
-' When learning functional programming this seems like a paradox. 
+## Write interop interfaces in C#
+
+* Carefully consider how you expose FSharp.Core
+* Consider using `[<CompiledName>]` attribute
+* Try to limit sharing to value types. 
+
+' Some FSharp types are interesting to use from C#
+' Provides a clear boundary
+' Value types limit action at a distance issues
+' Compiled Name to get naming conventions inline
+
+***
+
+## Utilise the .NET ecosystem 
+
+* Don't worry to much about non-functional interfaces
+
+' F# runs on the CLR utilise the libraries
+' Can always wrap in a facade
 
 ***
 
 ## Structuring modules 
- 
-    module Trade = 
 
-        let computeVolume trade = ...
+![microservice_db](images/microservice_db.png)
+###### image - http://houseofbots.com/news-detail/519-1-monolithic-to-microservices-architecture-scalable-approach
 
-        let save trade = ...
+' Consider modules like microservices
+' n-tier seperate dataaccess and domain logic 
 
-### vs 
+***
 
     module Trade = 
 
@@ -80,13 +159,50 @@
 
         let saveTrade trade = ...
 
-' simpler navigation 
-' similar considerations to service boundaries 
-' YMMV on this judgement is critical
+### vs 
+
+    module Trade = 
+
+        let computeVolume trade = ...
+
+        let save trade = ...
+
+' higher cohesion
+' don't violate SRP in functions thou 
+' similar considerations to microservices
+' notcie in the picture stateful services
 
 ***
 
-## Constructor injection 
+## For the stateful ones,
+
+    module StatefulModule = 
+
+        let private mutable state = 1
+
+        let doStuff() = ..
+
+### prefer objects 
+
+    type StatefulObject(myState) = 
+
+        let mutable state = myState
+
+        member __.DoStuff() = ..
+   
+' When learning functional programming this seems like a paradox. 
+' F# is a very good object oriented language use it
+' If you have state, then an object is a good place to store it
+
+***
+
+## Consider dependencies 
+
+    module Trade = 
+
+        let update (eventHub:IEventHub option) f trade = ... 
+
+### vs 
 
     type TradeService(eventHub:IEventHub) = 
 
@@ -95,65 +211,97 @@
             evntHub.raise (TradeUpdated(trade, newTrade))
             newTrade 
 
-### vs 
-
-    module Trade = 
-
-        let update (eventHub:IEventHub option) f trade = ... 
-
-
 ' Allows injection of cross cutting services
-' Provides ability to update a trade with or without event dependency
-' Easier testing
+' Improves ability to add dependencies
+' Allows you to use Trade.update without dragging in baggage.
 
-***
 
-## Avoid member constraints
-
-    let inline unit< ^S when ^S : 
-        (static member Unit : ^S)> () : ^S =
-    (^S : (static member Unit : ^S) ()) 
-
-##### http://tomasp.net/blog/2014/update-monads/
-##### Sorry Tomas
-
-' Rarely are actually required
-' Often other ways to encode this 
-
-***
+*** 
 
 ## Select your abstractions wisely
 
-* Applicatives and Monads are super powerful abstractions
-* But maybe limit the exposure
-* `Maybe`, `Result` are useful in the domain. 
-* But we have first class support for I/O, Exceptions and state as much as people hate this
-* Do you really need `AsyncReaderStateResult` ?? 
-* Also can be a bit like a virus 
-* ONce you start using them everything ends up getting wrapped in them
-* That being said computation expressions provide a nice middle ground.
-* Make sure semantics are solid and well understood thou.
+![monad_moniod](images/monad_monoid.jpg)
+
+' 17 mins to here
+
+*** 
+
+## These are all super powerful abstractions
+
+' You definitely should learn and apprciate them
+' but
+
+*** 
+
+![great_responsibility](images/with_great_power.png)
+
+' No simple answers not going to scale
+' Hence the number of monad tutorials
+' At the begining of the talk I mentioned darket matter dev investment
+' They aren't going to invest in this
+' but these are useful
 
 ***
 
-## Write interop interfaces in C#
+## Computation expressions to the rescue
 
-* Hides the noise of F# types `FSharpOption<_>`
-* Try to limit sharing to value types. 
+    let attemptReadMapProduct row = 
+        result { 
+            let! marketArea = (read<String> "marketarea" row)
+            let! product = (read "product" row) 
+            return! tryMapProduct marketArea product
+        }
 
-' Some FSharp types are interesting to use from C#
-' Provides a clear boundary
-' Value types limit action at a distance issues  
+## vs 
+
+    let attemptReadMapProduct row = 
+        read<String> "marketarea" row
+        >>= (fun ma -> 
+                read<String> "product" row
+                >>= (fun prod -> tryMapProduct ma prod)
+            )  
+
+' provides a nice middle ground
+' hides detail can still be utilised
+' enables debugging
+' also can be a little bit like a virus.
+' end up infecting the whole call chain.
 
 ***
 
-## Consider array as the default data structure
+## But do you really need
 
-* Familiar 
-* Understood by the majority of devs
+    let foo = 
+        asyncReaderStateResult { ... }
 
+## or 
 
-' If possible of course.
-' Air of familiarity 
+    let writeLine = 
+        io { .. }
 
+###### Probably not.
+
+' First class support for I/O, Exceptions and mutation.
+
+*** 
+
+## Limit to well defined abstractions 
+
+* Maybe 
+* Result
+* Async
+
+' These are well understood 
+' Although maybe and result builders aren't part of FSharp.Core 
+
+*** 
+
+## Except the type system for what it is 
+
+' Do you really need to create an encoding for higher kinded types? 
+' Just use haskell 
+
+*** 
+
+#Thanks for listening!!
 
