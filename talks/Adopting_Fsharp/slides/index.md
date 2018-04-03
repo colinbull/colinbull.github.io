@@ -9,25 +9,33 @@
 
 # Easing F# Adoption
 
-***
-
-### The first problem
-
-![the_enterprise](images/the_enterprise.png)
-
-' Large enterprises 
-' Not platforms
-' Outsourcing adoption
+' Not about idomatic code
+' It is about minimising the `activation` energy of F#
+' Scale the message as it were. 
+' A few things to get out the way first
 
 ***
 
 ### Enterprises aren't software houses
 
-They don't claim to be best in market,
-but they do recongise the value of software.
+They **do not** aspire to be best in market,
+but they **do** recongise the value of software.
 
-' Fall back to relying on buying in head count.
+' This seems like a contradiction
+' But really means they don't want to train.
+' Fall back to relying on buying in.
 ' this leads to another problem
+
+***
+
+### What does this look like?
+
+![the_enterprise](images/the_enterprise.png)
+
+' Dark matter devs mostly
+' Teams rotate quickly 
+' Target is not to be a dev, but to get on management track
+' To compound this.... 
 
 *** 
 
@@ -35,18 +43,23 @@ but they do recongise the value of software.
 
 ![stackoverflow](images/stackoverflow_survey.png)
 
-' Architects will apply the blindly
+' Architects will apply this blindly
+' I'm surprised I don't have to write everything in Node
 ' To cover all basis
 
 ***
 
+### And
+
 > Nobody got fired for hiring {insert-consultancy-here} 
 
-' But you did end up with crap overspecced buggy system.
+' Getting F# pushed into the consultancies solves one problem
+' Getting it on industry reports, Gartner, Forrester etc. will help
+' But there is a bigger problem.. 
 
 ***
 
-### The inconvenient truth
+### An inconvenient truth
 
 ***
 
@@ -77,12 +90,31 @@ but they do recongise the value of software.
 ' They will still need to learn
 ' Focusing on FSharp.Core won't help either
 
-*** 
+***
 
-### Don't try and introduce outside of Visual Studio
+***
 
-' This is important
-' Sorry Krystof.. 
+### Typical Gateway drugs 
+
+* Build
+* Dev ops scripts
+* Generate Test data
+
+' Build is actually quiet risky. Architects lurk here.
+' Devops, if you have that then your probably not going 
+' to need the rest of this talk
+
+***
+
+### Consider your environment
+
+How can I apply F# with minimal fuss
+
+' Think how does F# apply in your environment
+' Can you actually use type providers Firewalls 
+' DB access
+' It is hard not to just showcase consice syntax.
+' When you do showcase F#... 
 
 ***
 
@@ -106,12 +138,13 @@ but they do recongise the value of software.
 
 ' Many newcomers aren't used to REPL lifestyle
 ' Still want to set breakpoints to debug
+' Intermediate values
 
 ***
 
 ### Use operators wisely
 
-    let inline (!>) (b : ^b) : ^a = 
+    let inline (!!) (b : ^b) : ^a = 
         (^a : (static member op_Explicit : ^b -> ^a) (b)) 
 
     type Trade = 
@@ -119,7 +152,7 @@ but they do recongise the value of software.
         static member op_Explicit (product,volume) = 
             { Product = product; Volume = volume }
 
-    let trade : Trade = !> ("power", 5000) 
+    let trade : Trade = !! ("power", 5000) 
 
 ###  vs 
 
@@ -137,7 +170,7 @@ but they do recongise the value of software.
 
 ### Oh yeah! Member constraints
 
-    let inline (!>) (b : ^b) : ^a = 
+    let inline (!!) (b : ^b) : ^a = 
         (^a : (static member op_Explicit : ^b -> ^a) (b))
     
 ' Cryptic syntax. 
@@ -184,6 +217,7 @@ but they do recongise the value of software.
 
 ' F# runs on the CLR utilise the libraries
 ' Can always wrap in a facade
+' Get to F# types as quickly as possible
 
 ***
 
@@ -216,7 +250,7 @@ but they do recongise the value of software.
 ' higher cohesion
 ' don't violate SRP in functions thou 
 ' similar considerations to microservices
-' notcie in the picture stateful services
+' notice in the picture stateful services
 
 ***
 
@@ -268,8 +302,6 @@ but they do recongise the value of software.
 
 ![monad_moniod](images/monad_monoid.jpg)
 
-' 20 mins to here
-
 *** 
 
 ### These are all super powerful abstractions
@@ -285,16 +317,16 @@ but they do recongise the value of software.
 ' Hence the number of monad tutorials
 ' At the begining of the talk I mentioned darket matter dev investment
 ' They aren't going to invest in this
-' but these are useful
+' but these are useful, why?
 
 ***
 
-### Computation expressions to the rescue
+### Consider the reader for the best result.
 
     let attemptReadMapProduct row = 
         result { 
-            let! marketArea = (read<String> "marketarea" row)
-            let! product = (read "product" row) 
+            let! marketArea = read<String> "marketarea" row
+            let! product = read "product" row 
             return! tryMapProduct marketArea product
         }
 
@@ -340,7 +372,7 @@ but they do recongise the value of software.
 
 *** 
 
-### Limit to well defined abstractions 
+### Limit to well known abstractions 
 
 * Maybe
 * Result
@@ -348,20 +380,13 @@ but they do recongise the value of software.
 
 ' These are well understood 
 ' Although maybe and result builders aren't part of FSharp.Core 
-
-*** 
-
-### In Summary
-
-* Except the type system for what it is  
-* Except abstractions aren't for free.  
-* Think! Will I understand this next year?
-
-' Do you really need to create an encoding for higher kinded types? 
  
-
 *** 
 
 # Thanks for listening!!
+
+Twitter: @colinbul
+
+*** 
 
 ### Questions?
