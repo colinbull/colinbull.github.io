@@ -92,9 +92,13 @@ but they **do** recongise the value of software.
 
 ***
 
+### Use quantative evidence
+
+![quant_evidence](images/quantitve_evidence.jpg)
+
 ***
 
-### Typical Gateway drugs 
+### Use Gateway drugs 
 
 * Build
 * Dev ops scripts
@@ -142,7 +146,7 @@ How can I apply F# with minimal fuss
 
 ***
 
-### Use operators wisely
+### Use symbolics wisely
 
     let inline (!!) (b : ^b) : ^a = 
         (^a : (static member op_Explicit : ^b -> ^a) (b)) 
@@ -165,6 +169,7 @@ How can I apply F# with minimal fuss
 
 ' contrived example but gets the point across
 ' I have seen this example many times 
+' This is also true for bind
 
 ***
 
