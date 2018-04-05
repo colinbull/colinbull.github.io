@@ -9,26 +9,50 @@
 
 # Easing F# Adoption
 
-' Not about idomatic code
-' It is about minimising the `activation` energy of F#
-' Scale the message as it were. 
-' A few things to get out the way first
+' Introduce 
+' Explain successful introduction of F#
+
+***
+
+### Not about idomatic code
+
+' Sorry we aren't trying to be purist
+
+***
+
+### Scaling the F# message
+
+' This is important as it helps sharing
+' Conferences are great, but preaching to the converted
+
+***
+
+### Minimising the activation energy 
+
+![activation_energy](images/activation_energy.png)
 
 ***
 
 ### Enterprises aren't software houses
 
-They **do not** aspire to be best in market,
+They **do not** aspire to be best in market with software,
 but they **do** recongise the value of software.
 
 ' This seems like a contradiction
 ' But really means they don't want to train.
 ' Fall back to relying on buying in.
-' this leads to another problem
 
 ***
 
-### What does this look like?
+> Nobody got fired for hiring {insert-consultancy-here} 
+
+' Getting F# pushed into the consultancies solves one problem
+' Getting it on industry reports, Gartner, Forrester etc. will help
+' Ultimately thou we need to get to dark matter dev
+
+***
+
+### An outsourced enterprise
 
 ![the_enterprise](images/the_enterprise.png)
 
@@ -49,17 +73,7 @@ but they **do** recongise the value of software.
 
 ***
 
-### And
-
-> Nobody got fired for hiring {insert-consultancy-here} 
-
-' Getting F# pushed into the consultancies solves one problem
-' Getting it on industry reports, Gartner, Forrester etc. will help
-' But there is a bigger problem.. 
-
-***
-
-### An inconvenient truth
+### But there is a bigger problem
 
 ***
 
@@ -83,11 +97,12 @@ but they **do** recongise the value of software.
 * Type providers 
 * Async 
 * Immutability 
+* Discriminated Unions
 * etc.. 
 
 ' You might get a small response
 ' Most likely a shrug thou.
-' They will still need to learn
+' They will still need to learn more than they can cut and copy
 ' Focusing on FSharp.Core won't help either
 
 ***
@@ -140,20 +155,20 @@ How can I apply F# with minimal fuss
         let y = f a
         g y
 
+' Interesting - Intermediate values
 ' Many newcomers aren't used to REPL lifestyle
 ' Still want to set breakpoints to debug
-' Intermediate values
 
 ***
 
 ### Use symbolics wisely
 
     let inline (!!) (b : ^b) : ^a = 
-        (^a : (static member op_Explicit : ^b -> ^a) (b)) 
+        (^a : (static member Create : ^b -> ^a) (b)) 
 
     type Trade = 
         { Product:string; Volume:float }
-        static member op_Explicit (product,volume) = 
+        static member Create (product,volume) = 
             { Product = product; Volume = volume }
 
     let trade : Trade = !! ("power", 5000) 
@@ -176,7 +191,7 @@ How can I apply F# with minimal fuss
 ### Oh yeah! Member constraints
 
     let inline (!!) (b : ^b) : ^a = 
-        (^a : (static member op_Explicit : ^b -> ^a) (b))
+        (^a : (static member Create : ^b -> ^a) (b))
     
 ' Cryptic syntax. 
 ' Rarely are actually required
@@ -326,7 +341,7 @@ How can I apply F# with minimal fuss
 
 ***
 
-### Consider the reader for the best result.
+### Consider the next reader for the best result.
 
     let attemptReadMapProduct row = 
         result { 
@@ -368,11 +383,6 @@ How can I apply F# with minimal fuss
 ' These layer complexity 
 ' What happens if you get the implementation wrong.
 ' No one will thank you for that. 
-
-*** 
-
-### What happens if they go wrong?
-
 ' People abandon. Honestly.
 
 *** 
@@ -380,13 +390,28 @@ How can I apply F# with minimal fuss
 ### Limit to well known abstractions 
 
 * Maybe
-* Result
+* Result / Attempt 
 * Async
 
 ' These are well understood 
 ' Although maybe and result builders aren't part of FSharp.Core 
  
 *** 
+
+### In summary
+
+* If you can explain it in a way that scales use it
+* If not introduce a stepping stone
+* Rinse and repeat
+
+' Else you will do a lot of explaining.
+' Wait until you feel enough ppl grok it
+
+***
+
+# F# <> Haskell 
+
+***
 
 # Thanks for listening!!
 
