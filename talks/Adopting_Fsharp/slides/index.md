@@ -9,7 +9,7 @@
 
 # Easing F# Adoption
 
-' Introduce 
+' Introduce yourself
 ' Explain successful introduction of F#
 
 ***
@@ -17,19 +17,21 @@
 ### Not about idomatic code
 
 ' Sorry we aren't trying to be purist
+' Should still make an effor to be pure.
+' Still follow Scotts guidelines 
+' Illegal states unrepresentable
 
 ***
 
 ### Scaling the F# message
 
 ' This is important as it helps sharing
+' Bit like the gossip protocol.
 ' Conferences are great, but preaching to the converted
 
 ***
 
-### Minimising the activation energy 
-
-![activation_energy](images/activation_energy.png)
+### Some context first
 
 ***
 
@@ -139,6 +141,8 @@ How can I apply F# with minimal fuss
 
 ### Lower mismatch with C#
 
+![activation_energy](images/activation_energy.png)
+
 ' We need to be able to write F# that isn't like a slap in the face  
 ' Even though the C# isn't 
 ' The rest of the talk will focus on this.
@@ -161,15 +165,14 @@ How can I apply F# with minimal fuss
 
 ***
 
-### Use symbolics wisely
-
-    let inline (!!) (b : ^b) : ^a = 
-        (^a : (static member Create : ^b -> ^a) (b)) 
+### Arrgh! Custom operators
 
     type Trade = 
         { Product:string; Volume:float }
         static member Create (product,volume) = 
             { Product = product; Volume = volume }
+
+    let inline (!!) = Trade.Create
 
     let trade : Trade = !! ("power", 5000) 
 
@@ -184,7 +187,7 @@ How can I apply F# with minimal fuss
 
 ' contrived example but gets the point across
 ' I have seen this example many times 
-' This is also true for bind
+' Readability trumps consicseness
 
 ***
 
@@ -199,7 +202,7 @@ How can I apply F# with minimal fuss
 
 ***
 
-### Prefer an interface to a record of functions 
+### Interfaces or Record of functions 
 
     type ProductRepository = {
         Get : string -> Product 
@@ -233,7 +236,10 @@ How can I apply F# with minimal fuss
 
 ### Utilise the .NET ecosystem 
 
-* Don't worry to much about non-functional interfaces
+* Giraffe and ASPNET Core 
+* Newtonsoft.Json
+* PdfSharp
+* etc..
 
 ' F# runs on the CLR utilise the libraries
 ' Can always wrap in a facade
@@ -396,7 +402,11 @@ How can I apply F# with minimal fuss
 ' These are well understood 
 ' Although maybe and result builders aren't part of FSharp.Core 
  
-*** 
+***
+
+# F# <> Haskell 
+
+***
 
 ### In summary
 
@@ -406,10 +416,6 @@ How can I apply F# with minimal fuss
 
 ' Else you will do a lot of explaining.
 ' Wait until you feel enough ppl grok it
-
-***
-
-# F# <> Haskell 
 
 ***
 
