@@ -182,5 +182,6 @@ release.cmd
 *.orig
 docs
 .fake/
+output
 FSharp.Formatting.svclog
 _NCrunch*
